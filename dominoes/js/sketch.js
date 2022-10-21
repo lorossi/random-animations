@@ -85,15 +85,16 @@ class Sketch extends Engine {
       this.saveFrame();
     }
 
-    if (t == 0) {
-      this._inverted = !this._inverted;
-      this._counter++;
-
-      if (this.frameCount >= 2 * this._duration && this._recording) {
-        this.noLoop();
-        console.log("ENDED");
+    if (this._recording) {
+      if (t == 0 && this.frameCount == 0) {
+        this.startRecording();
+        console.log("%cRecording started", "color: green");
+      } else if (this.frameCount == this._duration) {
+        console.log("%cRecording stopped", "color: red");
         this.stopRecording();
         this.saveRecording();
+        this.noLoop();
+        console.log("%cRecording saved!", "color: green");
       }
     }
   }
