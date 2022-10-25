@@ -6,31 +6,30 @@ class Sketch extends Engine {
     this._scl = 0.6; // animation scale
     this._duration = 300; // duration of animation
     this._max_dy_fact = 0.2; // max displacement of rects
-    this._recording = false;
+    this._recording = true;
 
-    this._palette = {
-      true: {
-        background: "rgb(240, 240, 240)",
-        stroke: "rgb(15, 15, 15)",
-        fill: "rgb(127, 127, 127)",
-      },
-      false: {
+    this._palette = [
+      {
         background: "rgb(15, 15, 15)",
         stroke: "rgb(240, 240, 240)",
         fill: "rgb(127, 127, 127)",
       },
-    };
+      {
+        background: "rgb(240, 240, 240)",
+        stroke: "rgb(15, 15, 15)",
+        fill: "rgb(127, 127, 127)",
+      },
+    ];
   }
 
   setup() {
     this._counter = 0;
-    this._inverted = false;
   }
 
   draw() {
     const t = (this.frameCount % this._duration) / this._duration;
-
-    const current_palette = this._palette[this._inverted];
+    const palette_index = Math.floor(this.frameCount / this._duration) % 2;
+    const current_palette = this._palette[palette_index];
 
     this.background(current_palette.background);
 
@@ -39,7 +38,7 @@ class Sketch extends Engine {
     this.ctx.scale(this._scl, this._scl);
     this.ctx.translate(-this.width / 2, -this.height / 2);
 
-    this.ctx.lineWidth = 4;
+    this.ctx.lineWidth = 8;
 
     const scl = this.width / this._rects; // rect height
     const w = scl * this._rect_w_fact; // rect width
@@ -82,14 +81,10 @@ class Sketch extends Engine {
     this.ctx.restore();
 
     if (this._recording) {
-      this.saveFrame();
-    }
-
-    if (this._recording) {
       if (t == 0 && this.frameCount == 0) {
         this.startRecording();
         console.log("%cRecording started", "color: green");
-      } else if (this.frameCount == this._duration) {
+      } else if (this.frameCount == this._duration * 2) {
         console.log("%cRecording stopped", "color: red");
         this.stopRecording();
         this.saveRecording();
