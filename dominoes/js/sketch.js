@@ -6,7 +6,7 @@ class Sketch extends Engine {
     this._scl = 0.6; // animation scale
     this._duration = 300; // duration of animation
     this._max_dy_fact = 0.2; // max displacement of rects
-    this._recording = true;
+    this._recording = false;
 
     this._palette = [
       {
