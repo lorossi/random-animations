@@ -22,7 +22,7 @@ Not yet posted on Instagram
 
 Not yet posted on Instagram
 
-### Rock Paper Scissors
+### Alternating Noise
 
 Not yet posted on Instagram
 
