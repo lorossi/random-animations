@@ -4,22 +4,22 @@ class Sketch extends Engine {
     this._recording = false;
   }
 
-  setup() {}
+  setup() {
+    if (this._recording) {
+      this.startRecording();
+      console.log("%cRecording started", "color:green");
+    }
+  }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
+    const t = (this._frameCount / this._duration) % 1;
 
-    if (this._recording) {
-      if (t == 0 && this.frameCount == 0) {
-        this.startRecording();
-        console.log("%cRecording started", "color: green");
-      } else if (this.frameCount == this._duration) {
-        console.log("%cRecording stopped", "color: red");
-        this.stopRecording();
-        this.saveRecording();
-        this.noLoop();
-        console.log("%cRecording saved!", "color: green");
-      }
+    if (t >= 1 && this._recording) {
+      this._recording = false;
+      this.stopRecording();
+      console.log("%cRecording stopped. Saving...", "color:yellow");
+      this.saveRecording();
+      console.log("%cRecording saved", "color:green");
     }
   }
 }
