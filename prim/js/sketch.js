@@ -3,8 +3,9 @@ class Sketch extends Engine {
     this._recording = false;
 
     this._seed = null;
-    this._num = 100;
+    this._num = 500;
     this._r = 2;
+    this._scl = 0.9;
   }
 
   setup() {
@@ -20,15 +21,19 @@ class Sketch extends Engine {
     this._points = Array(this._num)
       .fill(0)
       .map(() => {
-        const x = Math.floor(this._random.random(0, this.width));
-        const y = Math.floor(this._random.random(0, this.height));
+        const x = Math.floor(
+          this._random.random(1 - this._scl, this._scl) * this.width
+        );
+        const y = Math.floor(
+          this._random.random(1 - this._scl, this._scl) * this.height
+        );
         return new Point(x, y);
       });
 
     this._tree = prim(this._points, this.width, this.height);
 
-    this.background("rgb(0, 0, 0)");
-    this.ctx.fillStyle = "rgb(255, 255, 255)";
+    this.background("rgb(15, 15, 15)");
+    this.ctx.fillStyle = "rgb(245, 245, 245)";
 
     this._points.forEach((p) => {
       this.ctx.beginPath();
