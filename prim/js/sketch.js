@@ -48,7 +48,7 @@ class Sketch extends Engine {
       const u = e.value.u;
       const v = e.value.v;
       this.ctx.save();
-      this.ctx.strokeStyle = "rgb(200, 200, 252005)";
+      this.ctx.strokeStyle = "rgb(200, 200, 200)";
       this.ctx.beginPath();
       this.ctx.moveTo(u.x, u.y);
       this.ctx.lineTo(v.x, v.y);
