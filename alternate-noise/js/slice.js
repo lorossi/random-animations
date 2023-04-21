@@ -8,7 +8,7 @@ class Slice {
     this._random = new XOR128(noise_seed);
     this._bias = this._random.random(0, Math.PI * 2);
 
-    this._particles = Array(200)
+    this._particles = Array(150)
       .fill(0)
       .map(() => {
         const random_seed = this._random.random(0, 1e9);

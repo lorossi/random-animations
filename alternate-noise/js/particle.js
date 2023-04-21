@@ -18,9 +18,9 @@ class Particle {
 
     this._acc = new Vector(0, 0);
     this._pos = new Vector(x, y);
-    this._old_pos = new Vector(-1, -1);
+    this._old_pos = new Vector(x, y);
     this._vel = new Vector(0, 0);
-    this._max_speed = 3;
+    this._max_speed = 2;
 
     this._max_life = this._h * Math.SQRT2;
     this._life = this._max_life;
@@ -40,6 +40,7 @@ class Particle {
     );
 
     const theta = n * Math.PI * 2 + this._bias;
+    this._old_pos = this._pos.copy();
 
     this._vel = Vector.fromAngle2D(theta).setMag(rho);
 
@@ -49,21 +50,19 @@ class Particle {
 
     this._life--;
     if (this._life <= 0) this._dead = true;
-
-    this._old_pos = this._pos.copy();
   }
 
   show(ctx) {
-    if (!this._moved) return;
-    if (this._dead) return;
+    if (!this.moved || this.dead) return;
 
     const x = Math.floor(this._pos.x);
     const y = Math.floor(this._pos.y);
+
     const a = this._easeLife();
 
     ctx.save();
     ctx.translate(x, y);
-    ctx.fillStyle = `rgba(0,0,0,${a})`;
+    ctx.fillStyle = `rgba(15,15,15,${a})`;
     ctx.beginPath();
     ctx.arc(0, 0, 1, 0, Math.PI * 2);
     ctx.fill();
@@ -73,13 +72,11 @@ class Particle {
   _easeLife() {
     const x = this._life / this._max_life;
     const eased = 1 - Math.pow(1 - x, 3);
-    return eased * 0.15;
+    return eased * 0.1;
   }
 
-  get _moved() {
-    const dx = Math.floor(this._pos.x - this._old_pos.x);
-    const dy = Math.floor(this._pos.y - this._old_pos.y);
-    return dx == 0 && dy == 0;
+  get moved() {
+    return !this._pos.equals(this._old_pos);
   }
 
   get dead() {
