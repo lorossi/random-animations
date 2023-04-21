@@ -3,7 +3,7 @@ class Sketch extends Engine {
     this._recording = false;
 
     this._seed = null;
-    this._num = 500;
+    this._num = 100;
     this._r = 2;
   }
 
@@ -25,7 +25,7 @@ class Sketch extends Engine {
         return new Point(x, y);
       });
 
-    this._tree = prim(this._points);
+    this._tree = prim(this._points, this.width, this.height);
 
     this.background("rgb(0, 0, 0)");
     this.ctx.fillStyle = "rgb(255, 255, 255)";
@@ -67,17 +67,24 @@ class Sketch extends Engine {
   }
 }
 
-const prim = function* (points) {
+const prim = function* (points, width, height) {
   let S = new Set();
   let T = new Set();
 
+  const manhattan = (u) =>
+    Math.abs(u.x - width / 2) + Math.abs(u.y - height / 2);
+  const first = points.reduce((a, b) => {
+    return manhattan(a) < manhattan(b) ? a : b;
+  });
+
   const p = [...points];
-  S.add(p.pop());
+  p.splice(p.indexOf(first), 1);
+  S.add(first);
 
   const N = new Set(p);
   const n = points.length;
 
-  while (T.size < n - 1) {
+  while (T.size < n - 2) {
     const [u, v, d] = closest(S, N);
     const n = { u: u.copy(), v: v.copy(), d: d };
     S.add(v.copy());
@@ -93,7 +100,7 @@ const closest = (S, N) => {
     return [...A].filter((u) => [...B].every((v) => !u.equals(v)));
   };
 
-  let found;
+  let found = [];
   let min_dist = Infinity;
 
   S.forEach((u) => {
