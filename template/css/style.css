@@ -9,11 +9,17 @@
   overflow: hidden;
 }
 
+html {
+  height: -moz-available;
+  height: -webkit-fill-available;
+  height: fill-available;
+}
+
 body {
-  font-family: Roboto;
-  font-size: var(--text-size);
-  background-color: var(--background-color);
-  color: var(--text-color);
+  min-height: 100vh;
+  min-height: -moz-available;
+  min-height: -webkit-fill-available;
+  min-height: fill-available;
 }
 
 a {
@@ -58,14 +64,10 @@ a:active {
   padding-right: 2vw;
 }
 
-@media only screen and (max-width: 1100px) {
+@media only screen and (max-width: 600px) {
   #sketch {
-    height: 90vw;
-    width: 90vw;
-  }
-
-  .container {
-    justify-content: space-around;
+    height: 95vw;
+    width: 95vw;
   }
 
   .footer {

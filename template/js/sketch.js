@@ -1,3 +1,6 @@
+import { Engine, SimplexNoise, Point, Color } from "./engine.js";
+import { XOR128 } from "./xor128.js";
+
 class Sketch extends Engine {
   preload() {
     this._duration = 900;
@@ -23,3 +26,5 @@ class Sketch extends Engine {
     }
   }
 }
+
+export { Sketch };
