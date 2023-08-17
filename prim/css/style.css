@@ -7,12 +7,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-}
-
-body {
   font-family: Roboto;
-  font-size: var(--text-size);
-  background-color: var(--background-color);
   color: var(--text-color);
 }
 
@@ -35,8 +30,8 @@ a:active {
 }
 
 #sketch {
-  height: 95vh;
-  width: 95vh;
+  height: 90vh;
+  width: 90vh;
   aspect-ratio: 1;
 
   touch-action: none;
@@ -45,7 +40,7 @@ a:active {
 .footer {
   position: absolute;
   width: 100vw;
-  bottom: 1vh;
+  bottom: 0;
 
   display: flex;
   flex-direction: row;
@@ -54,18 +49,14 @@ a:active {
 }
 
 .footer * {
-  padding-left: 2vw;
-  padding-right: 2vw;
+  padding: 1rem;
+  font-size: 1.5rem;
 }
 
-@media only screen and (max-width: 1100px) {
+@media only screen and (max-width: 600px) {
   #sketch {
     height: 90vw;
     width: 90vw;
-  }
-
-  .container {
-    justify-content: space-around;
   }
 
   .footer {
