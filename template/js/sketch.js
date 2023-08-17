@@ -15,7 +15,7 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = (this._frameCount / this._duration) % 1;
+    const t = (this.frameCount / this._duration) % 1;
 
     if (t >= 1 && this._recording) {
       this._recording = false;
