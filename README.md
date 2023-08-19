@@ -31,6 +31,14 @@ Not on Instagram yet.
 
 Not on Instagram yet.
 
+### Inverted Squares
+
+Not on Instagram yet.
+
+### Letters Cube
+
+Not on Instagram yet.
+
 ### Orbit Noise
 
 Not on Instagram yet.
