@@ -1,30 +1,51 @@
 # Random Animations
 
-I made this repo because I grew tired of making a separate repo for every silly animation that I make.
+I made this repo because I grew tired of making a separate repo for every silly js canvas that I make.
+Often there's not much to say about these animations, so I'll just put a link to them here along with a short description and a link to the Instagram post.
 
-Often there's not much to say about these animations, so I'll just put a link to the animation here.
+All the animations are hosted on a simple GitHub Pages website; however, some of them are very CPU intensive so be careful as your browser might freeze while opening them.
 
 ## Animations
 
+### Alternating Noise
+
+Not on Instagram yet.
+
 ### Arcs
 
-Not yet posted on Instagram
+Not on Instagram yet.
 
 ### Circle Arcs
 
-Not yet posted on Instagram
+Not on Instagram yet.
+
+### Circle Noise
+
+Not on Instagram yet.
 
 ### Circle Particles
 
-Not yet posted on Instagram
+Not on Instagram yet.
 
 ### Dominoes
 
-Not yet posted on Instagram
+Not on Instagram yet.
 
-### Alternating Noise
+### Orbit Noise
 
-Not yet posted on Instagram
+Not on Instagram yet.
+
+### Prim
+
+Not on Instagram yet.
+
+### Vertical Bars
+
+Not on Instagram yet.
+
+### Vertical Lines
+
+Not on Instagram yet.
 
 ## License
 
