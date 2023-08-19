@@ -7,15 +7,14 @@ class Particle {
   }
 
   show(ctx) {
-    const x = this._xor128.random(this._width);
-    const y = this._xor128.random(this._height);
+    // generate a random integer that is multiple of scl
+    const x = this._xor128.random_int(this._width / this._scl) * this._scl;
+    const y = this._xor128.random_int(this._height / this._scl) * this._scl;
 
     ctx.save();
     ctx.translate(x, y);
-    ctx.fillStyle = "rgba(0, 0, 0, 0.025)";
-    ctx.beginPath();
-    ctx.arc(0, 0, this._scl / 2, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.fillStyle = "rgba(0, 0, 0, 0.02)";
+    ctx.fillRect(0, 0, this._scl, this._scl);
     ctx.restore();
   }
 }

@@ -10,17 +10,17 @@ class Sketch extends Engine {
     this._recording = false;
 
     this._min_cols = 2;
-    this._max_cols = 6;
+    this._max_cols = 5;
 
     this._min_stripes_num = 4;
-    this._max_stripes_num = 12;
+    this._max_stripes_num = 9;
 
-    this._min_inverter_scl = 3;
+    this._min_inverter_scl = 4;
     this._min_inverter_density = 0.25;
     this._max_inverter_density = 1;
 
     this._particles_num = 10000;
-    this._particles_scl = 5;
+    this._particles_scl = 10;
     this._colors = ["rgb(15, 15, 15)", "rgb(240, 240, 240)"];
 
     this._seed = new Date().getTime();
@@ -72,23 +72,36 @@ class Sketch extends Engine {
             this._xor128
           )
       );
+
+    if (this._recording) {
+      this.startRecording();
+      console.log("%cRecording started", "color:green");
+    }
   }
 
   draw() {
+    const t = (this.frameCount / this._duration) % 1;
+
     this.ctx.save();
     this._squares.forEach((s) => s.show(this.ctx));
+    this.ctx.restore();
+
+    this.ctx.save();
+    this._inverters.forEach((i) => i.update(t));
+    this._inverters.forEach((i) => i.show(this.ctx));
     this.ctx.restore();
 
     this.ctx.save();
     this._particles.forEach((p) => p.show(this.ctx));
     this.ctx.restore();
 
-    this.ctx.save();
-    this._inverters.forEach((i) => i.update());
-    this._inverters.forEach((i) => i.show(this.ctx));
-    this.ctx.restore();
-
-    this.noLoop();
+    if (t >= 1 && this._recording) {
+      this._recording = false;
+      this.stopRecording();
+      console.log("%cRecording stopped. Saving...", "color:yellow");
+      this.saveRecording();
+      console.log("%cRecording saved", "color:green");
+    }
   }
 
   click() {
