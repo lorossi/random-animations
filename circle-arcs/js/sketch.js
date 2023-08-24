@@ -1,3 +1,5 @@
+import { Engine } from "./engine.js";
+
 class Sketch extends Engine {
   preload() {
     this._duration = 300;
@@ -65,3 +67,5 @@ class Sketch extends Engine {
     }
   }
 }
+
+export { Sketch };
