@@ -1,14 +1,23 @@
 import { Point } from "./engine.js";
 
 class Line {
-  constructor(length, range, seed, noise) {
+  constructor(length, range, seed, noise, xor128) {
     this._length = length;
     this._range = range;
     this._seed = seed;
     this._noise = noise;
+    this._xor128 = xor128;
 
-    this._noise_scl = 2;
-    this._time_scl = 2;
+    this._noise_scl = 5;
+    this._time_scl = 4;
+
+    this._states_num = this._xor128.random_int(2, 5) * 2;
+    this._visible = this._xor128.random_bool();
+    this._current_state = 0;
+    this._states = Array(this._states_num)
+      .fill()
+      .map(() => this._xor128.random())
+      .sort();
   }
 
   _generate(nx, ny) {
@@ -39,17 +48,42 @@ class Line {
     }
   }
 
+  _setState(t) {
+    if (this._states.every((s) => t > s)) return;
+
+    if (t > this._states[this._current_state]) {
+      this._current_state = (this._current_state + 1) % this._states.length;
+      this._visible = !this._visible;
+    }
+  }
+
+  _setAlpha(nx, ny) {
+    const n = this._noise.noise(
+      this._line[0].x * this._noise_scl,
+      this._line[this._line.length - 1].x * this._noise_scl,
+      nx + this._seed,
+      ny + this._seed
+    );
+
+    this._alpha = (n + 1) / 4 + 0.25;
+  }
+
   update(t) {
     const theta = t * Math.PI * 2;
     const nx = (1 + Math.cos(theta)) * this._time_scl;
     const ny = (1 + Math.sin(theta)) * this._time_scl;
 
+    this._setState(t);
     this._generate(nx, ny);
+    this._setAlpha(nx, ny);
   }
 
   show(ctx) {
+    if (!this._visible) return;
+
     ctx.save();
-    ctx.strokeStyle = "rgba(240, 240, 240, 0.25)";
+
+    ctx.strokeStyle = `rgba(240, 240, 240, ${this._alpha})`;
     ctx.beginPath();
     ctx.moveTo(this._line[0].x, this._line[0].y);
     this._line.forEach((p) => ctx.lineTo(p.x, p.y));

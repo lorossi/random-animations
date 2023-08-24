@@ -1,5 +1,6 @@
 import { Engine, SimplexNoise } from "./engine.js";
 import { Line } from "./line.js";
+import { XOR128 } from "./xor128.js";
 
 class Sketch extends Engine {
   preload() {
@@ -18,18 +19,16 @@ class Sketch extends Engine {
 
     const noises = Array(this._noises_num)
       .fill()
-      .map((_, i) => new SimplexNoise(seed + i));
+      .map((_, i) => new SimplexNoise(seed + i * 10));
+
+    const xor128 = new XOR128(seed);
 
     this._lines = Array(this._lines_num)
       .fill()
       .map((_, i) => {
         const seed = Math.sin((i / this._lines_num) * Math.PI * 2);
-        return new Line(
-          this.width / 2,
-          this._range,
-          seed,
-          noises[i % this._noises_num]
-        );
+        const noise = noises[i % this._noises_num];
+        return new Line(this.width / 2, this._range, seed, noise, xor128);
       });
 
     if (this._recording) {
