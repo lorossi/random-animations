@@ -149,7 +149,8 @@ class Engine {
   saveRecording(filename = "frames.zip") {
     // if the recording is not active, do nothing
     // also skipped if no frame has been recorded
-    if (this._is_recording || !this._zip || this._frames_recorded == 0) return;
+    if (this._is_recording || this._zip == null || this._frames_recorded == 0)
+      return;
 
     // download zip file
     this._zip.generateAsync({ type: "blob" }).then((blob) => {
@@ -501,6 +502,12 @@ class Color {
     }
   }
 
+  /**
+   * Checks if two colors are equal
+   * @param {Color} other
+   * @param {Boolean} [compare_alpha=true] If true, the alpha channel will be compared too
+   * @returns {Boolean}
+   */
   equals(other, compare_alpha = true) {
     const epsilon = 0.0001;
     const float_eq = (a, b) => Math.abs(a - b) < epsilon;
@@ -513,7 +520,15 @@ class Color {
   }
 
   /**
-   * Sets a color hue, saturation and lighting values
+   * Returns the color as a string
+   * @returns {string}
+   */
+  toString() {
+    return this.hex;
+  }
+
+  /**
+   * Create a color from HSL values
    * @param {number} h Color hue
    * @param {number} s Color saturation
    * @param {number} l Color lighting
@@ -524,16 +539,36 @@ class Color {
   }
 
   /**
-   * Sets a color red, green and blue channels values
+   * Create a color from RGB values
    * @param {number} r Red value
    * @param {number} g Green value
    * @param {number} b Blue value
    * @static
    */
-  fromRGB(r, g, b) {
+  static fromRGB(r, g, b) {
     return new Color(r, g, b, 1, true);
   }
 
+  /**
+   * Create a color from a hexadecimal string
+   * @param {string} hex
+   * @static
+   */
+  static fromHEX(hex) {
+    // regex to extract r, g, b, a values from hex string
+    const regex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i;
+    // extract values from hex string
+    const [, r, g, b, a] = regex.exec(hex);
+
+    // convert values to decimal
+    const dr = parseInt(r, 16);
+    const dg = parseInt(g, 16);
+    const db = parseInt(b, 16);
+    const da = a ? parseInt(a, 16) : 1;
+
+    // return color
+    return new Color(dr, dg, db, da, true);
+  }
   /**
    * Converts a color from RGB to HSL
    * @private
@@ -899,6 +934,7 @@ class SimplexNoise {
     // set the octaves and falloff
     this._octaves = 1;
     this._falloff = 0.5;
+    this._max_value = this._calculateMaxValue();
   }
 
   /**
@@ -942,7 +978,7 @@ class SimplexNoise {
       freq *= 1 / this._falloff;
     }
 
-    return n;
+    return n / this._max_value;
   }
 
   /**
@@ -953,6 +989,15 @@ class SimplexNoise {
   setDetail(octaves = 1, falloff = 0.5) {
     this._octaves = octaves;
     this._falloff = falloff;
+
+    this._max_value = this._calculateMaxValue();
+  }
+
+  _calculateMaxValue() {
+    let max_value = 0;
+    for (let i = 0; i < this._octaves; i++) max_value += this._falloff ** i;
+
+    return max_value;
   }
 
   /**
@@ -960,6 +1005,7 @@ class SimplexNoise {
    */
   set octaves(o) {
     this._octaves = o;
+    this._max_value = this._calculateMaxValue();
   }
 
   /**
@@ -975,6 +1021,7 @@ class SimplexNoise {
    */
   set falloff(f) {
     this._falloff = f;
+    this._max_value = this._calculateMaxValue();
   }
 
   /**
@@ -983,6 +1030,22 @@ class SimplexNoise {
    */
   get falloff() {
     return this._falloff;
+  }
+
+  /**
+   * Get the maximum value of the noise
+   * @returns {number} Maximum value
+   */
+  get max_value() {
+    return this._max_value;
+  }
+
+  /**
+   * Get the minimum value of the noise
+   * @returns {number} Minimum value
+   */
+  get min_value() {
+    return -this.max_value;
   }
 }
 
