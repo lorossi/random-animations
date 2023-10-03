@@ -19,6 +19,10 @@ Not on Instagram yet.
 
 Not on Instagram yet.
 
+### Circle Ball
+
+Not on Instagram yet.
+
 ### Circle Noise
 
 Not on Instagram yet.
@@ -56,6 +60,18 @@ Not on Instagram yet.
 Not on Instagram yet.
 
 ### Vertical Lines
+
+Not on Instagram yet.
+
+### Vertical Sines
+
+Not on Instagram yet.
+
+### Vertical Sines 2
+
+Not on Instagram yet.
+
+### Warped Noise
 
 Not on Instagram yet.
 
