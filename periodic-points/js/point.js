@@ -10,18 +10,19 @@ class PeriodicPoint {
     const harmonics = new Array(n)
       .fill(0)
       .map(() => [
-        this._xor128.random(10) * Math.PI,
+        this._xor128.random_int(1, 4),
         this._xor128.random(Math.PI * 2),
+        this._xor128.random(0.1, 1),
       ]);
 
     this._rt = new Array(this._duration).fill(0).map((_, i) => {
-      const t = i / this._duration;
+      const t = (i / this._duration) * Math.PI * 2;
       const s = harmonics.reduce(
-        (acc, h) => acc * Math.cos(h[0] * t + h[1]),
+        (acc, h) => acc * h[2] * Math.sin(h[0] * t + h[1]),
         1
       );
 
-      return this._easeOut(s);
+      return this._easeOut(Math.abs(s));
     });
 
     const rt_min = Math.min(...this._rt);
