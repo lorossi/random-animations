@@ -20,6 +20,7 @@ class Sketch extends Engine {
     const seed = Date.now();
     this._xor128 = new XOR128(seed);
     this._noise = new SimplexNoise(seed);
+    this._title = this._xor128.shuffle(Math.floor(seed * 1000).toString(16));
   }
 
   draw() {
@@ -118,6 +119,14 @@ class Sketch extends Engine {
   click() {
     this.setup();
     this.draw();
+  }
+
+  keyPress(_, code) {
+    console.log(code);
+    if (code === 13) {
+      // enter
+      this.saveFrame(this._title);
+    }
   }
 }
 
