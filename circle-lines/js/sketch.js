@@ -7,13 +7,12 @@ class Sketch extends Engine {
     this._scl = 0.9;
     this._circle_scl = 0.8;
     this._texture_scl = 4;
-    this._noise_scl = 0.025;
+    this._noise_scl = 0.015;
     this._lines_num = 30;
 
     this._white = new Color(245, 245, 245);
     this._black = new Color(15, 15, 15);
-    this._red = new Color(220, 0, 0);
-    this._text_color = new Color(0, 0, 0, 0.75);
+    this._background_color = new Color(200, 200, 200);
   }
 
   setup() {
@@ -29,7 +28,7 @@ class Sketch extends Engine {
     const scl = Math.min(this.width, this.height) / this._cols;
 
     this.ctx.save();
-    this.background(this._red.rgba);
+    this.background(this._background_color.rgba);
 
     this.ctx.translate(this.width / 2, this.height / 2);
     this.ctx.scale(this._scl, this._scl);
@@ -96,7 +95,7 @@ class Sketch extends Engine {
     for (let x = 0; x < this.width; x += this._texture_scl) {
       for (let y = 0; y < this.height; y += this._texture_scl) {
         const n = this._noise.noise(x * this._noise_scl, y * this._noise_scl);
-        const ch = this._polyEaseOut((n + 1) / 2) * 128;
+        const ch = this._polyEaseOut((n + 1) / 2) * 32;
 
         this.ctx.fillStyle = `rgba(${ch}, ${ch}, ${ch}, 0.1)`;
         this.ctx.beginPath();
