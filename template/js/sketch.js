@@ -17,7 +17,7 @@ class Sketch extends Engine {
   draw() {
     const t = (this.frameCount / this._duration) % 1;
 
-    if (t >= 1 && this._recording) {
+    if (t == 0 && this.frameCount > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");
