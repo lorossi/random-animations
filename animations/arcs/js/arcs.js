@@ -1,4 +1,4 @@
-const NOISE_SCL = 0.9;
+import { Color } from "./engine.js";
 
 class Arc {
   constructor(scl, noise, random) {
@@ -6,7 +6,7 @@ class Arc {
     this._random = random;
 
     this._r = this._random.random(scl / 4, scl / 2);
-    this._seed = this._random.random(1e6);
+    this._seed = this._random.random(1e9);
 
     this._grey = this._random.random_int(80, 170);
     this._black = this._random.random_int(20, 60);
@@ -14,20 +14,17 @@ class Arc {
   }
 
   move(tx, ty) {
-    const n1 =
-      (this._noise.noise(this._seed, tx * NOISE_SCL, ty * NOISE_SCL) + 1) / 2;
-    const n2 =
-      (this._noise.noise(this._seed + 10, tx * NOISE_SCL, ty * NOISE_SCL) + 1) /
-      2;
+    const n1 = this._noise.noise(tx, ty, this._seed, 0);
+    const n2 = this._noise.noise(tx, ty, 0, this._seed);
+
     this._theta = n1 * Math.PI * 2;
-    this._phi = n2 * Math.PI * 2;
+    this._phi = ((n2 + 1) / 2) * Math.PI * 2;
   }
 
   show(ctx) {
     ctx.save();
-    ctx.fillStyle = `rgba(${this._grey}, ${this._grey}, ${this._grey}, ${this._alpha})`;
-    ctx.strokeStyle = `rgba(${this._black}, ${this._black}, ${this._black}, ${this._alpha})`;
-
+    ctx.fillStyle = Color.fromMonochrome(this._grey, this._alpha).rgba;
+    ctx.strokeStyle = Color.fromMonochrome(this._black, this._alpha).rgba;
     ctx.rotate(this._theta);
     ctx.beginPath();
     ctx.arc(0, 0, this._r, 0, this._phi);
@@ -44,26 +41,25 @@ class Line {
     this._noise = noise;
     this._random = random;
 
-    this.r = (this._random.random(0.4, 1) * scl) / 2;
-    this.alpha = this._random.random(0.4, 0.6);
-    this.red = this._random.random_int(230, 255);
+    this._r = (this._random.random(0.4, 1) * scl) / 2;
+    this._alpha = this._random.random(0.4, 0.6);
+    this._red = this._random.random_int(230, 255);
 
-    this.seed = Math.random() * 1e6;
+    this._seed = random.random(1e9);
   }
 
   move(tx, ty) {
-    const n =
-      (this._noise.noise(this.seed, tx * NOISE_SCL, ty * NOISE_SCL) + 1) / 2;
-    this.theta = n * Math.PI * 6;
+    const n = this._noise.noise(tx, ty, this._seed, 0);
+    this._theta = ((n + 1) / 2) * Math.PI * 6;
   }
 
   show(ctx) {
     ctx.save();
-    ctx.strokeStyle = `rgba(${this.red}, 0, 0, ${this.alpha})`;
-    ctx.rotate(this.theta);
+    ctx.strokeStyle = new Color(this._red, 0, 0, this._alpha).rgba;
+    ctx.rotate(this._theta);
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.lineTo(this.r, 0);
+    ctx.lineTo(this._r, 0);
     ctx.stroke();
     ctx.restore();
   }
@@ -94,10 +90,12 @@ class Shape {
 
   show(ctx) {
     ctx.save();
-    ctx.translate(this._x * this._scl, this._y * this._scl);
+    ctx.translate((this._x + 0.5) * this._scl, (this._y + 0.5) * this._scl);
     ctx.scale(this._zoom, this._zoom);
     this._arcs.forEach((a) => a.show(ctx));
     this._lines.forEach((l) => l.show(ctx));
     ctx.restore();
   }
 }
+
+export { Shape };
