@@ -3,17 +3,17 @@
 from glob import glob
 
 
-def create_urls(
-    base_url="https://lorossi.github.com/random-animations/",
-) -> list[tuple[str, str]]:
+def create_urls() -> list[tuple[str, str]]:
     """Create urls for each animation."""
-    folders = [f for f in glob("animations/*") if "template" not in f]
+    folders = [folder for folder in glob("animations/*") if "template" not in folder]
     urls = []
-    for f in folders:
-        if "template" in f:
+    for folder in folders:
+        if "template" in folder:
             continue
 
-        urls.append((f.split("/")[-1], base_url + f))
+        name = folder.split("/")[-1].replace("-", " ").lower()
+        url = f"/{folder}"
+        urls.append((name, url))
     return urls
 
 
@@ -32,7 +32,6 @@ def embed_urls(urls: list[str], container_class="animations-list") -> None:
     container_start = content.find(container_str)
     container_end = content.find("</div>")
 
-    # print(content[container_start + len(container_str) : container_end])
     content = (
         content[: container_start + len(container_str)]
         + new_content
