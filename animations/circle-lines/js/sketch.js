@@ -12,7 +12,7 @@ class Sketch extends Engine {
 
     this._white = new Color(245, 245, 245);
     this._black = new Color(15, 15, 15);
-    this._background_color = new Color(171, 100, 101);
+    this._background_color = new Color(1177, 51, 51);
   }
 
   setup() {
