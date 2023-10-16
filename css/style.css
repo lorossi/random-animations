@@ -6,7 +6,7 @@
 * {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
   font-family: Roboto;
   color: var(--text-color);
 }
@@ -20,7 +20,7 @@ a:active {
   color: var(--visited-link-color);
 }
 
-.container {
+.animations-list {
   width: 100vw;
   height: 100vh;
 
@@ -29,12 +29,9 @@ a:active {
   align-items: center;
 }
 
-#sketch {
-  height: 90vh;
-  width: 90vh;
-  aspect-ratio: 1;
-
-  touch-action: none;
+ul {
+  text-align: center;
+  font-size: 1.5rem;
 }
 
 .footer {
