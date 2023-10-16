@@ -1,19 +1,26 @@
+import { Engine, SimplexNoise, Color } from "./engine.js";
+import { XOR128 } from "./xor128.js";
+import { Slice } from "./slice.js";
+
 class Sketch extends Engine {
   preload() {
+    this._slices_num = 8;
+    this._seeds_num = 2;
+    this._background_color = Color.fromMonochrome(240);
+    this._particle_color = Color.fromMonochrome(15);
+
     this._duration = 900;
     this._recording = false;
-
-    this._slices_num = 12;
-    this._seeds_num = 4;
   }
 
   setup() {
-    this._seed = Math.random() * 1e9;
-    const random = new XOR128(this._seed);
+    this._seed = new Date().getTime();
+    this._random = new XOR128(this._seed);
 
-    this._seeds = Array(this._seeds_num)
+    this._noise_scl = this._random.random(0.0005, 0.001);
+    this._noises = Array(this._seeds_num)
       .fill(0)
-      .map(() => random.random(0, 1e9));
+      .map(() => new SimplexNoise(this._random.random_int(1e9)));
 
     this._slices = Array(this._seeds_num)
       .fill(0)
@@ -21,8 +28,16 @@ class Sketch extends Engine {
         const x = (i / this._slices_num) * this.width;
         const w = this.width / this._slices_num;
         const h = this.height;
-        const seed = this._seeds[i % this._seeds_num];
-        return new Slice(x, 0, w, h, seed);
+
+        const s = new Slice(x, 0, w, h);
+        s.initDependencies(
+          this._random,
+          this._noises[i % this._seeds_num],
+          this._particle_color,
+          this._noise_scl
+        );
+
+        return s;
       });
 
     if (this._recording) {
@@ -30,20 +45,20 @@ class Sketch extends Engine {
       console.log("%cRecording started", "color:green");
     }
 
-    this.background("rgb(240, 240, 240)");
+    this.background(this._background_color.rgb);
   }
 
   draw() {
     this._slices.forEach((s) => s.update());
+
+    this.ctx.save();
 
     for (let i = 0; i < this._slices_num / this._seeds_num; i++) {
       this.ctx.save();
       const dx = (this.width / this._slices_num) * this._seeds_num * i;
       this.ctx.translate(dx, 0);
 
-      this._slices.forEach((s) => {
-        s.show(this.ctx);
-      });
+      this._slices.forEach((s) => s.show(this.ctx));
 
       this.ctx.restore();
     }
@@ -66,3 +81,5 @@ class Sketch extends Engine {
     this.loop();
   }
 }
+
+export { Sketch };

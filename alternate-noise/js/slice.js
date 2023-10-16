@@ -1,18 +1,29 @@
+import { Particle } from "./particle.js";
+
 class Slice {
-  constructor(x, y, w, h, noise_seed) {
+  constructor(x, y, w, h) {
     this._x = x;
     this._y = y;
     this._w = w;
     this._h = h;
+  }
 
-    this._random = new XOR128(noise_seed);
-    this._bias = this._random.random(0, Math.PI * 2);
+  initDependencies(random, noise, particle_color, noise_scl) {
+    this._random = random;
+    this._noise = noise;
 
-    this._particles = Array(150)
+    this._particles = Array(250)
       .fill(0)
       .map(() => {
-        const random_seed = this._random.random(0, 1e9);
-        return new Particle(w, h, noise_seed, random_seed, this._bias);
+        const p = new Particle(this._w, this._h);
+
+        p.initDependencies(
+          this._random,
+          this._noise,
+          particle_color,
+          noise_scl
+        );
+        return p;
       });
   }
 
@@ -21,14 +32,17 @@ class Slice {
     ctx.translate(this._x, this._y);
     this._particles.forEach((p) => p.show(ctx));
     ctx.restore();
+
+    this._particles = this._particles.filter((p) => p.alive);
   }
 
-  update(time) {
-    this._particles.forEach((p) => p.move(time));
-    this._particles = this._particles.filter((p) => !p.dead);
+  update() {
+    this._particles.forEach((p) => p.move());
   }
 
   get ended() {
     return this._particles.length == 0;
   }
 }
+
+export { Slice };

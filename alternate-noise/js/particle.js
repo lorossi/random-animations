@@ -1,85 +1,94 @@
-const NOISE_SCL = 0.0005;
+import { Vector } from "./vectors.min.js";
 
 class Particle {
-  constructor(w, h, noise_seed, random_seed, bias) {
+  constructor(w, h) {
     this._w = w;
     this._h = h;
-    this._bias = bias;
+  }
 
-    this._dead = false;
+  initDependencies(random, noise, color, noise_scl) {
+    this._random = random;
+    this._noise = noise;
+    this._color = color;
+    this._noise_scl = noise_scl;
 
-    this._random = new XOR128(random_seed);
-    this._noise = new SimplexNoise(noise_seed);
-    this._noise.octaves = 3;
-    this._noise.falloff = 0.25;
-
-    const x = 0;
-    const y = this._random.random(0, h);
+    const x = this._w / 2;
+    const y = this._random.random(0, this._h);
 
     this._acc = new Vector(0, 0);
-    this._pos = new Vector(x, y);
-    this._old_pos = new Vector(x, y);
     this._vel = new Vector(0, 0);
+    this._pos = new Vector(x, y);
+
+    this._old_pos = null;
     this._max_speed = 2;
 
-    this._max_life = this._h * Math.SQRT2;
-    this._life = this._max_life;
+    this._start_life = this._w * 4;
+    this._life = this._start_life;
   }
 
   move() {
     if (this._dead) return;
 
-    let n;
-    n = this._noise.noise(this._pos.x * NOISE_SCL, this._pos.y * NOISE_SCL, 0);
-    const rho = n / 2 + 0.5;
+    const n1 = this._noise.noise(
+      this._pos.x * this._noise_scl,
+      this._pos.y * this._noise_scl,
+      0
+    );
 
-    n = this._noise.noise(
-      this._pos.x * NOISE_SCL,
-      this._pos.y * NOISE_SCL,
+    const n2 = this._noise.noise(
+      this._pos.x * this._noise_scl,
+      this._pos.y * this._noise_scl,
       1e9
     );
 
-    const theta = n * Math.PI * 2 + this._bias;
+    const rho = n1 / 2 + 0.5;
+    const theta = n2 * Math.PI * 2;
+
     this._old_pos = this._pos.copy();
 
-    this._vel = Vector.fromAngle2D(theta).setMag(rho);
-
+    this._acc = Vector.fromAngle2D(theta).setMag(rho);
     this._vel.add(this._acc);
     this._vel.limit(this._max_speed);
     this._pos.add(this._vel);
 
     this._life--;
-    if (this._life <= 0) this._dead = true;
   }
 
   show(ctx) {
-    if (!this.moved || this.dead) return;
+    if (this._old_pos == null) return;
 
     const x = Math.floor(this._pos.x);
     const y = Math.floor(this._pos.y);
 
-    const a = this._easeLife();
+    const a = this._currentAlpha();
+    const ch = Math.floor(this._color.r);
 
     ctx.save();
-    ctx.translate(x, y);
-    ctx.fillStyle = `rgba(15,15,15,${a})`;
+    ctx.strokeStyle = `rgba(${ch}, ${ch}, ${ch}, ${a})`;
     ctx.beginPath();
-    ctx.arc(0, 0, 1, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.moveTo(this._old_pos.x, this._old_pos.y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
     ctx.restore();
   }
 
-  _easeLife() {
-    const x = this._life / this._max_life;
-    const eased = 1 - Math.pow(1 - x, 3);
-    return eased * 0.1;
+  _rescale(x, min_in, max_in, min_out, max_out) {
+    return ((x - min_in) * (max_out - min_out)) / (max_in - min_in) + min_out;
   }
 
-  get moved() {
-    return !this._pos.equals(this._old_pos);
+  _polyEaseOut(t, n = 3) {
+    return 1 - (1 - t) ** n;
   }
 
-  get dead() {
-    return this._dead;
+  _currentAlpha() {
+    const t = this._life / this._start_life;
+    const tp = this._polyEaseOut(t, 3);
+    return this._rescale(tp, 0, 1, 0, 0.1);
+  }
+
+  get alive() {
+    return this._life > 0;
   }
 }
+
+export { Particle };
