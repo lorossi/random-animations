@@ -11,6 +11,11 @@
   color: var(--text-color);
 }
 
+body {
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
 a {
   user-select: none;
 }
