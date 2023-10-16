@@ -14,7 +14,8 @@ def create_urls() -> list[tuple[str, str]]:
         name = folder.split("/")[-1].replace("-", " ").lower()
         url = f"/{folder}"
         urls.append((name, url))
-    return urls
+
+    return sorted(urls, key=lambda x: x[0])
 
 
 def embed_urls(urls: list[str], container_class="animations-list") -> None:

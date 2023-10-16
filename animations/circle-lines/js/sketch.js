@@ -1,4 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
+import { Engine, SimplexNoise, Color } from "./engine.js";
 import { XOR128 } from "./xor128.js";
 
 class Sketch extends Engine {
@@ -12,7 +12,7 @@ class Sketch extends Engine {
 
     this._white = new Color(245, 245, 245);
     this._black = new Color(15, 15, 15);
-    this._background_color = new Color(200, 200, 200);
+    this._background_color = new Color(171, 100, 101);
   }
 
   setup() {
