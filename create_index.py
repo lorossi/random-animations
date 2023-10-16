@@ -12,8 +12,7 @@ def create_urls() -> list[tuple[str, str]]:
             continue
 
         name = folder.split("/")[-1].replace("-", " ").lower()
-        url = f"/{folder}"
-        urls.append((name, url))
+        urls.append((name, folder))
 
     return sorted(urls, key=lambda x: x[0])
 
