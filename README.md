@@ -1,79 +1,17 @@
 # Random Animations
 
+[Try them here](https://lorossi.github.io/random-animations).
+
+Also, don't forget to check my [Instagram profile](https://www.instagram.com/lorossi97/) where I am gradually posting all these dumb videos.
+
+## Why?
+
 I made this repo because I grew tired of making a separate repo for every silly js canvas that I make.
-Often there's not much to say about these animations, so I'll just put a link to them here along with a short description and a link to the Instagram post.
+Often there's not much to say about these animations, so when I'll feel like they are ready to go, I'll just put a link to them here along with a short description and a link to the Instagram post.
+
+Also, sometimes I want to quickly play around or thinker with an idea that I just had or with something that I know it's not worth creating a whole repository for.
 
 All the animations are hosted on a simple GitHub Pages website; however, some of them are very CPU intensive so be careful as your browser might freeze while opening them.
-
-## Animations
-
-### Alternating Noise
-
-Not on Instagram yet.
-
-### Arcs
-
-Not on Instagram yet.
-
-### Circle Arcs
-
-Not on Instagram yet.
-
-### Circle Ball
-
-Not on Instagram yet.
-
-### Circle Noise
-
-Not on Instagram yet.
-
-### Circle Particles
-
-Not on Instagram yet.
-
-### Circle Sparks
-
-Not on Instagram yet.
-
-### Dominoes
-
-Not on Instagram yet.
-
-### Inverted Squares
-
-Not on Instagram yet.
-
-### Letters Cube
-
-Not on Instagram yet.
-
-### Orbit Noise
-
-Not on Instagram yet.
-
-### Prim
-
-Not on Instagram yet.
-
-### Vertical Bars
-
-Not on Instagram yet.
-
-### Vertical Lines
-
-Not on Instagram yet.
-
-### Vertical Sines
-
-Not on Instagram yet.
-
-### Vertical Sines 2
-
-Not on Instagram yet.
-
-### Warped Noise
-
-Not on Instagram yet.
 
 ## License
 
