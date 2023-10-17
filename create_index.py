@@ -5,16 +5,13 @@ from glob import glob
 
 def create_urls() -> list[tuple[str, str]]:
     """Create urls for each animation."""
-    folders = [folder for folder in glob("animations/*") if "template" not in folder]
-    urls = []
-    for folder in folders:
-        if "template" in folder:
-            continue
-
-        name = folder.split("/")[-1].replace("-", " ").lower()
-        urls.append((name, folder))
-
-    return sorted(urls, key=lambda x: x[0])
+    return sorted(
+        (
+            (folder.split("/")[-1].replace("-", " ").lower(), folder)
+            for folder in glob("animations/*")
+        ),
+        key=lambda x: x[0],
+    )  # this is a one-liner, but at what cost?
 
 
 def embed_urls(urls: list[str], container_class="animations-list") -> None:
