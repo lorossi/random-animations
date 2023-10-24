@@ -12,6 +12,7 @@ class Rectangle {
     this._noise_scl = 0.005;
     this._ch =
       (this._noise.noise(x * this._noise_scl, y * this._noise_scl) + 1) * 127.5;
+    this._can_split = true;
   }
 
   show(ctx) {
@@ -30,6 +31,8 @@ class Rectangle {
   }
 
   _splitVertical(r) {
+    if (!this._can_split) return [this];
+    this._can_split = false;
     if (this._w * r < this._min_size) return [this];
 
     const new_x = this._x + this._w * r;
@@ -82,6 +85,10 @@ class Rectangle {
         this._bias
       ),
     ];
+  }
+
+  get ended() {
+    return !this._can_split;
   }
 }
 

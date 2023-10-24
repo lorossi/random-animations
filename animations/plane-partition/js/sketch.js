@@ -14,7 +14,7 @@ class Sketch extends Engine {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
     this._noise = new SimplexNoise(seed);
-    const bias = this._xor128.random_interval(0.5, 0.2); // horizontal to vertical bias
+    const bias = this._xor128.random_interval(0.5, 0.4); // horizontal to vertical bias
     this._rects = [
       new Rectangle(
         0,
@@ -26,7 +26,6 @@ class Sketch extends Engine {
         bias
       ),
     ];
-    this._last_length = 1;
     this._ended = false;
 
     if (this._recording) {
@@ -44,7 +43,6 @@ class Sketch extends Engine {
     this.background("rgb(255, 255, 255)");
     this._rects.forEach((r, i) => {
       r.show(this.ctx);
-      // next_rects.push(...r.split());
       if (i < this._splits_per_frame) next_rects.push(...r.split());
       else next_rects.push(r);
     });
@@ -54,13 +52,13 @@ class Sketch extends Engine {
       .flat() // flatten the list
       .map((r) => ({ data: r, order: this._xor128.random() })) // add random order
       .sort((a, b) => a.order - b.order) // sort by order
-      .map((r) => r.data); // remove order (list is now shuffled)
+      .map((r) => r.data) // remove order (list is now shuffled)
+      .sort((a, b) => a.ended - b.ended); // place rectangles that can be split first
 
-    if (this._rects.length == this._last_length) {
+    if (this._rects.every((r) => r.ended)) {
       console.log("%cEnded", "color:yellow");
       this._ended = true;
     }
-    this._last_length = this._rects.length;
 
     if (this._ended && this._recording) {
       this._recording = false;

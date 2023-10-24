@@ -14,26 +14,20 @@ class Palette {
   }
 }
 
-const PALETTES = [
-  {
-    fg: [
-      new Color(120, 0, 0),
-      new Color(193, 18, 31),
-      new Color(0, 48, 73),
-      new Color(102, 155, 188),
-    ],
-    bg: new Color(253, 240, 213),
-  },
-];
-
 class PaletteFactory {
   constructor(xor128) {
     this._xor128 = xor128;
   }
 
   randomPalette() {
-    const index = this._xor128.random_int(PALETTES.length);
-    return new Palette(PALETTES[index]);
+    const length = this._xor128.random_int(4, 7);
+    const background = Color.fromMonochrome(245);
+    const colors = new Array(length).fill(0).map((_, i) => {
+      const ch = (i / length) * 200 * this._xor128.random_interval(1, 0.15);
+      return Color.fromMonochrome(ch);
+    });
+
+    return new Palette({ fg: colors, bg: background });
   }
 }
 
