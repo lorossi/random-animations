@@ -6,6 +6,7 @@ class Sine {
     this._y = y;
     this._width = width;
     this._height = height;
+    this._text_fill = Color.fromMonochrome(64);
 
     this._line_scl = 1;
   }
@@ -13,6 +14,8 @@ class Sine {
   initDependencies(noise, xor128) {
     this._noise = noise;
     this._xor128 = xor128;
+
+    this._seed = this._xor128.random();
   }
 
   setAttributes(fill_ch, noise_scl, color_noise_scl, time_scl, text) {
@@ -24,14 +27,14 @@ class Sine {
   }
 
   init() {
-    this._seed = this._xor128.random(1e9);
+    this._repetitions = this._xor128.random(3, 8);
     this._rotation = this._xor128.random_interval(0, Math.PI / 360);
 
     // calculate the length of the text
     const ctx = document.createElement("canvas").getContext("2d");
     ctx.font = `${this._width}px Recoleta`;
-    this._text_width =
-      ctx.measureText(this._text).width + ctx.measureText("x").width / 4;
+    const ex = ctx.measureText("x").width;
+    this._text_width = ctx.measureText(this._text).width + ex / 4;
 
     // the lines fill the canvas until the text
     this._lines_num = Math.floor(
@@ -45,8 +48,11 @@ class Sine {
     const ty = (1 + Math.sin(theta)) * this._time_scl;
 
     this._widths = new Array(this._lines_num).fill(0).map((_, i) => {
-      const n = this._noise.noise(tx, ty, i * this._noise_scl, this._seed);
-      const w = Math.max(0, (n + 1) / 2) * this._width;
+      const n =
+        (this._noise.noise(tx, ty, i * this._noise_scl, this._seed) + 1) / 2;
+      const theta = (i / this._lines_num) * this._repetitions;
+      const modulation = Math.cos((t - this._seed - theta) * Math.PI * 2);
+      const w = n * this._width * modulation;
       return w;
     });
 
@@ -80,7 +86,7 @@ class Sine {
     // draw text
     ctx.save();
     ctx.font = `${this._width}px Recoleta`;
-    ctx.fillStyle = this._fills[this._fills.length - 1].rgba;
+    ctx.fillStyle = this._text_fill.rgba;
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.translate(0, this._height);
