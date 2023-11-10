@@ -14,16 +14,21 @@ def create_urls() -> list[tuple[str, str]]:
     )  # this is a one-liner, but at what cost?
 
 
+def spacing(n: int) -> str:
+    """Return n tabs."""
+    return "\t" * n
+
+
 def embed_urls(urls: list[str], container_class="animations-list") -> None:
     """Embed the urls in the page."""
     with open("index.html") as f:
         content = f.read()
 
-    new_content = "<ul>"
+    new_content = f"\n{spacing(4)}<ul>"
     for name, url in urls:
         new_content += "\n"
-        new_content += f'<li><a href="{url}">{name}</a></li>'
-    new_content += "\n</ul>"
+        new_content += f'{spacing(5)}<li><a href="{url}">{name}</a></li>'
+    new_content += f"\n{spacing(4)}</ul>\n{spacing(3)}"
 
     container_str = f'<div class="{container_class}">'
     container_start = content.find(container_str)
