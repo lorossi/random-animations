@@ -11,12 +11,12 @@ class Sketch extends Engine {
 
     this._lines_h = 3;
     this._lines_num = 150;
-    this._scrambled_width = 0.33;
+    this._scrambled_width = 2 / 3;
     this._scrambled_height = 0.9;
-    this._scrambled_slope = 0.25;
-    this._background_color = Color.fromMonochrome(25);
+    this._scrambled_slope = 2 / 3;
+    this._background_color = Color.fromMonochrome(15);
     this._time_scl = 3;
-    this._noise_scl = 0.1;
+    this._noise_scl = 0.05;
   }
 
   setup() {
@@ -24,6 +24,7 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(seed);
     this._noise = new SimplexNoise(this._xor128.random_int(1e9));
     this._palette = PaletteFactory.randomPalette(this._xor128).colors;
+    document.body.style.background = this._background_color.hex;
 
     if (this._recording) {
       this.startRecording();
@@ -79,10 +80,12 @@ class Sketch extends Engine {
       }));
 
     this._lines = new Array(this._lines_num).fill(0).map((_, i) => {
+      // position
       const y = dy + this._lines_h * i;
       const h = this._lines_h;
 
-      const p = scrambled_section_y[i].index / this._lines_num;
+      // color
+      const p = i / this._lines_num;
       const start_color_index = Math.floor(p * (this._palette.length - 1));
       const end_color_index = start_color_index + 1;
 
@@ -90,6 +93,8 @@ class Sketch extends Engine {
         this._palette[end_color_index],
         p * this._palette.length - start_color_index
       );
+
+      color.a = 0.7;
 
       const l = new Line(y, h, this.width);
       l.setAttributes(
