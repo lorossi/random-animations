@@ -25,18 +25,27 @@ a:active {
   color: var(--text-color);
 }
 
-.animations-list {
-  width: 100vw;
-  height: 100vh;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.title {
+  margin-top: 2rem;
+  margin-left: 2rem;
+  font-size: 3rem;
 }
 
-ul {
-  text-align: center;
+.animations-list {
+  margin-top: 5rem;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: repeat(4, 1fr);
+
   font-size: 1.5rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  text-align: center;
+}
+
+.animations-list a {
+  margin-bottom: 0.5rem;
 }
 
 .footer {
@@ -55,13 +64,18 @@ ul {
   font-size: 1.5rem;
 }
 
-@media only screen and (max-width: 600px) {
-  #sketch {
-    height: 90vw;
-    width: 90vw;
+@media only screen and (max-width: 1200px) {
+  .animations-list {
+    grid-template-columns: repeat(3, 1fr);
   }
+}
 
+@media only screen and (max-width: 800px) {
   .footer {
     justify-content: space-around;
+  }
+
+  .animations-list {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
