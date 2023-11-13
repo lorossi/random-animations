@@ -1,12 +1,11 @@
 class Particle {
-  constructor(x, y, size) {
+  constructor(x, y, size, color) {
     this._x = x;
     this._y = y;
-
-    this._phi = Math.atan2(this._y, this._x);
-
+    this._color = color;
     this._size = size;
 
+    this._phi = Math.atan2(this._y, this._x);
     this._a = 0;
   }
 
@@ -24,7 +23,7 @@ class Particle {
     ctx.rotate(this._a);
     ctx.scale(scl, scl);
 
-    ctx.strokeStyle = "rgb(15, 15, 15)";
+    ctx.strokeStyle = this._color.rgba;
     ctx.lineWidth = 2;
 
     ctx.beginPath();

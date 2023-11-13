@@ -8,6 +8,8 @@ class Sketch extends Engine {
     this._recording = false;
 
     this._cols = 35;
+    this._bg_color = Color.fromMonochrome(245);
+    this._particle_color = Color.fromMonochrome(15);
   }
 
   setup() {
@@ -29,7 +31,7 @@ class Sketch extends Engine {
 
         if (Math.hypot(xx, yy) >= max_dist) return null;
 
-        return new Particle(xx, yy, size);
+        return new Particle(xx, yy, size, this._particle_color);
       })
       .filter((p) => p !== null);
   }
@@ -37,7 +39,7 @@ class Sketch extends Engine {
   draw() {
     const t = (this.frameCount / this._duration) % 1;
 
-    this.background("white");
+    this.background(this._bg_color);
 
     this.ctx.save();
     this.ctx.translate(this.width / 2, this.height / 2);

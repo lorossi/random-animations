@@ -5,24 +5,24 @@ class Circle {
     this._r = r;
     this._xor128 = xor128;
 
-    this._circles_num = this._xor128.random_int(2, 5);
+    this._circles_num = this._xor128.random_int(2, 8);
     this._inner_r = this._generateR();
-
-    do {
-      this._coefficients = this._generateCoefficients();
-    } while (new Set(this._coefficients).size != this._coefficients.length);
+    this._coefficients = this._generateCoefficients();
   }
-
   _generateR() {
-    return new Array(this._circles_num)
+    let r = Array(this._circles_num)
       .fill()
-      .map(() => this._xor128.random(this._r));
+      .map(() => this._xor128.random());
+    const m = Math.min(...r);
+    const M = Math.max(...r);
+    const rr = this._r / (this._circles_num + 1);
+    return r.map((v) => ((v - m) / (M - m)) * (this._r - rr) + rr);
   }
 
   _generateCoefficients() {
-    return new Array(this._circles_num)
+    return Array(this._circles_num)
       .fill()
-      .map(() => this._xor128.random_int(3, 10));
+      .map(() => this._xor128.random_int(1, 12));
   }
 
   draw(t, ctx) {
