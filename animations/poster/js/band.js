@@ -1,3 +1,5 @@
+import { Color } from "./engine.js";
+
 class Band {
   constructor(x, width, height) {
     this._x = x;
@@ -7,8 +9,9 @@ class Band {
     this._heights = [];
   }
 
-  setPalette(palette) {
+  setPalette(palette, saturation = 1) {
     this._palette = palette;
+    this._saturation = saturation;
   }
 
   initDependencies(xor128) {
@@ -52,6 +55,13 @@ class Band {
 
       ctx.restore();
     }
+
+    ctx.save();
+    ctx.globalCompositeOperation = "saturation";
+    ctx.fillStyle = `rgba(0, 0, 0, ${1 - this._saturation})`;
+    //ctx.fillStyle = Color.fromHSL(0, this._saturation * 100, 0.25).rgba;
+    ctx.fillRect(0, 0, this._width, this._height);
+    ctx.restore();
 
     ctx.restore();
   }

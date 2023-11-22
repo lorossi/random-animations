@@ -26,8 +26,7 @@ class Sketch extends Engine {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
     this._noise = new SimplexNoise(this._xor128);
-    this._palette_factory = new PaletteFactory(this._xor128);
-    this._palette = this._palette_factory.randomPalette();
+    this._palette = PaletteFactory.getRandomPalette(this._xor128);
 
     const circle_scl = this.width / this._cols;
     this._circles = new Array(this._cols * this._cols).fill(0).map((_, i) => {

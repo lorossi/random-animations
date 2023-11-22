@@ -12,7 +12,7 @@ class Sketch extends Engine {
     this._time_scl = 0.5;
     this._scl = 1;
     this._fg_color = Color.fromHEX("#130e0a");
-    this._bg_color = Color.fromHEX("#dcd7c4");
+    this._bg = Color.fromHEX("#dcd7c4");
   }
 
   setup() {
@@ -43,14 +43,14 @@ class Sketch extends Engine {
       console.log("%cRecording started", "color:green");
     }
 
-    document.body.style.backgroundColor = this._bg_color.rgb;
+    document.body.style.backgroundColor = this._bg.rgb;
   }
 
   draw() {
     const t = ((this.frameCount - this._frame_offset) / this._duration) % 1;
 
     this.ctx.save();
-    this.background(this._bg_color.rgb);
+    this.background(this._bg.rgb);
     this.ctx.translate(this.width / 2, this.height / 2);
     this.ctx.scale(this._scl, this._scl);
     this.ctx.translate(-this.width / 2, -this.height / 2);

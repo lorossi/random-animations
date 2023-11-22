@@ -9,7 +9,7 @@ class Sketch extends Engine {
 
     this._cols = 3;
     this._scl = 0.95;
-    this._bg_color = Color.fromMonochrome(15);
+    this._bg = Color.fromMonochrome(15);
     this._fg_color = Color.fromMonochrome(240, 0.5);
   }
 
@@ -32,10 +32,10 @@ class Sketch extends Engine {
       return h;
     });
 
-    this.background(this._bg_color.rgb);
+    this.background(this._bg.rgb);
 
     this._frame_offset = this.frameCount;
-    document.body.style.backgroundColor = this._bg_color.rgb;
+    document.body.style.backgroundColor = this._bg.rgb;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -67,7 +67,7 @@ class Sketch extends Engine {
       }
 
       if (this.frameCount - this._frame_offset > 0)
-        this.background(this._bg_color.rgb);
+        this.background(this._bg.rgb);
     }
   }
 

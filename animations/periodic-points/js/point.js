@@ -1,3 +1,5 @@
+import { Color } from "./engine.js";
+
 class PeriodicPoint {
   constructor(x, y, r, n, duration, xor128) {
     this._x = x;
@@ -6,6 +8,12 @@ class PeriodicPoint {
     this._n = n;
     this._duration = duration;
     this._xor128 = xor128;
+    this._colors = [
+      Color.fromHEX("#FFFF00"),
+      Color.fromHEX("#00FFFF"),
+      Color.fromHEX("#FF00FF"),
+      Color.fromHEX("#FFFFFF"),
+    ];
 
     const harmonics = new Array(n)
       .fill(0)
@@ -36,11 +44,16 @@ class PeriodicPoint {
     const r = this._rt[Math.floor(t * this._duration)];
 
     ctx.save();
-    ctx.fillStyle = "rgb(245, 245, 245)";
     ctx.translate(this._x, this._y);
-    ctx.beginPath();
-    ctx.arc(0, 0, r, 0, Math.PI * 2);
-    ctx.fill();
+    this._colors.forEach((c, i) => {
+      const theta = (i / (this._colors.length + 1)) * Math.PI * 2;
+      ctx.rotate(theta);
+      ctx.translate(r * 0.1, 0);
+      ctx.fillStyle = c.rgba;
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fill();
+    });
     ctx.restore();
   }
 

@@ -8,6 +8,7 @@ class Sketch extends Engine {
   preload() {
     this._bg = Color.fromMonochrome(64);
     this._texture_scl = 2;
+    this._band_saturation = 0.8;
 
     this._duration = 900;
     this._recording = false;
@@ -16,7 +17,7 @@ class Sketch extends Engine {
   setup() {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
-    this._palette = PaletteFactory.randomPalette(this._xor128);
+    this._palette = PaletteFactory.getRandomPalette(this._xor128);
 
     const bands_num = this._xor128.random_int(5, 7);
     const bands_scl = this.width / bands_num;
@@ -24,7 +25,7 @@ class Sketch extends Engine {
 
     this._bands = new Array(bands_num).fill(0).map((_, i) => {
       const b = new Band(i * bands_scl, bands_scl, this.height);
-      b.setPalette(this._palette);
+      b.setPalette(this._palette.colors, this._band_saturation);
       b.initDependencies(this._xor128);
       return b;
     });
@@ -35,7 +36,7 @@ class Sketch extends Engine {
       circle_r,
       bands_scl / 2
     );
-    this._circle.setPalette(this._palette);
+    this._circle.setPalette(this._palette.colors);
     this._circle.initDependencies(this._xor128);
 
     if (this._recording) {

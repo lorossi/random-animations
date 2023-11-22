@@ -8,7 +8,7 @@ class Sketch extends Engine {
     this._scl = 0.95;
     this._circle_scl = 0.75;
 
-    this._bg_color = Color.fromMonochrome(15);
+    this._bg = Color.fromMonochrome(15);
     this._fg_color = Color.fromMonochrome(245, 0.25);
 
     this._frame_offset = 0;
@@ -29,7 +29,7 @@ class Sketch extends Engine {
       return new Circle(x, y, r * this._circle_scl, this._xor128);
     });
 
-    this.background(this._bg_color.rgb);
+    this.background(this._bg.rgb);
 
     if (this._recording) {
       this.startRecording();
@@ -63,7 +63,7 @@ class Sketch extends Engine {
       }
 
       this._frame_offset = this.frameCount;
-      this.background(this._bg_color.rgb);
+      this.background(this._bg.rgb);
     }
   }
 

@@ -14,6 +14,7 @@ class Square {
 
     for (let i = 0; i < stripes_num; i++) {
       ctx.fillStyle = this._stripe_colors[i % 2];
+      ctx.strokeStyle = this._stripe_colors[i % 2];
 
       const d_pos = (this._stripe_scl * i) / 2;
       this._drawRect(ctx, d_pos);
@@ -25,7 +26,10 @@ class Square {
   _drawRect(ctx, d_pos) {
     ctx.save();
     ctx.translate(this._x, this._y);
-    ctx.fillRect(d_pos, d_pos, this._size - 2 * d_pos, this._size - 2 * d_pos);
+    ctx.beginPath();
+    ctx.rect(d_pos, d_pos, this._size - 2 * d_pos, this._size - 2 * d_pos);
+    ctx.fill();
+    ctx.stroke();
     ctx.restore();
   }
 }

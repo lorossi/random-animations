@@ -12,48 +12,49 @@ class Palette {
 
 const PALETTES = [
   [
-    new Color(38, 70, 83),
-    new Color(42, 157, 143),
-    new Color(233, 196, 106),
-    new Color(244, 162, 97),
-    new Color(231, 111, 81),
+    [38, 70, 83],
+    [42, 157, 143],
+    [233, 196, 106],
+    [244, 162, 97],
+    [231, 111, 81],
   ],
   [
-    new Color(255, 190, 11),
-    new Color(251, 86, 7),
-    new Color(255, 0, 110),
-    new Color(131, 56, 236),
-    new Color(58, 134, 255),
+    [255, 190, 11],
+    [251, 86, 7],
+    [255, 0, 110],
+    [131, 56, 236],
+    [58, 134, 255],
   ],
 
   [
-    new Color(255, 89, 94),
-    new Color(255, 202, 58),
-    new Color(138, 201, 38),
-    new Color(25, 130, 196),
-    new Color(106, 76, 147),
+    [255, 89, 94],
+    [255, 202, 58],
+    [138, 201, 38],
+    [25, 130, 196],
+    [106, 76, 147],
   ],
   [
-    new Color(237, 174, 73),
-    new Color(209, 73, 91),
-    new Color(0, 121, 140),
-    new Color(48, 99, 142),
-    new Color(0, 61, 91),
+    [237, 174, 73],
+    [209, 73, 91],
+    [0, 121, 140],
+    [48, 99, 142],
+    [0, 61, 91],
   ],
 ];
 
 Object.freeze(PALETTES);
 
 class PaletteFactory {
-  static randomPalette(xor128) {
+  static getRandomPalette(xor128) {
     const idx = xor128.random_int(PALETTES.length);
-    console.log(idx);
-    return new Palette(PALETTES[idx]);
+    const colors = PALETTES[idx].map((c) => Color.fromRGB(...c));
+    return new Palette(colors);
   }
 
   static generatePalette(i) {
     const idx = i % PALETTES.length;
-    return new Palette(PALETTES[idx]);
+    const colors = PALETTES[idx].map((c) => Color.fromRGB(...c));
+    return new Palette(colors);
   }
 
   static get palette_count() {

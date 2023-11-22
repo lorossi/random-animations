@@ -23,7 +23,7 @@ class Sketch extends Engine {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
     this._noise = new SimplexNoise(this._xor128.random_int(1e9));
-    this._palette = PaletteFactory.randomPalette(this._xor128).colors;
+    this._palette = PaletteFactory.getRandomPalette(this._xor128).colors;
     document.body.style.background = this._background_color.hex;
 
     if (this._recording) {

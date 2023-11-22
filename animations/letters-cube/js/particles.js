@@ -1,3 +1,5 @@
+import { Color } from "./engine.js";
+
 class Particle {
   constructor(width, height, scl, xor128) {
     this._width = width;
@@ -15,10 +17,11 @@ class Particle {
     ctx.save();
 
     ctx.translate(this._x, this._y);
-    ctx.fillStyle = "rgba(15, 15, 15, 0.25)";
+    const r = this._xor128.random(127);
+    ctx.fillStyle = Color.fromMonochrome(r, 0.05).rgba;
 
     ctx.beginPath();
-    ctx.arc(0, 0, this._scl / 2, 0, Math.PI * 2);
+    ctx.rect(0, 0, this._scl, this._scl);
     ctx.fill();
 
     ctx.restore();

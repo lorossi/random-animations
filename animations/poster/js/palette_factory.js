@@ -2,67 +2,30 @@
 import { Color } from "./engine.js";
 
 const PALETTES = [
-  [
-    Color.fromHEX("#090349"),
-    Color.fromHEX("#072879"),
-    Color.fromHEX("#740846"),
-    Color.fromHEX("#A1002A"),
-    Color.fromHEX("#F01501"),
-  ],
-  [
-    Color.fromHEX("#2a416a"),
-    Color.fromHEX("#305955"),
-    Color.fromHEX("#258786"),
-    Color.fromHEX("#ca7558"),
-    Color.fromHEX("#9ec2b6"),
-  ],
-  [
-    Color.fromHEX("#01213a"),
-    Color.fromHEX("#01411f"),
-    Color.fromHEX("#005d55"),
-    Color.fromHEX("#08afa8"),
-    Color.fromHEX("#8aed07"),
-  ],
-  [
-    Color.fromHEX("#041e2b"),
-    Color.fromHEX("#023f51"),
-    Color.fromHEX("#db3600"),
-    Color.fromHEX("#00829a"),
-    Color.fromHEX("#0cb1c7"),
-  ],
-  [
-    Color.fromHEX("#041421"),
-    Color.fromHEX("#042630"),
-    Color.fromHEX("#4c7273"),
-    Color.fromHEX("#86b9b0"),
-    Color.fromHEX("#d0d6d6"),
-  ],
-  [
-    Color.fromHEX("#23383b"),
-    Color.fromHEX("#246068"),
-    Color.fromHEX("#3aa1aa"),
-    Color.fromHEX("#e29000"),
-    Color.fromHEX("#fadb67"),
-  ],
-  [
-    Color.fromHEX("#0e3308"),
-    Color.fromHEX("#023e48"),
-    Color.fromHEX("#1b666b"),
-    Color.fromHEX("#a64510"),
-    Color.fromHEX("#ffa948"),
-  ],
-  [
-    Color.fromHEX("#0d2c2f"),
-    Color.fromHEX("#01555f"),
-    Color.fromHEX("#ce505c"),
-    Color.fromHEX("#f0839a"),
-    Color.fromHEX("#ffe4ed"),
-  ],
+  ["#090349", "#072879", "#740846", "#A1002A", "#F01501"],
+  ["#2a416a", "#305955", "#258786", "#ca7558", "#9ec2b6"],
+  ["#01213a", "#01411f", "#005d55", "#08afa8", "#8aed07"],
+  ["#041e2b", "#023f51", "#db3600", "#00829a", "#0cb1c7"],
+  ["#041421", "#042630", "#4c7273", "#86b9b0", "#d0d6d6"],
+  ["#23383b", "#246068", "#3aa1aa", "#e29000", "#fadb67"],
+  ["#0e3308", "#023e48", "#1b666b", "#a64510", "#ffa948"],
+  ["#0d2c2f", "#01555f", "#ce505c", "#f0839a", "#ffe4ed"],
 ];
 
+class Palette {
+  constructor(colors) {
+    this._colors = colors;
+  }
+
+  get colors() {
+    return this._colors;
+  }
+}
+
 class PaletteFactory {
-  static randomPalette(xor128) {
-    return xor128.pick(PALETTES);
+  static getRandomPalette(xor128) {
+    const hexes = xor128.pick(PALETTES);
+    return new Palette(hexes.map((h) => Color.fromHEX(h)));
   }
 }
 

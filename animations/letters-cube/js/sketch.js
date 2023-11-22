@@ -14,7 +14,7 @@ class Sketch extends Engine {
     this._scl = 0.9;
 
     this._particles_num = 5000;
-    this._particles_scl = 2;
+    this._particles_scl = 5;
 
     this._squares_num = 15;
     this._squares_scl = this.width / 10;
@@ -86,6 +86,7 @@ class Sketch extends Engine {
     this._cells.forEach((c) => c.show(this.ctx));
     this.ctx.restore();
 
+    this.ctx.globalCompositeOperation = "multiply";
     this._particles.forEach((p) => p.update());
     this._particles.forEach((p) => p.show(this.ctx));
 

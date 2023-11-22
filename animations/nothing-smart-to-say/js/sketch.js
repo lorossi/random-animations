@@ -45,7 +45,7 @@ class Sketch extends Engine {
         const dist =
           (Math.abs(x - this._cols / 2) + Math.abs(y - this._rows / 2)) /
           max_dist;
-        const eased_dist = this._easeTrig(dist + t);
+        const eased_dist = this._easeTrig(dist - t);
 
         if (this._xor128.random() > eased_dist) continue;
 

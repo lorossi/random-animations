@@ -8,6 +8,7 @@ class Sketch extends Engine {
     this._points_scl = 0.5;
     this._points_n = 3;
     this._scl = 0.8;
+    this._bg = Color.fromMonochrome(15);
 
     this._duration = 300;
     this._recording = false;
@@ -44,7 +45,7 @@ class Sketch extends Engine {
     const t = (this.frameCount / this._duration) % 1;
 
     this.ctx.save();
-    this.background("rgb(15, 15, 15)");
+    this.background(this._bg.rgb);
     this.ctx.translate(this.width / 2, this.height / 2);
     this.ctx.scale(this._scl, this._scl);
     this.ctx.translate(-this.width / 2, -this.height / 2);

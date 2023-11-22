@@ -92,6 +92,7 @@ class Sketch extends Engine {
     this.ctx.restore();
 
     this.ctx.save();
+    this.ctx.globalCompositeOperation = "multiply";
     this._particles.forEach((p) => p.show(this.ctx));
     this.ctx.restore();
 
