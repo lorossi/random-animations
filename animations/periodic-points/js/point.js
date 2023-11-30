@@ -12,7 +12,6 @@ class PeriodicPoint {
       Color.fromHEX("#FFFF00"),
       Color.fromHEX("#00FFFF"),
       Color.fromHEX("#FF00FF"),
-      Color.fromHEX("#FFFFFF"),
     ];
 
     const harmonics = new Array(n)
@@ -44,11 +43,12 @@ class PeriodicPoint {
     const r = this._rt[Math.floor(t * this._duration)];
 
     ctx.save();
+    ctx.globalCompositeOperation = "lighter";
     ctx.translate(this._x, this._y);
     this._colors.forEach((c, i) => {
-      const theta = (i / (this._colors.length + 1)) * Math.PI * 2;
+      const theta = (i / this._colors.length) * Math.PI * 2;
       ctx.rotate(theta);
-      ctx.translate(r * 0.1, 0);
+      ctx.translate(r * 0.15, 0);
       ctx.fillStyle = c.rgba;
       ctx.beginPath();
       ctx.arc(0, 0, r, 0, Math.PI * 2);

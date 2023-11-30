@@ -1,21 +1,17 @@
 import { Engine, SimplexNoise, Point, Color } from "./engine.js";
 import { XOR128 } from "./xor128.js";
 import { GridPoint, GridGroup } from "./grid.js";
+import { PaletteFactory } from "./palette-factory.js";
 
 class Sketch extends Engine {
   preload() {
     this._points_dist = 15;
-    this._bg = Color.fromHEX("#f8ffe5");
-    this._palette = [
-      Color.fromHEX("#06d6a0"),
-      Color.fromHEX("#1b9aaa"),
-      Color.fromHEX("#ef476f"),
-      Color.fromHEX("#ffc43d"),
-    ];
+    this._bg = Color.fromMonochrome(245);
+
     this._scl = 0.95;
     this._noise_scl = 0.01;
     this._texture_scl = 1;
-    this._texture_size = 2;
+    this._texture_size = 3;
     this._super_sampling = 10;
 
     this._duration = 900;
@@ -26,6 +22,12 @@ class Sketch extends Engine {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
     this._noise = new SimplexNoise(this._xor128.random_int(1e9));
+
+    this._palette = PaletteFactory.getRandomPalette(this._xor128)
+      .colors.map((c) => ({ color: c, sort: this._xor128.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map((c) => c.color)
+      .slice(0, 4);
 
     // init points
     const cols = Math.floor(this.width / this._points_dist);
@@ -142,13 +144,8 @@ class Sketch extends Engine {
 
     for (let x = 0; x < this.width; x += this._texture_size) {
       for (let y = 0; y < this.height; y += this._texture_size) {
-        const n = this._noise.noise(
-          x * this._texture_scl,
-          y * this._texture_scl,
-          0,
-          0
-        );
-        const c = Color.fromMonochrome((n + 1) * 127, 0.06);
+        const n = this._xor128.random(255);
+        const c = Color.fromMonochrome(n, 0.05);
         ctx.fillStyle = c.rgba;
         ctx.fillRect(x, y, this._texture_size, this._texture_size);
       }
