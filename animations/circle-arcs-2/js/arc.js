@@ -18,8 +18,12 @@ class Arc {
     const n1 = this._noise.noise(tx, ty, seed, 0);
     const n2 = this._noise.noise(tx, ty, 0, seed);
 
-    this._d_start = this._rescale(n1, -1, 1, -0.9, 0.9) * Math.PI * 2;
-    this._d_end = this._rescale(n2, -1, 1, -0.9, 0.9) * Math.PI * 2;
+    this._d_start = n1 * Math.PI * 2;
+    this._d_end = n2 * Math.PI * 2;
+
+    if (Math.abs(this._d_start - this._d_end) < Math.PI / 180) {
+      this._d_end += Math.PI / 180;
+    }
   }
 
   show(ctx) {

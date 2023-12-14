@@ -5,6 +5,7 @@ import { PaletteFactory } from "./palette.js";
 
 class Sketch extends Engine {
   preload() {
+    console.warn("TODO: add texture");
     this._scl = 0.9;
     this._time_scl = 0.75;
     this._cols = 4;

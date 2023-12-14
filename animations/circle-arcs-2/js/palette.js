@@ -15,14 +15,12 @@ class Palette {
   }
 }
 
+const PALETTES = [["#023047", "#8ecae6", "#219ebc", "#ffb703", "#fb8500"]];
+
 class PaletteFactory {
   static getRandomPalette(xor128) {
-    const length = xor128.random_int(4, 7);
-    const background = Color.fromMonochrome(245);
-    const colors = new Array(length).fill(0).map((_, i) => {
-      const ch = (i / length) * 200 * xor128.random_interval(1, 0.15);
-      return Color.fromMonochrome(ch);
-    });
+    const hex_list = xor128.pick(PALETTES);
+    const [background, ...colors] = hex_list.map((h) => Color.fromHEX(h));
 
     return new Palette(background, colors);
   }
