@@ -13,6 +13,28 @@ Also, sometimes I want to quickly play around or thinker with an idea that I jus
 
 All the animations are hosted on a simple GitHub Pages website; however, some of them are very CPU intensive so be careful as your browser might freeze while opening them.
 
+### Things to do
+
+#### Circle Arcs 2
+
+- [ ] Choose some palettes
+- [ ] Make the animation more dynamic
+
+#### Circle Lines
+
+- [ ] Choose a better background gradient
+
+#### Circle Factory
+
+- [ ] Make the pieces painted in halves instead of quarters
+- [ ] Pick some better colors
+
+## Published Animations
+
+Links to the animations that are already published on my Instagram profile:
+
+*(none so far)*
+
 ## License
 
 All the code in this repo is licensed under the MIT license. See the LICENSE file for more details.
