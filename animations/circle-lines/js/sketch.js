@@ -10,9 +10,8 @@ class Sketch extends Engine {
     this._noise_scl = 0.015;
     this._lines_num = 30;
 
-    this._white = new Color(245, 245, 245);
-    this._black = new Color(15, 15, 15);
-    this._background_color = new Color(1177, 51, 51);
+    this._white = Color.fromMonochrome(245);
+    this._black = Color.fromMonochrome(15);
   }
 
   setup() {
@@ -20,6 +19,17 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(seed);
     this._noise = new SimplexNoise(seed);
     this._title = this._xor128.shuffle(Math.floor(seed * 1000).toString(16));
+
+    this._background_gradient = this.ctx.createLinearGradient(
+      0,
+      0,
+      this.width,
+      this.height
+    );
+    // light red at the start
+    this._background_gradient.addColorStop(0, "#DC143C");
+    // dark red at the end
+    this._background_gradient.addColorStop(1, "#8B0000");
   }
 
   draw() {
@@ -28,7 +38,9 @@ class Sketch extends Engine {
     const scl = Math.min(this.width, this.height) / this._cols;
 
     this.ctx.save();
-    this.background(this._background_color.rgba);
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.ctx.fillStyle = this._background_gradient;
+    this.ctx.fillRect(0, 0, this.width, this.height);
 
     this.ctx.translate(this.width / 2, this.height / 2);
     this.ctx.scale(this._scl, this._scl);
