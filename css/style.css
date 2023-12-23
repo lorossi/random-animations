@@ -25,10 +25,36 @@ a:active {
   color: var(--text-color);
 }
 
-.title {
+.top {
   margin-top: 2rem;
   margin-left: 2rem;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.center-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
   font-size: 3rem;
+}
+
+.description {
+  margin-top: 5rem;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  max-width: 80vw;
 }
 
 .content {
