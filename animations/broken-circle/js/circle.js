@@ -14,8 +14,13 @@ class Circle {
   }
 
   draw(ctx, t) {
+    const theta = t * Math.PI * 2;
+    const r = this._scl * 0.1;
+    const dx = Math.cos(theta) * r;
+    const dy = Math.sin(theta) * r;
+
     ctx.save();
-    ctx.translate(this._x, this._y);
+    ctx.translate(this._x + dx, this._y + dy);
     for (let i = 0; i < this._rays; i++) {
       const tt = ((i / this._rays + t) % 1) * this._direction + this._offset;
       const angle = tt * Math.PI * 2;
