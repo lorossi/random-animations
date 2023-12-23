@@ -10,6 +10,7 @@ class Sketch extends Engine {
     this._cols = 35;
     this._bg = Color.fromMonochrome(245);
     this._particle_color = Color.fromMonochrome(15);
+    this._scl = 0.9;
   }
 
   setup() {
@@ -43,6 +44,7 @@ class Sketch extends Engine {
 
     this.ctx.save();
     this.ctx.translate(this.width / 2, this.height / 2);
+    this.ctx.scale(this._scl, this._scl);
     this._particles.forEach((p) => p.update(t));
     this._particles.forEach((p) => p.show(this.ctx));
     this.ctx.restore();
