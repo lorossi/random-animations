@@ -4,9 +4,9 @@ import { Letter } from "./letter.js";
 
 class Sketch extends Engine {
   preload() {
-    this._cols = 20;
+    this._cols = 15;
     this._bg = Color.fromMonochrome(255);
-    this._accent = new Color(255, 0, 0);
+    this._accent = Color.fromHEX("#8a0303");
     this._scl = 0.9;
     this._texture_size = 4;
     this._to_spell = "MAKEITSTOP";

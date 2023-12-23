@@ -20,8 +20,8 @@ class Sketch extends Engine {
 
   setup() {
     const seed = new Date().getTime();
-    this._random = new XOR128(seed);
-    this._noise = new SimplexNoise(this._random);
+    this._xor128 = new XOR128(seed);
+    this._noise = new SimplexNoise(this._xor128);
     this._noise.setDetail(2, 0.25);
 
     this._createTexture();
@@ -90,9 +90,8 @@ class Sketch extends Engine {
     ctx.save();
     for (let x = 0; x < this._texture.width; x += this._texture_scl) {
       for (let y = 0; y < this._texture.height; y += this._texture_scl) {
-        const n = this._noise.noise(x * this._noise_scl, y * this._noise_scl);
-        const ch = Math.floor(((n + 1) / 2) * 100);
-        const c = Color.fromMonochrome(ch, 0.1);
+        const n = this._xor128.random(127);
+        const c = Color.fromMonochrome(n, 0.05);
         ctx.fillStyle = c.rgba;
         ctx.fillRect(x, y, this._texture_scl, this._texture_scl);
       }

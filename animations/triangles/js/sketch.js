@@ -8,10 +8,11 @@ class Sketch extends Engine {
     this._recording = false;
 
     this._cols = 50;
-    this._noise_scl = 1;
-    this._time_scl = 0.5;
+    this._noise_scl = 0.0125;
+    this._time_scl = 0.1;
     this._scl = 1;
-    this._fg_color = Color.fromHEX("#130e0a");
+    this._texture_scl = 3;
+    this._fg = Color.fromHEX("#130e0a");
     this._bg = Color.fromHEX("#dcd7c4");
   }
 
@@ -33,10 +34,11 @@ class Sketch extends Engine {
           y / this._cols
         );
         t.setDependences(this._xor128, this._noise);
-        t.setAttributes(this._fg_color, this._noise_scl, this._time_scl);
+        t.setAttributes(this._fg, this._noise_scl, this._time_scl);
         return t;
       });
     this._frame_offset = this.frameCount;
+    this._texture = this._createTexture();
 
     if (this._recording) {
       this.startRecording();
@@ -61,6 +63,8 @@ class Sketch extends Engine {
 
     this.ctx.restore();
 
+    this._drawTexture(this.ctx);
+
     if (t == 0 && this.frameCount > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
@@ -73,6 +77,31 @@ class Sketch extends Engine {
   click() {
     this.setup();
     this.draw();
+  }
+
+  _createTexture() {
+    const canvas = document.createElement("canvas");
+    canvas.width = this.width;
+    canvas.height = this.height;
+
+    const ctx = canvas.getContext("2d");
+
+    for (let x = 0; x < this.width; x += this._texture_scl) {
+      for (let y = 0; y < this.height; y += this._texture_scl) {
+        const c = this._xor128.random_int(127);
+        ctx.fillStyle = Color.fromMonochrome(c, 0.05).rgba;
+        ctx.fillRect(x, y, this._texture_scl, this._texture_scl);
+      }
+    }
+
+    return canvas;
+  }
+
+  _drawTexture(ctx) {
+    ctx.save();
+    ctx.globalCompositeOperation = "multiply";
+    ctx.drawImage(this._texture, 0, 0);
+    ctx.restore();
   }
 }
 
