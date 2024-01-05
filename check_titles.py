@@ -33,8 +33,6 @@ def main():
         if check_default_content(content):
             print(f"Description not changed in {file}")
 
-    print("Done!")
-
 
 if __name__ == "__main__":
     main()
