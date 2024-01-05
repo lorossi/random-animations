@@ -22,12 +22,16 @@ All the animations are hosted on a simple GitHub Pages website; however, some of
 
 #### Circle Lines
 
-- [ ] Choose a better background gradient
+- [x] Choose a better background gradient
 
 #### Circle Factory
 
 - [ ] Make the pieces painted in halves instead of quarters
 - [ ] Pick some better colors
+
+#### letters-cube-simple
+
+- [ ] Add something interesting in the background
 
 ## Published Animations
 
