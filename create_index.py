@@ -5,13 +5,12 @@ from glob import glob
 
 def create_urls() -> list[tuple[str, str]]:
     """Create urls for each animation."""
-    return sorted(
-        (
-            (folder.split("/")[-1].replace("-", " ").lower(), folder)
-            for folder in glob("animations/*")
-        ),
-        key=lambda x: x[0],
-    )  # this is a one-liner, but at what cost?
+    folders = []
+    for folder in glob("animations/*"):
+        name = folder.split("/")[-1].replace("-", " ").lower()
+        folders.append((name, folder))
+
+    return sorted(folders, key=lambda x: x[0])
 
 
 def indent(n: int) -> str:
