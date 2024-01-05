@@ -33,6 +33,10 @@ All the animations are hosted on a simple GitHub Pages website; however, some of
 
 - [ ] Add something interesting in the background
 
+#### Circle Modernism
+
+- [ ] Make the animation more dynamic and interesting
+
 ## Published Animations
 
 Links to the animations that are already published on my Instagram profile:
