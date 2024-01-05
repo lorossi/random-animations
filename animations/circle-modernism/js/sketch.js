@@ -58,7 +58,7 @@ class Sketch extends Engine {
     this.ctx.save();
     this.ctx.fillStyle = this._fg.rgba;
     const font_height = Math.floor(
-      this._circle_y_size * this._rows_offset * 0.5
+      this._circle_y_size * this._rows_offset * 0.4
     );
 
     this.ctx.font = `${font_height}px HelveticaNeue`;
@@ -71,6 +71,7 @@ class Sketch extends Engine {
 
     this.ctx.font = `${font_height * 0.6}px HelveticaNeue`;
     this.ctx.fillText("function over form", w / 2, font_height * 1.1);
+    this.ctx.fillText("but which function?", w / 2, font_height * 1.7);
 
     this.ctx.restore();
     this.ctx.restore();

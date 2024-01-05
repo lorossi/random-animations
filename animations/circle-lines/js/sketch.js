@@ -6,12 +6,13 @@ class Sketch extends Engine {
     this._cols = 12;
     this._scl = 0.9;
     this._circle_scl = 0.8;
-    this._texture_scl = 4;
-    this._noise_scl = 0.015;
+    this._texture_scl = 3;
     this._lines_num = 30;
 
     this._white = Color.fromMonochrome(245);
     this._black = Color.fromMonochrome(15);
+    this._gradient_start = Color.fromMonochrome(15);
+    this._gradient_end = Color.fromMonochrome(245);
   }
 
   setup() {
@@ -27,9 +28,9 @@ class Sketch extends Engine {
       this.height
     );
     // light red at the start
-    this._background_gradient.addColorStop(0, "#DC143C");
+    this._background_gradient.addColorStop(0, this._gradient_start.rgba);
     // dark red at the end
-    this._background_gradient.addColorStop(1, "#8B0000");
+    this._background_gradient.addColorStop(1, this._gradient_end.rgba);
   }
 
   draw() {
@@ -102,14 +103,15 @@ class Sketch extends Engine {
 
     // add texture
     this.ctx.save();
-    this.ctx.globalCompositeOperation = "multiply";
+    // this.ctx.globalCompositeOperation = "multiply";
 
     for (let x = 0; x < this.width; x += this._texture_scl) {
       for (let y = 0; y < this.height; y += this._texture_scl) {
-        const n = this._noise.noise(x * this._noise_scl, y * this._noise_scl);
-        const ch = this._polyEaseOut((n + 1) / 2) * 32;
+        const n = this._xor128.random();
+        const w = this._polyEaseOut(n) * 255;
+        const c = Color.fromMonochrome(w, 0.0125);
 
-        this.ctx.fillStyle = `rgba(${ch}, ${ch}, ${ch}, 0.1)`;
+        this.ctx.fillStyle = c.rgba;
         this.ctx.beginPath();
         this.ctx.rect(x, y, this._texture_scl, this._texture_scl);
         this.ctx.fill();
