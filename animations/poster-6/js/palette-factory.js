@@ -41,8 +41,6 @@ class PaletteFactory {
       .slice(0, length)
       .map((c) => Color.fromHEX(c.color));
 
-    console.log(colors.map((c) => c.hex));
-
     return new Palette(colors);
   }
 

@@ -7,6 +7,9 @@ class Sketch extends Engine {
   preload() {
     this._texture_scl = 4;
     this._circle_scl = 0.9;
+    this._scl = 0.9;
+    this._bg = Color.fromMonochrome(245);
+    this._border = Color.fromMonochrome(15);
   }
 
   setup() {
@@ -34,9 +37,22 @@ class Sketch extends Engine {
 
     this.ctx.save();
     this.ctx.clearRect(0, 0, this.width, this.height);
+    this.ctx.fillStyle = this._bg.rgb;
+    this.ctx.fillRect(0, 0, this.width, this.height);
+
+    this.ctx.save();
+    this.ctx.translate(this.width / 2, this.height / 2);
+    this.ctx.scale(this._scl, this._scl);
+    this.ctx.translate(-this.width / 2, -this.height / 2);
 
     this._cells.forEach((c) => c.draw(this.ctx));
+
+    this.ctx.strokeStyle = this._border.rgb;
+    this.ctx.lineWidth = 4;
+    this.ctx.strokeRect(0, 0, this.width, this.height);
     this._drawTexture();
+
+    this.ctx.restore();
 
     this.ctx.restore();
   }
