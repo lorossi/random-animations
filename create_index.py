@@ -34,7 +34,7 @@ def embed_urls(urls: list[str]) -> None:
     new_content = ""
     for name, url in urls:
         new_content += "\n"
-        new_content += f'{indent(base+1)}<a href="{url}">{name}</a>'
+        new_content += f'{indent(base + 1)}<a href="{url}">{name}</a>'
     new_content += f"\n{indent(base)}"
 
     content = content.replace("{{ LINKS }}", new_content)
