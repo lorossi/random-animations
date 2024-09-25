@@ -80,7 +80,7 @@ class Sketch extends Engine {
     this.ctx.textBaseline = "bottom";
     // fill bg
     this.ctx.fillStyle = this._bg.rgb;
-    const bottom_text = "JUST KEEP LOOKING, NOTHING TO SEE";
+    const bottom_text = "KEEP LOOKING, NOTHING INTERESTING HERE";
     const bottom_text_width = this.ctx.measureText(bottom_text).width;
     this.ctx.fillRect(
       this.width - bottom_text_width,

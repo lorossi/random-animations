@@ -1,13 +1,14 @@
 import { Color, Point } from "./engine.js";
 
 class Tile {
-  constructor(x, y, size, noise, scale = 0.9, noise_scl = 0.1) {
+  constructor(x, y, size, noise, scale = 0.9, noise_scl = 0.1, wrong = false) {
     this._x = x;
     this._y = y;
     this._size = size;
     this._noise = noise;
     this._scale = scale;
     this._noise_scl = noise_scl;
+    this._wrong = wrong;
 
     this._fg = this._selectFg();
     this._draw = this._selectDrawFunction();
@@ -80,9 +81,20 @@ class Tile {
   }
 
   draw(ctx) {
+    if (this._wrong) return;
+
+    var n = this._noise.noise(
+      this._x * this._noise_scl,
+      this._y * this._noise_scl,
+      3000
+    );
+    var theta = (n * Math.PI) / 32;
+
     ctx.save();
     ctx.translate(this._x + this._size / 2, this._y + this._size / 2);
     ctx.scale(this._scale, this._scale);
+    ctx.rotate(theta);
+
     ctx.fillStyle = this._fg.rgba;
 
     this._draw(ctx);
