@@ -45,6 +45,7 @@ def open_file(path: str) -> str:
 
 def main():
     """Script entry point."""
+    anything_found = False
     for file in list_files():
         content = open_file(file)
 
@@ -54,13 +55,20 @@ def main():
 
         if title == "TEMPLATE":
             print(f"{file}: Title not changed")
+            anything_found = True
         elif not check_page_title(title, folder):
             print(f"{file}: Title not consistent with folder name")
+            anything_found = True
 
         if description == "TEMPLATE":
             print(f"{file}: Description not changed")
+            anything_found = True
         elif not check_page_description(description, folder):
             print(f"{file}: Description not consistent with folder name")
+            anything_found = True
+
+    if not anything_found:
+        print("All file titles and description are consistent")
 
 
 if __name__ == "__main__":
