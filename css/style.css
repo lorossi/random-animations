@@ -26,7 +26,7 @@ a:active {
 }
 
 .top {
-  margin-top: 2rem;
+  margin-top: 3rem;
   margin-left: 2rem;
 
   display: flex;
@@ -46,7 +46,7 @@ a:active {
 }
 
 .description {
-  margin-top: 5rem;
+  margin-top: 2.5rem;
   font-size: 1rem;
   display: flex;
   flex-direction: column;
@@ -57,9 +57,11 @@ a:active {
   max-width: 80vw;
 }
 
-.content {
-  min-height: 100vh;
+.description p:last-child {
+  margin-top: 1rem;
+}
 
+.content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -81,21 +83,6 @@ a:active {
 
 .animations-list a {
   margin-bottom: 0.5rem;
-}
-
-.footer {
-  margin-top: 5rem;
-  width: 100%;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer * {
-  padding: 1rem;
-  font-size: 1.5rem;
 }
 
 @media only screen and (max-width: 1200px) {
