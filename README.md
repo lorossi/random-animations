@@ -6,7 +6,7 @@ Also, don't forget to check my [Instagram profile](https://www.instagram.com/lor
 
 ## Why?
 
-I made this repo because I grew tired of making a separate repo for every silly js canvas that I make.
+I made this repo because I grew tired of making a separate repo for every silly JS canvas that I make.
 Often there's not much to say about these animations, so when I'll feel like they are ready to go, I'll just put a link to them here along with a short description and a link to the Instagram post.
 
 Also, sometimes I want to quickly play around or thinker with an idea that I just had or with something that I know it's not worth creating a whole repository for.
@@ -14,15 +14,6 @@ Also, sometimes I want to quickly play around or thinker with an idea that I jus
 All the animations are hosted on a simple GitHub Pages website; however, some of them are very CPU intensive so be careful as your browser might freeze while opening them.
 
 ### Things to do
-
-#### Circle Arcs 2
-
-- [ ] Choose some palettes
-- [ ] Make the animation more dynamic
-
-#### Circle Lines
-
-- [x] Choose a better background gradient
 
 #### Circle Factory
 

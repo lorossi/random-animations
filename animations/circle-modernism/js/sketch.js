@@ -5,6 +5,8 @@ class Sketch extends Engine {
   preload() {
     this._bg = Color.fromHEX("#D6D9CE");
     this._fg = Color.fromHEX("#000112");
+    this._title_color = Color.fromMonochrome(15, 1);
+    this._subtitle_color = Color.fromMonochrome(15, 0.75);
     this._accent = Color.fromHEX("#F3A714");
 
     this._cols = 12;
@@ -56,7 +58,7 @@ class Sketch extends Engine {
     this.ctx.restore();
 
     this.ctx.save();
-    this.ctx.fillStyle = this._fg.rgba;
+    this.ctx.fillStyle = this._title_color.rgba;
     const font_height = Math.floor(
       this._circle_y_size * this._rows_offset * 0.4
     );
@@ -65,13 +67,18 @@ class Sketch extends Engine {
     this.ctx.textAlign = "left";
     this.ctx.textBaseline = "top";
 
-    const w = this.ctx.measureText("C").width;
+    const par_indent = this.ctx.measureText("C").width / 4;
 
     this.ctx.fillText("Circle Modernism", 0, 0);
 
     this.ctx.font = `${font_height * 0.6}px HelveticaNeue`;
-    this.ctx.fillText("function over form", w / 2, font_height * 1.1);
-    this.ctx.fillText("but which function?", w / 2, font_height * 1.7);
+    this.ctx.fillStyle = this._subtitle_color.rgba;
+    this.ctx.fillText("function over form", par_indent, font_height * 1.1);
+    this.ctx.fillText(
+      "what does function mean to you?",
+      par_indent,
+      font_height * 1.7
+    );
 
     this.ctx.restore();
     this.ctx.restore();

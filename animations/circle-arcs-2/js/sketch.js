@@ -7,7 +7,7 @@ class Sketch extends Engine {
   preload() {
     console.warn("TODO: add texture");
     this._scl = 0.9;
-    this._time_scl = 0.75;
+    this._time_scl = 1;
     this._cols = 4;
 
     this._min_rings = 4;
