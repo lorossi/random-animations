@@ -86,8 +86,8 @@ class Sketch extends Engine {
 
     for (let x = 0; x < width; x += scl) {
       for (let y = 0; y < height; y += scl) {
-        const ch = this._xor128.random_int(127);
-        const color = Color.fromMonochrome(ch, 0.25);
+        const ch = this._xor128.random_int(255);
+        const color = Color.fromMonochrome(ch, 0.04);
         ctx.fillStyle = color.rgba;
         ctx.fillRect(x, y, scl, scl);
       }
@@ -98,7 +98,7 @@ class Sketch extends Engine {
 
   _applyNoiseTexture(texture) {
     this.ctx.save();
-    this.ctx.globalCompositeOperation = "screen";
+    this.ctx.globalCompositeOperation = "dodge";
     this.ctx.drawImage(texture, 0, 0);
 
     this.ctx.restore();

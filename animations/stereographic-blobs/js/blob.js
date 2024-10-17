@@ -12,6 +12,8 @@ class Blob {
     this._noise = noise;
     this._rng = rng;
 
+    this._rotation = (this._rng.random_int(4) * Math.PI) / 2;
+
     const shuffled_colors = this._fill
       .slice()
       .map((c) => ({ color: c, order: this._rng.random() }))
@@ -42,8 +44,12 @@ class Blob {
     ctx.save();
     ctx.translate(this._x + this._size / 2, this._y + this._size / 2);
     ctx.scale(this._scl, this._scl);
+    ctx.rotate(this._rotation);
 
-    this._shapes.forEach((s) => s.draw(ctx));
+    this._shapes.forEach((s, i) => {
+      ctx.rotate((i * Math.PI) / 2);
+      s.draw(ctx);
+    });
 
     ctx.restore();
   }
