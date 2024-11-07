@@ -73,7 +73,7 @@ a:active {
   display: grid;
   justify-content: center;
   align-items: center;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 
   font-size: 1.5rem;
   margin-left: 2rem;
@@ -98,5 +98,11 @@ a:active {
 
   .animations-list {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .animations-list {
+    grid-template-columns: repeat(1, 1fr);
   }
 }
