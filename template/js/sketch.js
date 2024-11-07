@@ -1,5 +1,6 @@
 import { Engine, SimplexNoise, Point, Color } from "./engine.js";
 import { XOR128 } from "./xor128.js";
+import { Palette, PaletteFactory } from "./palette-factory.js";
 
 class Sketch extends Engine {
   preload() {

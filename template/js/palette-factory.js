@@ -2,12 +2,12 @@ import { Color } from "./engine.js";
 
 class Palette {
   constructor(colors) {
-    this._colors = colors;
+    this._colors = [...colors];
   }
 
-  shuffle(xor128) {
+  shuffle(rand = Math) {
     this._colors = this._colors
-      .map((c) => ({ color: c, order: xor128.random() }))
+      .map((c) => ({ color: c, order: rand.random() }))
       .sort((a, b) => a.order - b.order)
       .map((c) => c.color);
 
@@ -34,18 +34,23 @@ class Palette {
 const PALETTES = [];
 
 class PaletteFactory {
-  static getRandomPalette(xor128) {
-    const colors = xor128
-      .pick(PALETTES)
-      .map((c) => ({ color: c, order: xor128.random() }))
-      .sort((a, b) => a.order - b.order)
-      .map((c) => Color.fromHEX(c.color));
+  static getRandomPalette(xor128, randomize = true) {
+    const colors = xor128.pick(PALETTES).map((c) => Color.fromHEX(c));
+    const palette = new Palette(colors);
+    if (randomize) palette.shuffle(xor128);
 
-    return new Palette(colors);
+    return palette;
   }
 
   static getPalette(n) {
+    if (n < 0 || n > PALETTES.length - 1)
+      throw new Error("Palette index out of bounds");
+
     return new Palette(PALETTES[n].map((h) => Color.fromHEX(h)));
+  }
+
+  static getPalettesCount() {
+    return PALETTES.length;
   }
 }
 
