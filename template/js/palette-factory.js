@@ -54,4 +54,4 @@ class PaletteFactory {
   }
 }
 
-export { PaletteFactory };
+export { PaletteFactory, Palette };
