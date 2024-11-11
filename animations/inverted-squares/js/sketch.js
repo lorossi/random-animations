@@ -19,15 +19,16 @@ class Sketch extends Engine {
     this._min_inverter_density = 0.25;
     this._max_inverter_density = 1;
 
-    this._particles_num = 10000;
-    this._particles_scl = 10;
-    this._colors = ["rgb(15, 15, 15)", "rgb(240, 240, 240)"];
+    this._texture_scl = 4;
+    this._texture_oversampling = 2;
 
-    this._seed = new Date().getTime();
-    this._xor128 = new XOR128(this._seed);
+    this._colors = [Color.fromMonochrome(15), Color.fromMonochrome(245)];
   }
 
   setup() {
+    this._seed = new Date().getTime();
+    this._xor128 = new XOR128(this._seed);
+
     const cols = this._xor128.random_int(this._min_cols, this._max_cols);
     const stripes_num = this._xor128.random_int(
       this._min_stripes_num,
@@ -61,17 +62,10 @@ class Sketch extends Engine {
         () => new Inverter(this.width, this.height, inverter_scl, this._xor128)
       );
 
-    this._particles = Array(this._particles_num)
-      .fill()
-      .map(
-        () =>
-          new Particle(
-            this.width,
-            this.height,
-            this._particles_scl,
-            this._xor128
-          )
-      );
+    this._noise_texture = this._generateNoiseTexture(
+      this._texture_scl,
+      this._texture_oversampling
+    );
 
     if (this._recording) {
       this.startRecording();
@@ -91,10 +85,7 @@ class Sketch extends Engine {
     this._inverters.forEach((i) => i.show(this.ctx));
     this.ctx.restore();
 
-    this.ctx.save();
-    this.ctx.globalCompositeOperation = "multiply";
-    this._particles.forEach((p) => p.show(this.ctx));
-    this.ctx.restore();
+    this._applyNoiseTexture(this._noise_texture);
 
     if (t >= 1 && this._recording) {
       this._recording = false;
@@ -108,6 +99,45 @@ class Sketch extends Engine {
   click() {
     this.setup();
     this.draw();
+  }
+
+  _generateNoiseTexture(scl = 2, oversampling = 16) {
+    const canvas = document.createElement("canvas");
+    canvas.width = this.width * oversampling;
+    canvas.height = this.height * oversampling;
+
+    const ctx = canvas.getContext("2d");
+
+    for (let y = 0; y < this.height * oversampling; y += scl) {
+      for (let x = 0; x < this.width * oversampling; x += scl) {
+        const ch = this._xor128.random_int(0, 127);
+        const c = Color.fromMonochrome(ch, 0.1);
+        ctx.fillStyle = c.rgba;
+        ctx.fillRect(x, y, scl, scl);
+      }
+    }
+
+    return canvas;
+  }
+
+  _applyNoiseTexture(texture) {
+    const dx = -this._xor128.random_int(
+      this.width * (this._texture_oversampling - 1)
+    );
+    const dy = -this._xor128.random_int(
+      this.height * (this._texture_oversampling - 1)
+    );
+
+    this.ctx.save();
+    this.ctx.globalCompositeOperation = "hard-light";
+    this.ctx.drawImage(
+      texture,
+      dx,
+      dy,
+      this.width * this._texture_oversampling,
+      this.height * this._texture_oversampling
+    );
+    this.ctx.restore();
   }
 }
 

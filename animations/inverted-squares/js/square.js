@@ -13,8 +13,8 @@ class Square {
     ctx.save();
 
     for (let i = 0; i < stripes_num; i++) {
-      ctx.fillStyle = this._stripe_colors[i % 2];
-      ctx.strokeStyle = this._stripe_colors[i % 2];
+      ctx.fillStyle = this._stripe_colors[i % 2].rgba;
+      ctx.strokeStyle = this._stripe_colors[i % 2].rgba;
 
       const d_pos = (this._stripe_scl * i) / 2;
       this._drawRect(ctx, d_pos);
