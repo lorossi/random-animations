@@ -24,10 +24,6 @@ All the animations are hosted on a simple GitHub Pages website; however, some of
 
 - [ ] Add something interesting in the background
 
-#### Circle Modernism
-
-- [ ] Make the animation more dynamic and interesting
-
 ### Sparse Bookshelves
 
 - [ ] Add something in between the books (globe, plant, cat, ...)

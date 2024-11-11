@@ -25,9 +25,13 @@ class Sketch extends Engine {
 
     this._circle_x_size = this.width / this._cols;
     this._circle_y_size = this.height / (this._rows + this._rows_offset);
-    this._circle_r = Math.min(this._circle_x_size, this._circle_y_size) / 2;
+    this._circle_r =
+      (Math.min(this._circle_x_size, this._circle_y_size) / 2) *
+      this._xor128.random_interval(1, 0.1);
+    this._mask_r_factor = this._xor128.random_interval(1, 0.2);
 
     this._texture = this._createTexture();
+    this._frame_started = this.frameCount;
 
     if (this._recording) {
       this.startRecording();
@@ -36,7 +40,7 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
+    const t = ((this.frameCount - this._frame_started) / this._duration) % 1;
 
     this.ctx.save();
     this.background(this._bg.rgba);
@@ -94,6 +98,11 @@ class Sketch extends Engine {
     }
   }
 
+  click() {
+    if (this._recording) return;
+    this.setup();
+  }
+
   _drawCircles(ctx) {
     const a = 0.5;
     ctx.save();
@@ -113,7 +122,7 @@ class Sketch extends Engine {
 
   _clipMask(ctx, t = 0, outer = false) {
     const theta = Math.PI * 2 * t;
-    const r = this.width / 3;
+    const r = (this.width / 3) * this._mask_r_factor;
     const x = this.width / 2 + 0.75 * r * Math.cos(theta);
     const y = this.height / 2 + 0.75 * r * Math.sin(theta);
 
