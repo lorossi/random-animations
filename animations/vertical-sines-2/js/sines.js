@@ -27,14 +27,14 @@ class Sine {
   }
 
   init() {
-    this._repetitions = this._xor128.random(3, 8);
+    this._repetitions = 32;
     this._rotation = this._xor128.random_interval(0, Math.PI / 360);
 
     // calculate the length of the text
     const ctx = document.createElement("canvas").getContext("2d");
     ctx.font = `${this._width}px Recoleta`;
     const ex = ctx.measureText("x").width;
-    this._text_width = ctx.measureText(this._text).width + ex / 4;
+    this._text_width = ctx.measureText(this._text).width + ex / 8;
 
     // the lines fill the canvas until the text
     this._lines_num = Math.floor(
@@ -50,9 +50,9 @@ class Sine {
     this._widths = new Array(this._lines_num).fill(0).map((_, i) => {
       const n =
         (this._noise.noise(tx, ty, i * this._noise_scl, this._seed) + 1) / 2;
-      const theta = (i / this._lines_num) * this._repetitions;
+      const theta = (i * this._repetitions) / this._lines_num;
       const modulation = Math.cos((t - this._seed - theta) * Math.PI * 2);
-      const w = n * this._width * modulation;
+      const w = n * this._width * modulation * 1.25;
       return w;
     });
 
@@ -74,18 +74,18 @@ class Sine {
 
     // draw sines
     ctx.save();
-
+    // small offset to align the sines with the text
     for (let i = 0; i < this._lines_num; i++) {
       const w = this._widths[i];
       const y = i * this._line_scl;
       ctx.fillStyle = this._fills[i].rgba;
-      ctx.fillRect(-w / 2, y, w, this._line_scl);
+      ctx.fillRect(-w * 0.5 - this._width * 0.1, y, w, this._line_scl);
     }
     ctx.restore();
 
     // draw text
     ctx.save();
-    ctx.font = `${this._width}px Recoleta`;
+    ctx.font = `${Math.floor(this._width)}px Recoleta`;
     ctx.fillStyle = this._text_fill.rgba;
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";

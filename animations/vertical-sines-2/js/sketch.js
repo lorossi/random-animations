@@ -8,9 +8,12 @@ class Sketch extends Engine {
     this._scl = 0.8;
     this._duration = 300;
 
-    this._noise_scl = 0.05;
+    this._noise_scl = 0.025;
     this._noise_color_scl = 0.001;
     this._noise_time_scl = 0.5;
+
+    this._texture_scl = 2;
+    this._texture_oversampling = 2;
 
     this._background_color = new Color(246, 238, 227);
     this._max_sines_ch = 25;
@@ -50,6 +53,8 @@ class Sketch extends Engine {
       (acc, sine) => (sine.nodes_num > acc ? sine.nodes_num : acc),
       0
     );
+
+    this._texture = this._createTexture();
   }
 
   draw() {
@@ -61,17 +66,66 @@ class Sketch extends Engine {
     this.ctx.scale(this._scl, this._scl);
     this.ctx.translate(-this.width / 2, -this.height / 2);
 
-    this._sines.forEach((sine, i) => {
+    this._sines.forEach((sine) => {
       sine.update(t);
-      sine.draw(this.ctx, t);
+      sine.draw(this.ctx);
     });
 
     this.ctx.restore();
+
+    this._applyTexture();
   }
 
   click() {
     this.setup();
     this.draw();
+  }
+
+  _createTexture() {
+    const canvas = document.createElement("canvas");
+    canvas.width = this._texture_oversampling * this.width;
+    canvas.height = this._texture_oversampling * this.height;
+    const ctx = canvas.getContext("2d");
+
+    for (
+      let x = 0;
+      x < this.width * this._texture_oversampling;
+      x += this._texture_scl
+    ) {
+      for (
+        let y = 0;
+        y < this.height * this._texture_oversampling;
+        y += this._texture_scl
+      ) {
+        const r = this._xor128.random(127);
+        const c = Color.fromMonochrome(r, 0.075);
+
+        ctx.fillStyle = c.rgba;
+        ctx.fillRect(x, y, this._texture_scl, this._texture_scl);
+      }
+    }
+
+    return canvas;
+  }
+
+  _applyTexture() {
+    const dx = -this._xor128.random(
+      (this._texture_oversampling - 1) * this.width
+    );
+    const dy = -this._xor128.random(
+      (this._texture_oversampling - 1) * this.height
+    );
+
+    this.ctx.save();
+    this.ctx.globalCompositeOperation = "dodge";
+    this.ctx.drawImage(
+      this._texture,
+      dx,
+      dy,
+      this.width * this._texture_oversampling,
+      this.height * this._texture_oversampling
+    );
+    this.ctx.restore();
   }
 }
 
