@@ -28,6 +28,10 @@ All the animations are hosted on a simple GitHub Pages website; however, some of
 
 - [ ] Make the animation more dynamic and interesting
 
+### Sparse Bookshelves
+
+- [ ] Add something in between the books (globe, plant, cat, ...)
+
 ## Published Animations
 
 Links to the animations that are already published on my Instagram profile:
