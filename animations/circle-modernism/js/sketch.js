@@ -13,7 +13,7 @@ class Sketch extends Engine {
     this._rows = 12;
     this._rows_offset = 2;
     this._scl = 0.95;
-    this._texture_scl = 4;
+    this._texture_scl = 2;
 
     this._duration = 900;
     this._recording = false;
@@ -132,8 +132,8 @@ class Sketch extends Engine {
     const ctx = texture.getContext("2d");
     for (let x = 0; x < this.width; x += this._texture_scl) {
       for (let y = 0; y < this.height; y += this._texture_scl) {
-        const n = this._xor128.random(137);
-        const c = Color.fromMonochrome(n, 0.05);
+        const n = this._xor128.random(127);
+        const c = Color.fromMonochrome(n, 0.1);
 
         ctx.fillStyle = c.rgba;
         ctx.fillRect(x, y, this._texture_scl, this._texture_scl);
