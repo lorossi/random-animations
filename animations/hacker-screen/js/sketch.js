@@ -2,9 +2,9 @@ import { Engine, SimplexNoise, Point, Color } from "./engine.js";
 import { XOR128 } from "./xor128.js";
 import { Palette, PaletteFactory } from "./palette-factory.js";
 import { Radar } from "./radar.js";
-import { Sin } from "./sin.js";
 import { Bars } from "./bars.js";
 import { TextLines } from "./textlines.js";
+import { NoiseLetters } from "./noise-letters.js";
 
 class Sketch extends Engine {
   preload() {
@@ -21,7 +21,12 @@ class Sketch extends Engine {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
 
-    const layer_classes = this._xor128.shuffle([Radar, Sin, Bars, TextLines]);
+    const layer_classes = this._xor128.shuffle([
+      Radar,
+      NoiseLetters,
+      Bars,
+      TextLines,
+    ]);
 
     this._layers = new Array(4).fill().map((_, i) => {
       const size = this.width / 2;
@@ -39,6 +44,7 @@ class Sketch extends Engine {
         this._layer_scl
       );
     });
+    document.body.style.backgroundColor = this._bg.rgba;
 
     if (this._recording) {
       this.startRecording();
