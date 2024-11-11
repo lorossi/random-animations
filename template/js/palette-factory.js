@@ -2,7 +2,7 @@ import { Color } from "./engine.js";
 
 class Palette {
   constructor(colors) {
-    this._colors = [...colors];
+    this._colors = colors;
   }
 
   shuffle(rand = Math) {
@@ -15,11 +15,16 @@ class Palette {
   }
 
   copy() {
-    return new Palette(...this._colors);
+    return new Palette(this._colors.map((c) => c.copy()));
   }
 
   getColor(i) {
     return this._colors[i % this._colors.length];
+  }
+
+  getRandomColor(rand = Math) {
+    const r = Math.floor(rand.random() * this._colors.length);
+    return this.getColor(r);
   }
 
   get colors() {
