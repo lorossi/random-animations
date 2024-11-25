@@ -28,6 +28,13 @@ All the animations are hosted on a simple GitHub Pages website; however, some of
 
 - [ ] Add something in between the books (globe, plant, cat, ...)
 
+### Modular
+
+- [ ] Style the modules a bit more
+  - [ ] wire holes color (black)
+  - [ ] background color
+  - [ ] module color
+
 ## Published Animations
 
 Links to the animations that are already published on my Instagram profile:
