@@ -5,6 +5,14 @@ class Palette {
     this._colors = colors;
   }
 
+  static fromArrayHEX(colors) {
+    return new Palette(colors.map((c) => Color.fromHEX(c)));
+  }
+
+  static fromArrayRGB(colors) {
+    return new Palette(colors.map((c) => Color.fromRGB(c)));
+  }
+
   shuffle(rand = Math) {
     this._colors = this._colors
       .map((c) => ({ color: c, order: rand.random() }))
