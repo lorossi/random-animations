@@ -10,7 +10,7 @@ class Inverter {
     this._pos_x = this._xor128.random_int(this._steps);
     this._pos_y = this._xor128.random_int(this._steps);
 
-    const on_off = this._xor128.random_int(5, 10) * 2;
+    const on_off = this._xor128.random_int(3, 8);
     this._on_off_interval = Array(on_off)
       .fill()
       .map(() => this._xor128.random(1))

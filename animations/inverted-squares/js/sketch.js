@@ -2,7 +2,6 @@ import { Engine, SimplexNoise, Point, Color } from "./engine.js";
 import { XOR128 } from "./xor128.js";
 import { Inverter } from "./inverter.js";
 import { Square } from "./square.js";
-import { Particle } from "./particles.js";
 
 class Sketch extends Engine {
   preload() {
@@ -19,7 +18,7 @@ class Sketch extends Engine {
     this._min_inverter_density = 0.25;
     this._max_inverter_density = 1;
 
-    this._texture_scl = 4;
+    this._texture_scl = 2;
     this._texture_oversampling = 2;
 
     this._colors = [Color.fromMonochrome(15), Color.fromMonochrome(245)];
@@ -110,8 +109,8 @@ class Sketch extends Engine {
 
     for (let y = 0; y < this.height * oversampling; y += scl) {
       for (let x = 0; x < this.width * oversampling; x += scl) {
-        const ch = this._xor128.random_int(0, 127);
-        const c = Color.fromMonochrome(ch, 0.1);
+        const ch = this._xor128.random_int(255);
+        const c = Color.fromMonochrome(ch, 0.05);
         ctx.fillStyle = c.rgba;
         ctx.fillRect(x, y, scl, scl);
       }
