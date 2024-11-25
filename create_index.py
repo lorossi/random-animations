@@ -1,14 +1,19 @@
 """This script creates the list of animations urls and embeds it into the index page."""
 
 from glob import glob
+from urllib import parse
 
 
 def create_urls() -> list[tuple[str, str]]:
     """Create urls for each animation."""
     folders = []
     for folder in glob("animations/*"):
+        if "WIP" in folder:
+            print(f"Skipping {folder}")
+            continue
         name = folder.split("/")[-1].replace("-", " ").lower()
-        folders.append((name, folder))
+        parsed_folder = parse.quote(folder)
+        folders.append((name, parsed_folder))
 
     return sorted(folders, key=lambda x: x[0])
 
@@ -23,7 +28,7 @@ def base_indent(content: str) -> int:
     return (len(content) - len(content.lstrip())) // 3
 
 
-def embed_urls(urls: list[str]) -> None:
+def embed_urls(urls: list[tuple[str, str]]) -> int:
     """Embed the urls in the page."""
     with open("index_template.html") as f:
         content = f.read()
@@ -42,8 +47,10 @@ def embed_urls(urls: list[str]) -> None:
     with open("index.html", "w") as f:
         f.write(content)
 
+    return len(content)
 
-def main():
+
+def main() -> None:
     """Script entry point."""
     urls = create_urls()
     embed_urls(urls)

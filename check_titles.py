@@ -19,17 +19,24 @@ def check_page_description(description: str, folder: str) -> bool:
 
 
 def get_folder(file: str) -> str:
+    """Get the folder name of the file."""
     return file.split("/")[-2]
 
 
 def get_title(content: str) -> str:
     """Get the title of the page."""
-    return re.search(r"<title>(.*?)</title>", content).group(1)
+    r = re.search(r"<title>(.*?)</title>", content)
+    if r is None:
+        return ""
+    return r.group(1)
 
 
 def get_description(content: str) -> str:
     """Get the description of the page."""
-    return re.search(r'meta name="description" content="(.*?)"', content).group(1)
+    r = re.search(r'meta name="description" content="(.*?)"', content)
+    if r is None:
+        return ""
+    return r.group(1)
 
 
 def list_files() -> list[str]:
@@ -43,8 +50,8 @@ def open_file(path: str) -> str:
         return f.read()
 
 
-def main():
-    """Script entry point."""
+def main() -> None:
+    """Check the titles and descriptions of all the files."""
     anything_found = False
     for file in list_files():
         content = open_file(file)
