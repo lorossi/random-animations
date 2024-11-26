@@ -47,14 +47,19 @@ class Palette {
 const PALETTES = [];
 
 class PaletteFactory {
-  static getRandomPalette(xor128, randomize = true) {
-    const colors = xor128.pick(PALETTES).map((c) => Color.fromHEX(c));
-    const palette = new Palette(colors);
-    if (randomize) palette.shuffle(xor128);
+  static getRandomPalette(rand = Math, randomize = true) {
+    const colors_index = Math.floor(rand.random() * PALETTES.length);
+    let colors = PALETTES[colors_index].map((c) => Color.fromHEX(c));
 
-    return palette;
+    if (randomize) {
+      colors = colors
+        .map((c) => ({ color: c, order: rand.random() }))
+        .sort((a, b) => a.order - b.order)
+        .map((c) => c.color);
+    }
+
+    return new Palette(colors);
   }
-
   static getPalette(n) {
     if (n < 0 || n > PALETTES.length - 1)
       throw new Error("Palette index out of bounds");
