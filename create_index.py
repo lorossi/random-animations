@@ -4,18 +4,18 @@ from glob import glob
 from urllib import parse
 
 
-def create_urls() -> list[tuple[str, str]]:
+def create_urls() -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
     """Create urls for each animation."""
     folders = []
+    skipped = []
     for folder in glob("animations/*"):
-        if "WIP" in folder:
-            print(f"Skipping {folder}")
-            continue
         name = folder.split("/")[-1].replace("-", " ").lower()
         parsed_folder = parse.quote(folder)
-        folders.append((name, parsed_folder))
 
-    return sorted(folders, key=lambda x: x[0])
+        base_list = skipped if "WIP" in folder else folders
+        base_list.append((name, parsed_folder))
+
+    return sorted(folders, key=lambda x: x[0]), sorted(skipped, key=lambda x: x[0])
 
 
 def indent(n: int) -> str:
@@ -52,8 +52,12 @@ def embed_urls(urls: list[tuple[str, str]]) -> int:
 
 def main() -> None:
     """Script entry point."""
-    urls = create_urls()
-    embed_urls(urls)
+    urls, skipped = create_urls()
+    print(f"Created {len(urls)} urls and skipped {len(skipped)} WIP animations")
+    for name, _ in skipped:
+        print(f"\t- skipped {name}")
+    embedded = embed_urls(urls)
+    print(f"Embedded {len(urls)} urls in {embedded} characters")
 
 
 if __name__ == "__main__":
