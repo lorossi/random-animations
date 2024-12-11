@@ -69,11 +69,11 @@ class Grid {
     const new_walkers = [];
     this._walkers.forEach((w) => {
       w.update();
-      if (w.canSplit()) new_walkers.push(w.split());
+      if (w.getCanSplit()) new_walkers.push(w.split());
       new_walkers.push(w);
     });
     this._walkers = new_walkers;
-    return this._walkers.every((w) => w.isEnded());
+    return this._walkers.every((w) => w.getHasEnded());
   }
 
   show(ctx) {

@@ -197,14 +197,14 @@ class Walker {
     return directions;
   }
 
-  isEnded() {
+  getHasEnded() {
     return this._has_ended;
   }
 
-  canSplit() {
+  getCanSplit() {
     // if the walker is still alive, it cannot split
     if (!this._has_ended) return false;
-    if (this._children.some((c) => !c.isEnded())) return false;
+    if (this._children.some((c) => !c.getHasEnded())) return false;
 
     // check the first free position via backtracking the history
     for (let i = this._positions_history.length - 1; i >= 0; i--) {

@@ -47,7 +47,6 @@ class Sketch extends Engine {
 
   draw() {
     if (this._ended) {
-      this._reset();
       return;
     }
 
