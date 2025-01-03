@@ -30,7 +30,7 @@ class Sketch extends Engine {
       const dx = (-1 / 3) * this._plus_scl * i;
       const dy = this._plus_scl * i;
       let x = 0;
-      while ((x - 5) * this._plus_scl < this.width) {
+      while ((x - 6) * this._plus_scl < this.width) {
         const px = dx + this._plus_scl * x;
         const py = dy + (1 / 3) * this._plus_scl * x;
         this._plus.push(
@@ -42,17 +42,11 @@ class Sketch extends Engine {
             this._rotation_directions[x % 2]
           )
         );
-
         x++;
       }
-    }
 
-    // place the other plus
-    for (let i = -this._cols / 2; i < this._cols + 4; i++) {
-      const dx = (-1 / 3) * this._plus_scl * i;
-      const dy = this._plus_scl * i;
-      let x = 0;
-      while ((x - 5) * this._plus_scl < this.width) {
+      x = 0;
+      while ((x - 6) * this._plus_scl < this.width) {
         const px = dx + this._plus_scl * x - (5 / 3) * this._plus_scl;
         const py = dy + (1 / 3) * this._plus_scl * x;
         this._negative_plus.push(
@@ -73,6 +67,7 @@ class Sketch extends Engine {
       this._xor128.random() > 0.5 ? 1 : -1,
     ];
     this._dt = this._xor128.random();
+    document.body.style.backgroundColor = this._palette.getColor(0).rgba;
 
     this._frame_offset = this.frameCount;
     if (this._recording) {
