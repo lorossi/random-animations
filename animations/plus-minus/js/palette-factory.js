@@ -46,10 +46,11 @@ class Palette {
 
 // two colors palettes (dark and light)
 const PALETTES = [
-  ["#edf2f4", "#2b2d42"],
-  ["#0f0f0f", "#f2f2f2"],
-  ["#0d1321", "#f0ebd8"],
-  ["#fffcf2", "#252422"],
+  ["#EDF2F4", "#2B2D42"],
+  ["#0F0F0F", "#F2F2F2"],
+  ["#0D1321", "#F0EBD8"],
+  ["#FFFCF2", "#252422"],
+  ["#101012", "#28EBCF"],
 ];
 
 class PaletteFactory {
