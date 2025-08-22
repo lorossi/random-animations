@@ -6,7 +6,7 @@ class Palette {
   }
 
   static fromArrayHEX(colors) {
-    return new Palette(colors.map((c) => Color.fromHEX(c)));
+    return new Palette(colors.map((c) => Color.fromHex(c)));
   }
 
   static fromArrayRGB(colors) {
@@ -49,7 +49,13 @@ const PALETTES = [];
 class PaletteFactory {
   static getRandomPalette(rand = Math, randomize = true) {
     const colors_index = Math.floor(rand.random() * PALETTES.length);
-    let colors = PALETTES[colors_index].map((c) => Color.fromHEX(c));
+    let colors = PALETTES[colors_index].map((c) => {
+      if (c instanceof Color) {
+        return c.copy();
+      }
+
+      return Color.fromHex(c);
+    });
 
     if (randomize) {
       colors = colors
@@ -64,7 +70,7 @@ class PaletteFactory {
     if (n < 0 || n > PALETTES.length - 1)
       throw new Error("Palette index out of bounds");
 
-    return new Palette(PALETTES[n].map((h) => Color.fromHEX(h)));
+    return new Palette(PALETTES[n].map((h) => Color.fromHex(h)));
   }
 
   static getPalettesCount() {
