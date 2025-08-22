@@ -14,30 +14,169 @@ import {
 
 // colors string to rgb
 const COLOR_NAMES = {
-  black: [0, 0, 0],
-  silver: [192, 192, 192],
-  gray: [128, 128, 128],
-  white: [255, 255, 255],
-  maroon: [128, 0, 0],
-  red: [255, 0, 0],
-  purple: [128, 0, 128],
-  fuchsia: [255, 0, 255],
-  green: [0, 128, 0],
-  lime: [0, 255, 0],
-  olive: [128, 128, 0],
-  yellow: [255, 255, 0],
-  navy: [0, 0, 128],
-  blue: [0, 0, 255],
-  teal: [0, 128, 128],
-  aqua: [0, 255, 255],
+  SW_aconiteviolet: [156, 82, 242],
+  SW_andovergreen: [92, 138, 115],
+  SW_antwarpblue: [0, 138, 161],
+  SW_apricotorange: [255, 115, 64],
+  SW_apricotyellow: [255, 230, 0],
+  SW_artemesiagreen: [101, 169, 143],
+  SW_benzolgreen: [0, 217, 115],
+  SW_black: [0, 0, 0],
+  SW_blackisholive: [50, 78, 42],
+  SW_blue: [13, 117, 255],
+  SW_blueviolet: [71, 51, 255],
+  SW_brickred: [163, 33, 0],
+  SW_brown: [108, 43, 17],
+  SW_buffycitrine: [136, 141, 42],
+  SW_burntsienna: [169, 52, 0],
+  SW_calamineblue: [128, 255, 204],
+  SW_cameopink: [230, 173, 207],
+  SW_carmine: [214, 0, 54],
+  SW_carminered: [161, 11, 43],
+  SW_cerulianblue: [41, 189, 173],
+  SW_cinnamonbuff: [255, 191, 110],
+  SW_cinnamonrufous: [194, 97, 44],
+  SW_citronyellow: [166, 212, 13],
+  SW_cobaltgreen: [148, 255, 148],
+  SW_coralred: [255, 115, 153],
+  SW_corinthianpink: [255, 166, 217],
+  SW_cossackgreen: [50, 142, 19],
+  SW_cotingapurple: [52, 0, 89],
+  SW_creamyellow: [255, 184, 82],
+  SW_darkcitrine: [126, 135, 67],
+  SW_darkgreenishglaucous: [179, 217, 163],
+  SW_darkmediciblue: [65, 119, 119],
+  SW_darkslatepurple: [83, 34, 92],
+  SW_darksoftviolet: [77, 82, 222],
+  SW_darktyrianblue: [13, 43, 82],
+  SW_deepgrayisholive: [80, 84, 35],
+  SW_deepindigo: [0, 8, 49],
+  SW_deeplyonsblue: [0, 36, 204],
+  SW_deepslategreen: [15, 38, 31],
+  SW_deepslateolive: [23, 39, 19],
+  SW_deepvioletplumbeous: [92, 114, 135],
+  SW_diaminegreen: [27, 142, 19],
+  SW_dullblueviolet: [110, 102, 212],
+  SW_dullvioletblack: [6, 0, 79],
+  SW_dullviridiangreen: [25, 204, 51],
+  SW_duskygreen: [0, 89, 46],
+  SW_duskymadderviolet: [45, 0, 96],
+  SW_ecru: [192, 180, 144],
+  SW_englishred: [222, 69, 0],
+  SW_eosinepink: [255, 94, 196],
+  SW_etruscanred: [201, 48, 62],
+  SW_eugeniareda: [237, 61, 102],
+  SW_eugeniaredb: [230, 46, 115],
+  SW_eupatoriumpurple: [191, 54, 224],
+  SW_fawn: [209, 176, 179],
+  SW_freshcolor: [255, 120, 140],
+  SW_glaucousgreen: [179, 232, 194],
+  SW_goldenyellow: [250, 148, 66],
+  SW_grayishlavendera: [184, 184, 255],
+  SW_grayishlavenderb: [191, 171, 204],
+  SW_green: [64, 201, 69],
+  SW_greenblue: [45, 188, 148],
+  SW_grenadinepink: [255, 97, 107],
+  SW_haysrusset: [104, 25, 22],
+  SW_helvetiablue: [0, 87, 186],
+  SW_hermosapink: [255, 179, 240],
+  SW_hydrangeared: [158, 25, 77],
+  SW_indianlake: [204, 26, 151],
+  SW_isabellacolor: [195, 165, 92],
+  SW_ivorybuff: [235, 217, 153],
+  SW_jasperred: [250, 43, 0],
+  SW_khaki: [182, 132, 0],
+  SW_krongbergsgreen: [117, 146, 67],
+  SW_laeliapink: [204, 133, 209],
+  SW_lemonyellow: [242, 255, 38],
+  SW_lightbrowndrab: [176, 134, 153],
+  SW_lightbrownisholive: [112, 105, 52],
+  SW_lightglaucousblue: [166, 230, 219],
+  SW_lightgrayisholive: [118, 132, 78],
+  SW_lightgreenyellow: [189, 242, 38],
+  SW_lightmauve: [145, 97, 242],
+  SW_lightpinkishcinnamon: [255, 191, 153],
+  SW_lightporcelaingreen: [35, 193, 124],
+  SW_lilac: [184, 117, 235],
+  SW_lincolngreen: [64, 84, 22],
+  SW_madderbrown: [101, 19, 0],
+  SW_maple: [194, 151, 90],
+  SW_marsbrowntobacco: [82, 32, 0],
+  SW_mineralgray: [159, 194, 178],
+  SW_naplesyellow: [250, 237, 143],
+  SW_neutralgray: [181, 209, 204],
+  SW_nightgreen: [122, 255, 0],
+  SW_nileblue: [191, 255, 230],
+  SW_ochraceoussalmon: [217, 158, 115],
+  SW_ochrered: [167, 55, 75],
+  SW_oilgreen: [110, 169, 0],
+  SW_oldrose: [217, 77, 153],
+  SW_olive: [113, 134, 0],
+  SW_olivebuff: [188, 211, 130],
+  SW_olivegreen: [88, 119, 30],
+  SW_oliveocher: [209, 189, 25],
+  SW_oliveyellow: [153, 179, 51],
+  SW_olympicblue: [79, 143, 230],
+  SW_orange: [255, 82, 0],
+  SW_orangecitrine: [140, 101, 16],
+  SW_orangerufous: [192, 82, 0],
+  SW_orangeyellow: [255, 171, 0],
+  SW_paleburntlake: [115, 15, 31],
+  SW_palekingsblue: [171, 245, 237],
+  SW_palelemonyellow: [255, 245, 158],
+  SW_palerawumber: [94, 64, 23],
+  SW_pansypurple: [111, 0, 67],
+  SW_peachred: [255, 51, 25],
+  SW_peacockblue: [0, 207, 145],
+  SW_pinkishcinnamon: [242, 173, 120],
+  SW_pistachiogreen: [86, 170, 105],
+  SW_pomegranitepurple: [185, 0, 120],
+  SW_pompeianred: [169, 6, 54],
+  SW_purpledrab: [117, 66, 96],
+  SW_pyriteyellow: [196, 191, 51],
+  SW_rainettegreen: [133, 184, 87],
+  SW_rawsienna: [184, 94, 0],
+  SW_red: [161, 0, 69],
+  SW_redorange: [232, 25, 0],
+  SW_redviolet: [52, 0, 163],
+  SW_rosolancpurple: [179, 25, 171],
+  SW_salviablue: [150, 191, 230],
+  SW_scarlet: [213, 12, 66],
+  SW_seagreen: [51, 255, 125],
+  SW_seashellpink: [255, 207, 196],
+  SW_sepia: [80, 61, 0],
+  SW_slatecolor: [27, 54, 68],
+  SW_spectrumred: [242, 0, 0],
+  SW_spinelred: [255, 77, 201],
+  SW_sudanbrown: [155, 83, 72],
+  SW_sulpheryellow: [245, 245, 184],
+  SW_sulphineyellow: [186, 166, 0],
+  SW_taupebrown: [107, 46, 99],
+  SW_turquoisegreen: [181, 255, 194],
+  SW_vandarpoelsblue: [0, 62, 131],
+  SW_vandykebrown: [54, 35, 4],
+  SW_vandykered: [116, 9, 9],
+  SW_venicegreen: [107, 255, 179],
+  SW_veroniapurple: [126, 48, 117],
+  SW_vinaceouscinnamon: [245, 153, 148],
+  SW_vinaceoustawny: [199, 67, 0],
+  SW_violet: [38, 25, 209],
+  SW_violetblue: [32, 45, 133],
+  SW_violetcarmine: [83, 23, 69],
+  SW_violetred: [61, 0, 121],
+  SW_vistorislake: [92, 44, 69],
+  SW_warmgray: [156, 178, 158],
+  SW_white: [255, 255, 255],
+  SW_yellow: [255, 255, 0],
+  SW_yellowgreen: [166, 255, 71],
+  SW_yellowocher: [224, 184, 31],
+  SW_yelloworange: [255, 140, 0],
   aliceblue: [240, 248, 255],
   antiquewhite: [250, 235, 215],
-  aqua: [0, 255, 255],
   aquamarine: [127, 255, 212],
   azure: [240, 255, 255],
   beige: [245, 245, 220],
   bisque: [255, 228, 196],
-  black: [0, 0, 0],
   blanchedalmond: [255, 235, 205],
   blue: [0, 0, 255],
   blueviolet: [138, 43, 226],
@@ -54,36 +193,30 @@ const COLOR_NAMES = {
   darkblue: [0, 0, 139],
   darkcyan: [0, 139, 139],
   darkgoldenrod: [184, 134, 11],
-  darkgray: [169, 169, 169],
   darkgreen: [0, 100, 0],
   darkgrey: [169, 169, 169],
   darkkhaki: [189, 183, 107],
   darkmagenta: [139, 0, 139],
   darkolivegreen: [85, 107, 47],
-  darkorange: [255, 140, 0],
   darkorchid: [153, 50, 204],
   darkred: [139, 0, 0],
   darksalmon: [233, 150, 122],
   darkseagreen: [143, 188, 143],
   darkslateblue: [72, 61, 139],
-  darkslategray: [47, 79, 79],
   darkslategrey: [47, 79, 79],
   darkturquoise: [0, 206, 209],
   darkviolet: [148, 0, 211],
   deeppink: [255, 20, 147],
   deepskyblue: [0, 191, 255],
-  dimgray: [105, 105, 105],
   dimgrey: [105, 105, 105],
   dodgerblue: [30, 144, 255],
   firebrick: [178, 34, 34],
   floralwhite: [255, 250, 240],
   forestgreen: [34, 139, 34],
-  fuchsia: [255, 0, 255],
   gainsboro: [220, 220, 220],
   ghostwhite: [248, 248, 255],
   gold: [255, 215, 0],
   goldenrod: [218, 165, 32],
-  gray: [128, 128, 128],
   green: [0, 128, 0],
   greenyellow: [173, 255, 47],
   grey: [128, 128, 128],
@@ -101,14 +234,12 @@ const COLOR_NAMES = {
   lightcoral: [240, 128, 128],
   lightcyan: [224, 255, 255],
   lightgoldenrodyellow: [250, 250, 210],
-  lightgray: [211, 211, 211],
   lightgreen: [144, 238, 144],
   lightgrey: [211, 211, 211],
   lightpink: [255, 182, 193],
   lightsalmon: [255, 160, 122],
   lightseagreen: [32, 178, 170],
   lightskyblue: [135, 206, 250],
-  lightslategray: [119, 136, 153],
   lightslategrey: [119, 136, 153],
   lightsteelblue: [176, 196, 222],
   lightyellow: [255, 255, 224],
@@ -162,7 +293,6 @@ const COLOR_NAMES = {
   skyblue: [135, 206, 235],
   slateblue: [106, 90, 205],
   slategray: [112, 128, 144],
-  slategrey: [112, 128, 144],
   snow: [255, 250, 250],
   springgreen: [0, 255, 127],
   steelblue: [70, 130, 180],
@@ -173,9 +303,7 @@ const COLOR_NAMES = {
   turquoise: [64, 224, 208],
   violet: [238, 130, 238],
   wheat: [245, 222, 179],
-  white: [255, 255, 255],
   whitesmoke: [245, 245, 245],
-  yellow: [255, 255, 0],
   yellowgreen: [154, 205, 50],
 };
 Object.freeze(COLOR_NAMES);
@@ -690,7 +818,7 @@ class Color {
     this._b = b;
     this._a = a;
 
-    this._toHsl();
+    this._calculateHsl();
   }
 
   /**
@@ -780,10 +908,10 @@ class Color {
    */
   static fromHSL(h, s, l, a) {
     const dummy = new Color();
-    dummy._h = h;
-    dummy._s = s;
-    dummy._l = l;
-    dummy._toRgb();
+    dummy.h = h;
+    dummy.s = s;
+    dummy.l = l;
+    dummy._calculateRgb();
     return new Color(dummy._r, dummy._g, dummy._b, a);
   }
 
@@ -806,7 +934,7 @@ class Color {
    * @static
    * @returns {Color}
    */
-  static fromHEX(hex) {
+  static fromHex(hex) {
     // regex to extract r, g, b, a values from hex string
     const regex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i;
     // extract values from hex string
@@ -820,6 +948,17 @@ class Color {
 
     // return color
     return new Color(dr, dg, db, da);
+  }
+
+  /**
+   * Create a color from a hexadecimal string
+   * @deprecated Use Color.fromHex instead
+   * @param {string} hex
+   * @static
+   * @returns {Color}
+   */
+  static fromHEX(hex) {
+    return Color.fromHex(hex);
   }
 
   /**
@@ -851,7 +990,7 @@ class Color {
    * Converts a color from RGB to HSL
    * @private
    */
-  _toHsl() {
+  _calculateHsl() {
     const r = this._r / 255;
     const g = this._g / 255;
     const b = this._b / 255;
@@ -890,7 +1029,7 @@ class Color {
    * Converts a color from HSL to RGB
    * @private
    */
-  _toRgb() {
+  _calculateRgb() {
     if (this._s == 0) {
       this._r = this._l;
       this._g = this._l;
@@ -923,9 +1062,8 @@ class Color {
    * @param {number} dec The decimal number
    * @private
    */
-  _toHex(dec) {
-    dec = Math.floor(dec);
-    return dec.toString(16).padStart(2, 0).toUpperCase();
+  _decToHex(dec) {
+    return Math.floor(dec).toString(16).padStart(2, 0).toUpperCase();
   }
 
   /**
@@ -933,7 +1071,7 @@ class Color {
    * @param {number} hex The hexadecimal number
    * @private
    */
-  _toDec(hex) {
+  _hexToDec(hex) {
     return parseInt(hex, 16);
   }
 
@@ -963,44 +1101,74 @@ class Color {
     return value;
   }
 
-  set hex(h) {
-    this._r = this._toDec(h.slice(1, 3));
-    this._g = this._toDec(h.slice(3, 5));
-    this._b = this._toDec(h.slice(5, 7));
+  set hex(hex) {
+    this._r = this._hexToDec(hex.slice(1, 3));
+    this._g = this._hexToDec(hex.slice(3, 5));
+    this._b = this._hexToDec(hex.slice(5, 7));
 
-    const a = parseInt(h.slice(7, 9), 16);
+    const a = parseInt(hex.slice(7, 9), 16);
     if (isNaN(a)) this._a = 1;
     else this._a = a;
 
-    this._toHsl();
+    this._calculateHsl();
+  }
+
+  get_hex() {
+    return `#${this._decToHex(this._r)}${this._decToHex(
+      this._g
+    )}${this._decToHex(this._b)}`;
   }
 
   get hex() {
-    return `#${this._toHex(this._r)}${this._toHex(this._g)}${this._toHex(
-      this._b
-    )}`;
+    return this.get_hex();
+  }
+
+  get_hexa() {
+    return `#${this._decToHex(this._r)}${this._decToHex(
+      this._g
+    )}${this._decToHex(this._b)}${this._decToHex(this._a * 255)}`;
   }
 
   get hexa() {
-    return `#${this._toHex(this._r)}${this._toHex(this._g)}${this._toHex(
-      this._b
-    )}${this._toHex(this._a * 255)}`;
+    return this.get_hexa();
+  }
+
+  get_rgb() {
+    const [r, g, b] = [this._r, this._g, this._b].map(Math.floor);
+    return `rgb(${r}, ${g}, ${b})`;
   }
 
   get rgb() {
-    return `rgb(${this._r}, ${this._g}, ${this._b})`;
+    return this.get_rgb();
+  }
+
+  get_rgba() {
+    const [r, g, b] = [this._r, this._g, this._b].map(Math.floor);
+    const a = this._a;
+    return `rgba(${r}, ${g}, ${b}, ${a})`;
   }
 
   get rgba() {
-    return `rgba(${this._r}, ${this._g}, ${this._b}, ${this._a})`;
+    return this.get_rgba();
+  }
+
+  get_hsl() {
+    const [h, s, l] = [this._h, this._s, this._l].map(Math.floor);
+    return `hsl(${h}, ${s}%, ${l}%)`;
   }
 
   get hsl() {
-    return `hsl(${this._h}, ${this._s}%, ${this._l}%)`;
+    return this.get_hsl();
+  }
+
+  get_hsla() {
+    const [h, s, l] = [this._h, this._s, this._l].map(Math.floor);
+    const a = this._a;
+    return `hsla(${h}, ${s}%, ${l}%, ${a})`;
   }
 
   get hsla() {
-    return `hsla(${this._h}, ${this._s}%, ${this._l}%, ${this._a})`;
+    return this.get_hsla();
   }
 
   get r() {
@@ -1009,7 +1177,7 @@ class Color {
 
   set r(x) {
     this._r = Math.floor(this._clamp(x, 0, 255));
-    this._toHsl();
+    this._calculateHsl();
   }
 
   get g() {
@@ -1018,7 +1186,7 @@ class Color {
 
   set g(x) {
     this._g = Math.floor(this._clamp(x, 0, 255));
-    this._toHsl();
+    this._calculateHsl();
   }
 
   get b() {
@@ -1027,7 +1195,7 @@ class Color {
 
   set b(x) {
     this._b = Math.floor(this._clamp(x, 0, 255));
-    this._toHsl();
+    this._calculateHsl();
   }
 
   get a() {
@@ -1044,7 +1212,7 @@ class Color {
 
   set h(x) {
     this._h = Math.floor(this._wrap(x, 0, 360));
-    this._toRgb();
+    this._calculateRgb();
   }
 
   get s() {
@@ -1053,7 +1221,7 @@ class Color {
 
   set s(x) {
     this._s = Math.floor(this._clamp(x, 0, 100));
-    this._toRgb();
+    this._calculateRgb();
   }
 
   get l() {
@@ -1062,19 +1230,12 @@ class Color {
 
   set l(x) {
     this._l = Math.floor(this._clamp(x, 0, 255));
-    this._toRgb();
+    this._calculateRgb();
   }
 
-  get monochrome() {
+  get is_monochrome() {
     if (this._r == this._g && this._g == this._b) return true;
     else return false;
-  }
-
-  set monochrome(s) {
-    this._r = s;
-    this._g = s;
-    this._b = s;
-    this._toHsl();
   }
 }
 
