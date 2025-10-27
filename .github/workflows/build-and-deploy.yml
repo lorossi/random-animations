@@ -3,6 +3,12 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "animations/**"
+      - "css/**"
+      - "create_index.py"
+      - "index_template.html"
+      - ".github/workflows/**"
 
 permissions:
   contents: read
