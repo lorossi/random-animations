@@ -1,6 +1,7 @@
 """This script checks for titles and description in all the files called index.html."""
 
 import re
+import sys
 from glob import glob
 
 
@@ -74,7 +75,9 @@ def main() -> None:
             print(f"{file}: Description not consistent with folder name")
             anything_found = True
 
-    if not anything_found:
+    if anything_found:
+        sys.exit(1)
+    else:
         print("All file titles and description are consistent")
 
 
