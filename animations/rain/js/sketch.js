@@ -13,7 +13,7 @@ class Sketch extends Engine {
     this._drop_size = 3;
     this._umbrella_elasticity = 0.5;
     this._umbrella_cols = 5;
-    this._umbrella_rows = 3;
+    this._umbrella_rows = 4;
     this._umbrella_scl = 0.75;
     this._width_factor = 0.8;
     this._height_factor = 0.8;

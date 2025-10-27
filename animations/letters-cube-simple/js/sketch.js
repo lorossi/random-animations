@@ -24,6 +24,9 @@ class Sketch extends Engine {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
 
+    // change page background color
+    document.body.style.backgroundColor = this._bg.rgb;
+
     // height of the letter
     const letter_scl = this.height / this._cubes_num;
     // max length of the word

@@ -6,7 +6,7 @@ class Sketch extends Engine {
   preload() {
     this._background_color = Color.fromMonochrome(15);
     this._splits_per_frame = 5;
-    this._scl = 0.9;
+    this._scl = 0.95;
     this._split_probability = 0.75;
 
     this._recording = false;

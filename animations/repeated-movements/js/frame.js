@@ -24,6 +24,7 @@ class Frame {
     this._old_point = null;
     this._sines = [];
     this._sines_scl = 1;
+    this._fg = Color.fromMonochrome(200);
   }
 
   setSines(sines) {
@@ -78,7 +79,8 @@ class Frame {
       return y < acc ? y : acc;
     }, 0);
 
-    this._sines_scl = this._size / Math.max(max_x - min_x, max_y - min_y);
+    this._sines_scl =
+      (this._size / Math.max(max_x - min_x, max_y - min_y)) * 0.8;
   }
 
   update(t) {
@@ -102,15 +104,14 @@ class Frame {
     ctx.translate(this._x + this._size / 2, this._y + this._size / 2);
     ctx.scale(this._scl, this._scl);
 
-    ctx.strokeStyle = Color.fromMonochrome(80).rgb;
+    ctx.strokeStyle = this._fg.rgba;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.rect(-this._size / 2, -this._size / 2, this._size, this._size);
     ctx.stroke();
 
     ctx.save();
-    ctx.scale(0.9, 0.9); // make sure the line is not clipped
-    ctx.strokeStyle = Color.fromMonochrome(180, 0.5).rgba;
+    ctx.strokeStyle = this._fg.rgba;
     ctx.lineWidth = 2;
 
     ctx.beginPath();

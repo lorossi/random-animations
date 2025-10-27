@@ -16,6 +16,8 @@ class Sketch extends Engine {
     this._tile_size = Math.floor(this.width / this._cols);
     this._palette = PaletteFactory.getRandomPalette(this._xor128, true);
 
+    document.body.style.background = this._palette.getColor(0).toString();
+
     this._tiles = new Array(this._cols * this._cols).fill(0).map((_, i) => {
       const x = i % this._cols;
       const y = Math.floor(i / this._cols);
