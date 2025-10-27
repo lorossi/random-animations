@@ -94,7 +94,7 @@ class Sketch extends Engine {
     return ((x + 1) / 2) * (max - min) + min;
   }
 
-  keyDown(key, code) {
+  keyDown(_, code) {
     if (code == 32) {
       // space
       this._noise_enabled = !this._noise_enabled;

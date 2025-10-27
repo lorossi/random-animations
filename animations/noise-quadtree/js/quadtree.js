@@ -98,27 +98,33 @@ class Cell {
     // small chance to skip drawing to create holes
     if (this._xor128.random() < 1 / (2 * this._depth)) return;
 
-    const r = this._xor128.random();
-    if (r < 2 / 3) {
-      // filled
-      ctx.fillRect(this._x, this._y, this._size, this._size);
-    } else {
-      // random rotation
-      const angle = this._xor128.random_int(0, 4) * (Math.PI / 2);
-      ctx.translate(this._x + this._size / 2, this._y + this._size / 2);
-      ctx.rotate(angle);
-      ctx.translate(-this._x - this._size / 2, -this._y - this._size / 2);
+    // random rotation
+    const angle = this._xor128.random_int(0, 4) * (Math.PI / 2);
+    ctx.translate(this._x + this._size / 2, this._y + this._size / 2);
+    ctx.rotate(angle);
+    ctx.translate(-this._x - this._size / 2, -this._y - this._size / 2);
 
-      // diagonal pattern
-      ctx.beginPath();
-      for (let i = -this._size; i < this._size * 2; i += 15) {
-        ctx.moveTo(this._x + i, this._y);
-        ctx.lineTo(this._x + i - this._size, this._y + this._size);
-      }
-      ctx.strokeStyle = this._fg.rgba;
-      ctx.lineWidth = 2;
-      ctx.stroke();
+    const r = this._xor128.random();
+    if (r < 0.6) {
+      this._fill(ctx);
+    } else {
+      this._linePattern(ctx);
     }
+  }
+
+  _fill(ctx) {
+    ctx.fillRect(this._x, this._y, this._size, this._size);
+  }
+
+  _linePattern(ctx) {
+    ctx.beginPath();
+    for (let i = -this._size; i < this._size * 2; i += 15) {
+      ctx.moveTo(this._x + i, this._y);
+      ctx.lineTo(this._x + i - this._size, this._y + this._size);
+    }
+    ctx.strokeStyle = this._fg.rgba;
+    ctx.lineWidth = 2;
+    ctx.stroke();
   }
 
   get x() {
