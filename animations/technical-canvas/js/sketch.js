@@ -12,6 +12,12 @@ class Sketch extends Engine {
     this._texture_oversize = 1.5;
 
     this._refresh = 60;
+    this._oscillator_started = false;
+
+    this._audio_context = new AudioContext();
+    this._oscillator = this._audio_context.createOscillator();
+    this._oscillator.type = "sine";
+    this._oscillator.connect(this._audio_context.destination);
   }
 
   setup() {
@@ -26,11 +32,16 @@ class Sketch extends Engine {
       this._texture_scl,
       this._texture_oversize
     );
+
+    document.body.style.backgroundColor = this._bg.darken(0.03).rgb;
   }
 
   draw() {
     if (this.frameCount - this._last_refresh > this._refresh) {
       this._generateRows();
+
+      const frequency = this._xor128.random_int(600, 1200);
+      this._beep(frequency);
       this._last_refresh = this.frameCount;
     }
 
@@ -72,8 +83,10 @@ class Sketch extends Engine {
   }
 
   click() {
-    this.setup();
-    this.draw();
+    if (this._oscillator_started) return;
+
+    this._oscillator_started = true;
+    this._oscillator.start();
   }
 
   _generateRows() {
@@ -122,6 +135,22 @@ class Sketch extends Engine {
     }
 
     return this._texture;
+  }
+
+  async _beep(frequency = 800, duration = 100) {
+    this._oscillator.frequency.setValueAtTime(
+      frequency,
+      this._audio_context.currentTime
+    );
+    await this._sleep(duration);
+    this._oscillator.frequency.setValueAtTime(
+      0,
+      this._audio_context.currentTime
+    );
+  }
+
+  async _sleep(delay) {
+    await new Promise((resolve) => setTimeout(resolve, delay));
   }
 }
 

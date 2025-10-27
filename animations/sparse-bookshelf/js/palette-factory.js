@@ -47,6 +47,7 @@ const PALETTES = [
     "#ae2012",
     "#9b2226",
   ],
+  ["#8cb369", "#f4e285", "#f4a259", "#5b8e7d", "#bc4b51"],
 ];
 
 class PaletteFactory {

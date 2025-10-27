@@ -36,7 +36,9 @@ class Row {
       const offset_x = this._xor128.random_interval(0, line_width * 3);
       const offset_y = this._xor128.random_interval(0, line_width * 3);
       const offset_h = this._xor128.random_interval(0, this._height / 10);
-      const rotation = this._xor128.random_interval(0, Math.PI / 240);
+      const rotation =
+        this._xor128.random_interval(0, Math.PI / 240) +
+        this._xor128.random_int(0, 4) * (Math.PI / 2);
       const fade = this._xor128.random(0.9, 1);
       const color_copy = this._color.copy();
       color_copy.lighten(fade);
