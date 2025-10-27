@@ -1,0 +1,10 @@
+name: Check Animation Titles
+on: [push, pull_request]
+jobs:
+  check-titles:
+    runs-on: python-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Run name test script
+        run: python3 ./check_titles.py

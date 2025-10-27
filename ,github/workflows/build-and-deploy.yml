@@ -1,0 +1,30 @@
+name: Build and Deploy on GitHub Pages
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-index:
+    runs-on: python-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Create index
+        run: python3 ./create_index.py
+        with:
+          path: index.html
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: index.html
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build-index
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
