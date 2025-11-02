@@ -32,6 +32,16 @@ const PAINTINGS = [
     displayname: "Caravaggio",
     count: 5,
   },
+  {
+    artist: "dali",
+    displayname: "Salvador Dalí",
+    count: 5,
+  },
+  {
+    artist: "basquiat",
+    displayname: "Jean-Michel Basquiat",
+    count: 5,
+  },
 ];
 
 Object.freeze(PAINTINGS);
