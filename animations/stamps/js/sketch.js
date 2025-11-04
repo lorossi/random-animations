@@ -4,9 +4,6 @@ import { Spinner } from "./spinner.js";
 import { Stamp } from "./stamp.js";
 import { XOR128 } from "./xor128.js";
 
-// TODO: add wait screen for image loading
-// TODO: add checkbox for mixed paintings and dropdown for artists
-
 class Sketch extends Engine {
   preload() {
     this._scl = 0.95;
