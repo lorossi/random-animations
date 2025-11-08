@@ -10,8 +10,8 @@ class Sketch extends Engine {
     this._circle_speed = 2;
     this._bg = Color.fromMonochrome(240);
     this._scl = 0.95;
-    this._noise_scl = 0.001;
-    this._noise_radius = 0.5;
+    this._noise_scl = 0.0015;
+    this._noise_radius = 0.005;
   }
 
   setup() {
@@ -19,7 +19,6 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(this._seed);
 
     this._palette = PaletteFactory.getRandomPalette(this._xor128);
-    this._rotation = this._xor128.random_int(4) * (Math.PI / 2);
 
     this.background(this._bg);
     this._generateCircles();
