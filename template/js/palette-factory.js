@@ -35,6 +35,16 @@ class Palette {
     return this.getColor(r);
   }
 
+  getSmoothColor(t, easing = null) {
+    const n = this._colors.length - 1;
+    const integer_part = Math.floor(t * n) % n;
+    const fractional_part = t * n - Math.floor(t * n);
+
+    const c1 = this.getColor(integer_part);
+    const c2 = this.getColor(integer_part + 1);
+
+    return c1.mix(c2, fractional_part, easing);
+  }
   get colors() {
     return this._colors;
   }
