@@ -45,8 +45,12 @@ class Palette {
 }
 
 const PALETTES = [
-  ["#003049", "#f77f00"],
-  ["#8b0000", "#00008b"],
+  // https://coolors.co/palette/f6f7eb-e94f37-393e41
+  ["#f6f7eb", "#e94f37", "#393e41"],
+  // https://coolors.co/palette/f4f1de-e07a5f-3d405b
+  ["#f4f1de", "#e07a5f", "#3d405b"],
+  // https://coolors.co/palette/26547c-ef476f-ffd166
+  ["#26547c", "#ef476f", "#ffd166"],
 ];
 
 class PaletteFactory {

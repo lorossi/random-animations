@@ -13,10 +13,12 @@ class Sketch extends Engine {
     this._seed = new Date().getTime();
     this._xor128 = new XOR128(this._seed);
     this._noise = new SimplexNoise(this._xor128);
+    this._palette = PaletteFactory.getRandomPalette(this._xor128);
+    this._bg = this._palette.getColor(0);
 
     let circles = this._xor128.random_int(7, 15);
     if (circles % 2 === 0) circles++;
-    this._rotation = this._xor128.random_interval(0, Math.PI / 180);
+    this._rotation = this._xor128.random_interval(0, Math.PI / 90);
 
     this._circles = circles;
 
@@ -35,8 +37,6 @@ class Sketch extends Engine {
     this.ctx.scale(this._scl, this._scl);
     this.ctx.translate(-this.width / 2, -this.height / 2);
 
-    const palette = PaletteFactory.getRandomPalette(this._xor128, true);
-
     const lengths = this.width / (this._circles * 2);
 
     for (let i = 0; i < 2; i++) {
@@ -48,7 +48,7 @@ class Sketch extends Engine {
       for (let j = 0; j < this._circles; j++) {
         const x = (j + 1) * lengths;
         const l = (this.width / this._circles / 2) * (j + 1);
-        const c = palette.getColor(i).copy();
+        const c = this._palette.getColor(i + 1).copy();
         const p = 1 - j / this._circles;
         const a = this._easeInExp(p, 3);
         c.a = this._remap(a, 0.1, 0.5);
