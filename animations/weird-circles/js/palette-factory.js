@@ -53,6 +53,10 @@ const PALETTES = [
   ["#da2c38", "#226f54", "#87c38f", "#f4f0bb", "#43291f"],
   // https://coolors.co/palette/011627-fdfffc-2ec4b6-e71d36-ff9f1c
   ["#011627", "#fdfffc", "#2ec4b6", "#e71d36", "#ff9f1c"],
+  // https://coolors.co/palette/f4f1de-e07a5f-3d405b-81b29a-f2cc8f
+  ["#f4f1de", "#e07a5f", "#3d405b", "#81b29a", "#f2cc8f"],
+  // https://coolors.co/palette/d00000-ffba08-3f88c5-032b43-136f63
+  ["#d00000", "#ffba08", "#3f88c5", "#032b43", "#136f63"],
 ];
 
 class PaletteFactory {

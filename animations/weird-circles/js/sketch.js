@@ -16,9 +16,8 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(seed);
 
     const palette = PaletteFactory.getRandomPalette(this._xor128);
-    const colors = palette.colors;
-    this._bg_color = colors[0];
-    this._palette = new Palette(colors.slice(1));
+    [this._bg, ...this._fg] = palette.colors;
+    this._palette = new Palette(this._fg);
 
     const circle_r = this.width / this._cols / 2;
     this._circles = new Array(this._cols ** 2).fill(0).map((_, i) => {
@@ -37,7 +36,7 @@ class Sketch extends Engine {
 
   draw() {
     this.ctx.save();
-    this.background(this._bg_color);
+    this.background(this._bg);
     this.scaleFromCenter(this._scl);
 
     this._circles.forEach((circle) => circle.draw(this.ctx));
