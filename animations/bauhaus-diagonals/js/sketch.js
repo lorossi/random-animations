@@ -10,7 +10,7 @@ class Sketch extends Engine {
     this._empty_chances = 0.3;
     this._shape_scl = 0.95;
     this._noise_scl = 5;
-    this._texture_scl = 3;
+    this._texture_scl = 4;
 
     // colors by https://color.adobe.com/-Bauhaus-color-theme-6950982/
     this._fg = Color.fromHex("#222222");
@@ -71,8 +71,8 @@ class Sketch extends Engine {
 
     for (let x = 0; x < this.width; x += this._texture_scl) {
       for (let y = 0; y < this.height; y += this._texture_scl) {
-        const ch = this._xor128.random_int(255);
-        const c = Color.fromMonochrome(ch, 0.025);
+        const ch = this._xor128.random_int(127);
+        const c = Color.fromMonochrome(ch, 0.05);
         texture_ctx.fillStyle = c.rgba;
         texture_ctx.fillRect(x, y, this._texture_scl, this._texture_scl);
       }
@@ -83,7 +83,7 @@ class Sketch extends Engine {
 
   _applyTexture(texture) {
     this.ctx.save();
-    this.ctx.globalCompositeOperation = "dodge";
+    this.ctx.globalCompositeOperation = "multiply";
     this.ctx.drawImage(texture, 0, 0);
     this.ctx.restore();
   }
