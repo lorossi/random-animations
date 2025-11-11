@@ -7,7 +7,7 @@ class Sketch extends Engine {
   preload() {
     this._cols = 100;
     this._walkers_num = 5;
-    this._walker_noise_scl = 0.05;
+    this._walker_noise_scl = 0.005;
     this._scl = 0.95;
 
     this._recording = false;

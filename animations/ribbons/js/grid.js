@@ -55,9 +55,7 @@ class Grid {
       this._walkers_line_num
     );
 
-    const seed = this._xor128.random_int(1e16);
-
-    walker.setSeed(seed);
+    walker.setSeed(this._seed);
     walker.setGrid(this._grid);
     walker.setPalette(this._palette);
     walker.setNoiseScl(this._noise_scl);
