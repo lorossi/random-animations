@@ -15,25 +15,7 @@ All the animations are hosted on a simple GitHub Pages website; however, some of
 
 ### Things to do
 
-#### Circle Factory
-
-- [ ] Make the pieces painted in halves instead of quarters
-- [ ] Pick some better colors
-
-#### letters-cube-simple
-
-- [ ] Add something interesting in the background
-
-### Sparse Bookshelves
-
-- [ ] Add something in between the books (globe, plant, cat, ...)
-
-### Modular
-
-- [ ] Style the modules a bit more
-  - [ ] wire holes color (black)
-  - [ ] background color
-  - [ ] module color
+I'd say we have to wing it
 
 ## Published Animations
 
