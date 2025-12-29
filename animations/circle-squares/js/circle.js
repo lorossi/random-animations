@@ -1,5 +1,37 @@
 import { XOR128 } from "./xor128.js";
 
+class Crown {
+  constructor(max_size, thickness, color) {
+    this._max_size = max_size;
+    this._thickness = thickness;
+    this._color = color;
+
+    this._size = 0;
+  }
+
+  update(t) {
+    this._size = this._max_size * t;
+  }
+
+  draw(ctx) {
+    const outer = Math.max(0, this._size);
+    const inner = Math.max(0, this._size - this._thickness);
+
+    ctx.save();
+    ctx.fillStyle = this._color.rgba;
+
+    ctx.beginPath();
+    ctx.arc(0, 0, outer, 0, Math.PI * 2);
+    ctx.arc(0, 0, inner, 0, Math.PI * 2, true);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  get size() {
+    return this._size - this._thickness;
+  }
+}
 class Circle {
   constructor(x, y, size, seed, scl, palette) {
     this._x = x;
@@ -11,18 +43,29 @@ class Circle {
 
     this._xor128 = new XOR128(this._seed);
 
-    this._circles_num = this._xor128.random_int(5, 16);
+    this._crowns_num = this._xor128.random_int(5, 16);
+    if (this._crowns_num % 2 == 1) this._crowns_num += 1;
 
     this._palette.shuffle(this._xor128);
-    this._dr = this._xor128.random(0, this._size * 0.25);
+    this._dr = this._xor128.random(0, this._size * 0.15);
     this._dtheta = this._xor128.random(0, Math.PI * 2);
 
     this._colors = [this._palette.getColor(0), this._palette.getColor(1)];
+
+    this._crowns = new Array(this._crowns_num).fill(null).map((_, i) => {
+      const thickness = this._size / this._crowns_num;
+      return new Crown(this._size, thickness, this._colors[i % 2]);
+    });
+  }
+
+  update(t) {
+    this._crowns.forEach((crown, i) => {
+      const crown_t = t + i / this._crowns_num;
+      crown.update(this._wrap(crown_t, 0, 1));
+    });
   }
 
   draw(ctx) {
-    const max_size = this._size;
-
     ctx.save();
     ctx.translate(this._x + this._size / 2, this._y + this._size / 2);
     ctx.scale(this._scl, this._scl);
@@ -40,28 +83,7 @@ class Circle {
     ctx.rotate(this._dtheta);
     ctx.translate(this._dr, 0);
 
-    ctx.beginPath();
-    ctx.fillStyle = this._colors[1].rgba;
-    ctx.arc(0, 0, max_size, 0, Math.PI * 2);
-    ctx.fill();
-
-    for (let i = 0; i < this._circles_num; i++) {
-      let outer_radius = max_size * ((i + 1) / this._circles_num);
-      let inner_radius = max_size * (i / this._circles_num);
-
-      if (inner_radius > max_size) {
-        outer_radius -= max_size;
-        inner_radius -= max_size;
-      }
-
-      const color = this._colors[i % 2];
-
-      ctx.fillStyle = color.rgba;
-      ctx.beginPath();
-      ctx.arc(0, 0, outer_radius, 0, Math.PI * 2);
-      ctx.arc(0, 0, inner_radius, 0, Math.PI * 2, true);
-      ctx.fill();
-    }
+    this._crowns.forEach((crown) => crown.draw(ctx));
 
     ctx.restore();
   }
