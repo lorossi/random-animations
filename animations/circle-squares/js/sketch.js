@@ -10,7 +10,7 @@ class Sketch extends Engine {
     this._texture_scl = 2;
     this._texture_oversize = 1.2;
 
-    this._duration = 600;
+    this._duration = 300;
     this._recording = false;
   }
 
@@ -47,7 +47,6 @@ class Sketch extends Engine {
   }
 
   draw() {
-    console.log(this.frameRate);
     const delta_frame = this.frameCount - this._frame_offset;
     const t = (delta_frame / this._duration) % 1;
 
@@ -90,7 +89,7 @@ class Sketch extends Engine {
 
     for (let x = 0; x < canvas.width; x += texture_scl) {
       for (let y = 0; y < canvas.height; y += texture_scl) {
-        const ch = this._xor128.random_int(0, 127);
+        const ch = this._xor128.random_int(256);
         const c = Color.fromMonochrome(ch, 0.05);
         ctx.fillStyle = c.rgba;
         ctx.fillRect(x, y, texture_scl, texture_scl);
@@ -105,7 +104,7 @@ class Sketch extends Engine {
     const dy = -this._xor128.random_int(0, texture.height - this.height);
 
     this.ctx.save();
-    this.ctx.globalCompositeOperation = "dodge";
+    this.ctx.globalCompositeOperation = "multiply";
     this.ctx.drawImage(texture, dx, dy);
     this.ctx.restore();
   }

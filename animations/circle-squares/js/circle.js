@@ -83,7 +83,9 @@ class Circle {
     ctx.rotate(this._dtheta);
     ctx.translate(this._dr, 0);
 
-    this._crowns.forEach((crown) => crown.draw(ctx));
+    this._crowns
+      .filter((crown) => crown.size < this._size - this._dr)
+      .forEach((crown) => crown.draw(ctx));
 
     ctx.restore();
   }
