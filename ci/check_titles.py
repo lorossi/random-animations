@@ -5,23 +5,18 @@ import sys
 from glob import glob
 
 
-def check_page_title(title: str, folder: str) -> bool:
-    """Check if the page title is consistent with the folder name."""
-    clean_folder = folder.split("/")[-1].replace("-", " ").lower()
-    clean_title = title.replace("-", " ").lower()
-    return clean_folder == clean_title
-
-
-def check_page_description(description: str, folder: str) -> bool:
-    """Check if the page description is consistent with the folder name."""
-    clean_folder = folder.split("/")[-1].replace("-", " ").lower()
-    clean_description = description.replace("-", " ").lower()
-    return clean_folder == clean_description
+def format_title(title: str) -> str:
+    """Format the title to be comparable."""
+    to_replace = [" ", "-", "_"]
+    clean_title = title.lower()
+    for r in to_replace:
+        clean_title = clean_title.replace(r, "")
+    return clean_title
 
 
 def get_folder(file: str) -> str:
     """Get the folder name of the file."""
-    return file.split("/")[-2]
+    return format_title(file.split("/")[-2])
 
 
 def get_title(content: str) -> str:
@@ -29,7 +24,7 @@ def get_title(content: str) -> str:
     r = re.search(r"<title>(.*?)</title>", content)
     if r is None:
         return ""
-    return r.group(1)
+    return format_title(r.group(1))
 
 
 def get_description(content: str) -> str:
@@ -37,45 +32,40 @@ def get_description(content: str) -> str:
     r = re.search(r'meta name="description" content="(.*?)"', content)
     if r is None:
         return ""
-    return r.group(1)
-
-
-def list_files() -> list[str]:
-    """List all the index.html files."""
-    return glob("animations/**/index.html")
-
-
-def open_file(path: str) -> str:
-    """Open the file and return its content."""
-    with open(path) as f:
-        return f.read()
+    return format_title(r.group(1))
 
 
 def main() -> None:
     """Check the titles and descriptions of all the files."""
-    anything_found = False
-    for file in list_files():
-        content = open_file(file)
+    something_found = False
+    for path in glob("animations/**/index.html"):
+        with open(path) as f:
+            content = f.read()
 
-        folder = get_folder(file)
+        folder = get_folder(path)
         title = get_title(content)
         description = get_description(content)
 
         if title == "TEMPLATE":
-            print(f"{file}: Title not changed")
-            anything_found = True
-        elif not check_page_title(title, folder):
-            print(f"{file}: Title not consistent with folder name")
-            anything_found = True
+            print(f"{path}: Title not changed")
+            something_found = True
+        elif title != folder:
+            print(
+                f"{path}: Title not consistent with folder name ({folder} vs {title})"
+            )
+            something_found = True
 
         if description == "TEMPLATE":
-            print(f"{file}: Description not changed")
-            anything_found = True
-        elif not check_page_description(description, folder):
-            print(f"{file}: Description not consistent with folder name")
-            anything_found = True
+            print(f"{path}: Description not changed")
+            something_found = True
+        elif description != folder:
+            print(
+                f"{path}: Description not consistent with folder name "
+                f"({folder} vs {description})"
+            )
+            something_found = True
 
-    if anything_found:
+    if something_found:
         sys.exit(1)
     else:
         print("All file titles and description are consistent")
