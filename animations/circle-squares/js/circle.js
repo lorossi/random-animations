@@ -15,14 +15,12 @@ class Crown {
 
   draw(ctx) {
     const outer = Math.max(0, this._size);
-    const inner = Math.max(0, this._size - this._thickness);
 
     ctx.save();
     ctx.fillStyle = this._color.rgba;
 
     ctx.beginPath();
     ctx.arc(0, 0, outer, 0, Math.PI * 2);
-    ctx.arc(0, 0, inner, 0, Math.PI * 2, true);
     ctx.fill();
 
     ctx.restore();
@@ -43,6 +41,7 @@ class Circle {
 
     this._xor128 = new XOR128(this._seed);
 
+    this._dt = this._xor128.random();
     this._crowns_num = this._xor128.random_int(5, 16);
     if (this._crowns_num % 2 == 1) this._crowns_num += 1;
 
@@ -60,7 +59,7 @@ class Circle {
 
   update(t) {
     this._crowns.forEach((crown, i) => {
-      const crown_t = t + i / this._crowns_num;
+      const crown_t = t + this._dt + i / this._crowns_num;
       crown.update(this._wrap(crown_t, 0, 1));
     });
   }
@@ -85,6 +84,7 @@ class Circle {
 
     this._crowns
       .filter((crown) => crown.size < this._size - this._dr)
+      .sort((a, b) => b.size - a.size)
       .forEach((crown) => crown.draw(ctx));
 
     ctx.restore();
