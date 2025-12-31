@@ -44,6 +44,8 @@ def embed_urls(urls: list[tuple[str, str]]) -> int:
 
     content = content.replace("{{ LINKS }}", new_content)
 
+    content = content.replace("{{ COUNT }}", str(len(urls)))
+
     with open("index.html", "w") as f:
         f.write(content)
 
