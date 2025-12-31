@@ -54,6 +54,7 @@ class Sketch extends Engine {
     this.ctx.save();
     this.background(this._bg);
     this._grid.draw(this.ctx);
+    this._texture.draw(this.ctx);
     this.ctx.restore();
 
     this._drawQuestionMark(this.ctx, this._cols - 2, this._cols - 1, Math.PI);

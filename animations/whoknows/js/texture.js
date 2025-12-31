@@ -29,7 +29,7 @@ class Texture {
     return canvas;
   }
 
-  apply(ctx) {
+  draw(ctx) {
     ctx.save();
     ctx.globalCompositeOperation = "dodge";
     ctx.drawImage(this._canvas, 0, 0, ctx.canvas.width, ctx.canvas.height);
