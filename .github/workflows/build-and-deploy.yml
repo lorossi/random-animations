@@ -24,6 +24,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
       - name: Run name test script
         run: python3 ./ci/check_titles.py
 
@@ -33,6 +39,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
       - name: Create index
         run: python3 ./ci/create_index.py
       - name: Prepare files for deployment
