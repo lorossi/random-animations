@@ -17,7 +17,7 @@ def from_adobe_xml(xml_content: str) -> list[str]:
 def from_coolors_url(url: str) -> list[str]:
     """Parse a Coolors.co URL and return a list of hex color strings."""
     rgb_pattern = re.compile(r"palette/([0-9A-Fa-f\-]+)")
-    return [f"#{color}" for color in re.findall(rgb_pattern, url)[0].split("-")]
+    return [f"#{color.upper()}" for color in re.findall(rgb_pattern, url)[0].split("-")]
 
 
 def main() -> None:
