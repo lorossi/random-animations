@@ -10,9 +10,6 @@ class Sketch extends Engine {
 
     this._bg = Color.fromMonochrome(240);
     this._scl = 0.95;
-
-    this._texture_scl = 4;
-    this._texture_oversize = 1.25;
   }
 
   setup() {
@@ -38,8 +35,6 @@ class Sketch extends Engine {
       );
     });
 
-    this._texture = this._generateTexture();
-
     this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
@@ -52,16 +47,11 @@ class Sketch extends Engine {
     const t = (delta_frame / this._duration) % 1;
 
     this.ctx.save();
-
-    this.ctx.save();
     this.background(this._bg);
     this.scaleFromCenter(this._scl);
 
     this._squares.forEach((square) => square.update(t));
     this._squares.forEach((square) => square.draw(this.ctx));
-    this.ctx.restore();
-
-    this._applyTexture(this._texture);
     this.ctx.restore();
 
     if (t == 0 && delta_frame > 0 && this._recording) {
@@ -76,41 +66,6 @@ class Sketch extends Engine {
   click() {
     this.setup();
     this.draw();
-  }
-
-  _generateTexture() {
-    const size = Math.floor(
-      Math.max(this.width, this.height) * this._texture_oversize
-    );
-    const canvas = document.createElement("canvas");
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext("2d");
-
-    for (let x = 0; x < size; x += this._texture_scl) {
-      for (let y = 0; y < size; y += this._texture_scl) {
-        const ch = this._xor128.random_int(255);
-        const c = Color.fromMonochrome(ch);
-
-        ctx.fillStyle = c.rgba;
-        ctx.fillRect(x, y, this._texture_scl, this._texture_scl);
-      }
-    }
-
-    return canvas;
-  }
-
-  _applyTexture(texture) {
-    const oversize =
-      (this._texture_oversize - 1) * Math.min(this.width, this.height);
-    const dx = -this._xor128.random_int(oversize);
-    const dy = -this._xor128.random_int(oversize);
-
-    this.ctx.save();
-    this.ctx.globalAlpha = 0.04;
-    this.ctx.globalCompositeOperation = "multiply";
-    this.ctx.drawImage(texture, dx, dy);
-    this.ctx.restore();
   }
 }
 
