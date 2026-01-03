@@ -68,9 +68,13 @@ class Cell {
   drawQuestionMark(ctx) {
     const cell_size = this._size / this._cols;
 
-    const cell_x = this._xor128.random_int(this._cols);
-    const cell_y = this._xor128.random_int(this._cols);
+    // prevent failure when cols is 2 (should not happen at all)
+    const max_cell = this._cols == 2 ? 1 : this._cols - 1;
+    const min_cell = this._cols == 2 ? 0 : 1;
+    const cell_x = this._xor128.random_int(min_cell, max_cell);
+    const cell_y = this._xor128.random_int(min_cell, max_cell);
 
+    // font color is opposite to background color
     const color_index = (this._getCellColorIndex(cell_x, cell_y) + 1) % 2;
     const bg_color = this._colors[color_index];
     const rotation = this._xor128.random_int(4) * (Math.PI / 2);
@@ -84,7 +88,7 @@ class Cell {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = bg_color.rgba;
-    ctx.font = `${cell_size}px Roboto`;
+    ctx.font = `${cell_size}px RobotoBold`;
     ctx.fillText("?", 0, 0.1 * cell_size);
     ctx.restore();
   }

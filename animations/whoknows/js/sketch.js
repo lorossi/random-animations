@@ -70,20 +70,18 @@ class Sketch extends Engine {
   }
 
   _drawQuestionMark(ctx, x, y, rotation) {
-    const question_mark = "?";
     const cell_scl = this.width / this._cols;
     const font_size = Math.floor(cell_scl);
     const color = this._grid.getColor(x, y);
 
     ctx.save();
+    ctx.translate(cell_scl * (x + 0.5), cell_scl * (y + 0.5));
     ctx.fillStyle = this._isColorDark(color) ? "#FFFFFF" : "#000000";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = `${font_size}px Roboto`;
-    ctx.translate(x * cell_scl + cell_scl / 2, y * cell_scl + cell_scl / 2);
+    ctx.font = `${font_size}px RobotoBold`;
     ctx.rotate(rotation);
-
-    ctx.fillText(question_mark, 0, cell_scl * 0.05);
+    ctx.fillText("?", 0, 0.1 * cell_scl);
     ctx.restore();
   }
   _isColorDark(color) {
