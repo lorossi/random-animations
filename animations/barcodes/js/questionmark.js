@@ -16,29 +16,14 @@ class QuestionMark {
     ctx.save();
     ctx.globalCompositeOperation = "difference";
     ctx.fillStyle = "white";
-    ctx.strokeStyle = "white";
 
     ctx.translate(this._x, this._y);
     ctx.rotate(this._rotation);
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = `${this._size}px Hack`;
-
-    const text_metrics = ctx.measureText(text);
-    const actual_height =
-      text_metrics.actualBoundingBoxAscent +
-      text_metrics.actualBoundingBoxDescent;
-
     ctx.fillText(text, 0, 0);
 
-    // draw a box around the question mark
-    ctx.lineWidth = 2;
-    ctx.strokeRect(
-      -text_metrics.width / 2 - this._size / 10,
-      -actual_height / 2 - this._size / 10,
-      text_metrics.width + this._size / 5,
-      actual_height + this._size / 5
-    );
     ctx.restore();
   }
 }
