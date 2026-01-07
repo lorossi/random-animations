@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, SimplexNoise, Point, Color, XOR128 } from "./lib.js";
 
 class Sketch extends Engine {
   preload() {
@@ -16,7 +14,7 @@ class Sketch extends Engine {
     }
   }
 
-  draw() {
+  draw(dt) {
     const delta_frame = this.frameCount - this._frame_offset;
     const t = (delta_frame / this._duration) % 1;
 
