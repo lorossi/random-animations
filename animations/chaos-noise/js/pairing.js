@@ -2,51 +2,75 @@ import { XOR128, SimplexNoise } from "./lib.js";
 import { Palette } from "./palette-factory.js";
 
 class Pairing {
-  constructor(x, y, size, seed, noise_scl, palette) {
+  constructor(x, y, size, seed, noise_scl, colors) {
     this._x = x;
     this._y = y;
     this._size = size;
     this._seed = seed;
     this._noise_scl = noise_scl;
+    this._colors = colors;
 
     this._drawing_functions = [
       this._drawCircle.bind(this),
       this._drawLine.bind(this),
       this._concentricCircles.bind(this),
       this._drawEmpty.bind(this),
+      this._drawTriangle.bind(this),
     ];
-    this._xor128 = new XOR128(this._seed);
-    this._noise = new SimplexNoise(this._xor128.random_int(1e9));
+    this._functions_weight = [3, 3, 2, 1, 1];
+    this._cumulative_weights = this._createCumulativeWeights(
+      this._functions_weight
+    );
+    console.log(this._cumulative_weights);
 
-    const colors = palette.colors
+    this._xor128 = new XOR128(this._seed);
+    this._noises = new Array(3)
+      .fill(0)
+      .map(() => new SimplexNoise(this._xor128.random_int(1e9)));
+  }
+
+  _createCumulativeWeights(weights) {
+    const weights_sum = weights.reduce((a, b) => a + b, 0);
+    const cumulative_weights = weights.map(
+      (_, i) => weights.slice(0, i + 1).reduce((a, b) => a + b, 0) / weights_sum
+    );
+
+    return cumulative_weights;
+  }
+
+  update(tx, ty) {
+    const colors = this._colors
       .map((c, i) => ({
         c: c,
-        order: this._noise.noise(
-          this._x * this._noise_scl,
-          this._y * this._noise_scl,
-          1000 + i
+        order: this._noises[0].noise(
+          this._x * this._noise_scl + i,
+          this._y * this._noise_scl + i,
+          tx,
+          ty
         ),
       }))
       .sort((a, b) => a.order - b.order)
       .map((o) => o.c);
     this._palette = new Palette(colors);
 
-    const n1 = this._noise.noise(
-      x * this._noise_scl,
-      y * this._noise_scl,
-      2000
+    const n1 = this._noises[1].noise(
+      this._x * this._noise_scl,
+      this._y * this._noise_scl,
+      tx + 2000,
+      ty + 2000
     );
     this._inner_rotation = (Math.floor((n1 + 1) * 2) * Math.PI) / 4;
 
-    const n2 = this._noise.noise(
-      x * this._noise_scl,
-      y * this._noise_scl,
-      3000
+    const n2 = this._noises[2].noise(
+      this._x * this._noise_scl,
+      this._y * this._noise_scl,
+      tx + 3000,
+      ty + 3000
     );
-    const drawing_n = Math.floor(
-      ((n2 + 1) / 2) * this._drawing_functions.length
+    const drawing_i = Math.floor(
+      ((n2 + 1) / 2) * this._cumulative_weights.length
     );
-    this._inner_draw = this._drawing_functions[drawing_n];
+    this._inner_draw = this._drawing_functions[drawing_i];
   }
 
   draw(ctx) {
@@ -55,6 +79,11 @@ class Pairing {
     ctx.scale(0.95, 0.95);
 
     // Background
+    ctx.beginPath();
+    ctx.rect(-this._size / 2, -this._size / 2, this._size, this._size);
+    ctx.closePath();
+    ctx.clip();
+
     // upper half
     ctx.fillStyle = this._palette.getColor(0).rgba;
     ctx.fillRect(-this._size / 2, -this._size / 2, this._size, this._size / 2);
@@ -111,7 +140,30 @@ class Pairing {
     ctx.closePath();
     ctx.fill();
   }
+
   _drawEmpty() {}
+
+  _drawTriangle(ctx) {
+    const height = (this._size * Math.sqrt(3)) / 2;
+
+    // Triangle
+    // lower
+    ctx.fillStyle = this._palette.getColor(2).rgba;
+    ctx.beginPath();
+    ctx.moveTo(-this._size / 2, height / 2);
+    ctx.lineTo(this._size / 2, height / 2);
+    ctx.lineTo(0, -height / 2);
+    ctx.closePath();
+    ctx.fill();
+    // upper
+    ctx.fillStyle = this._palette.getColor(3).rgba;
+    ctx.beginPath();
+    ctx.moveTo(-this._size / 2, -height / 2);
+    ctx.lineTo(this._size / 2, -height / 2);
+    ctx.lineTo(0, height / 2);
+    ctx.closePath();
+    ctx.fill();
+  }
 }
 
 export { Pairing };
