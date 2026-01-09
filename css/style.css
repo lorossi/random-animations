@@ -93,6 +93,17 @@ a:active {
 }
 
 @media only screen and (max-width: 800px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+  }
+  .animations-list {
+    font-size: 0.9rem;
+  }
+
   .footer {
     justify-content: space-around;
   }
