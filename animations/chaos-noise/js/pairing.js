@@ -21,7 +21,6 @@ class Pairing {
     this._cumulative_weights = this._createCumulativeWeights(
       this._functions_weight
     );
-    console.log(this._cumulative_weights);
 
     this._xor128 = new XOR128(this._seed);
     this._noises = new Array(3)
