@@ -1,5 +1,12 @@
-import { Engine, SimplexNoise, Point, Color, XOR128 } from "./lib.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import {
+  Engine,
+  SimplexNoise,
+  Point,
+  Color,
+  XOR128,
+  Palette,
+  PaletteFactory,
+} from "./lib.js";
 class Sketch extends Engine {
   preload() {
     this._duration = 900;
