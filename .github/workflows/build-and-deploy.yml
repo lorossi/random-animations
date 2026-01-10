@@ -6,7 +6,7 @@ on:
     paths:
       - "animations/**"
       - "css/**"
-      - "ci/**"
+      - "scripts/**"
       - "index_template.html"
       - ".github/workflows/**"
 
@@ -31,7 +31,7 @@ jobs:
           python-version: '3.13'
 
       - name: Run name test script
-        run: python3 ./ci/check_titles.py
+        run: python3 ./scripts/check_titles.py
 
   build:
     runs-on: ubuntu-latest
@@ -46,7 +46,7 @@ jobs:
           python-version: '3.13'
 
       - name: Create index
-        run: python3 ./ci/create_index.py
+        run: python3 ./scripts/create_index.py
       - name: Prepare files for deployment
         run: |
           mkdir -p ${{ env.SITE_DIR }}
