@@ -14,7 +14,6 @@ import { PALETTES_HEX } from "./palettes.js";
 class Sketch extends Engine {
   preload() {
     this._cols = 200;
-    this._bg = Color.fromMonochrome(25);
   }
 
   setup() {
@@ -25,6 +24,11 @@ class Sketch extends Engine {
 
     const palette_factory = PaletteFactory.fromHEXArray(PALETTES_HEX);
     const palette = palette_factory.getRandomPalette(this._xor128, false);
+    const lightest = palette.colors.reduce(
+      (a, b) => (a.luminance > b.luminance ? a : b),
+      palette.colors[0]
+    );
+    this._bg = lightest;
 
     const cell_size = Math.ceil(this.width / this._cols);
 
@@ -35,6 +39,8 @@ class Sketch extends Engine {
       palette,
       this._xor128.random_int(1e6)
     );
+
+    document.body.style.background = this._bg.hex;
   }
 
   draw(dt) {
