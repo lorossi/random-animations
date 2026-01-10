@@ -7,11 +7,8 @@ from glob import glob
 
 def format_title(title: str) -> str:
     """Format the title to be comparable."""
-    to_replace = [" ", "-", "_"]
-    clean_title = title.lower()
-    for r in to_replace:
-        clean_title = clean_title.replace(r, "")
-    return clean_title
+    clean = title.strip().lower()
+    return re.sub(r"\s+|-|_|\d+", "", clean)
 
 
 def get_folder(file: str) -> str:
