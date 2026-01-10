@@ -1,16 +1,19 @@
 import { XOR128 } from "./lib.js";
 
 class Grid {
-  constructor(cols, rows, cell_size, palette, seed) {
-    this._cols = cols;
-    this._rows = rows;
+  constructor(slots, cell_size, palette, seed) {
+    this._cols = slots;
+    this._rows = slots;
+
     this._cell_size = cell_size;
     this._palette = palette;
     this._seed = seed;
 
     this._xor128 = new XOR128(this._seed);
 
-    this._states = new Array(cols).fill(null).map(() => this._xor128.random());
+    this._states = new Array(this._cols)
+      .fill(null)
+      .map(() => this._xor128.random());
 
     this._lines = [];
     this._k = this._xor128.random(0.0005, 0.02);
@@ -40,10 +43,10 @@ class Grid {
     let previous_row = this._states;
 
     while (row < this._rows) {
-      const new_row = previous_row.map((state, x) => {
+      const new_row = previous_row.map((_, x) => {
         const neighbors = this._getNeighbors(x, previous_row);
 
-        return this._stateFunction(state, neighbors);
+        return this._stateFunction(neighbors);
       });
       this._lines = this._lines.concat(new_row);
 
@@ -52,12 +55,11 @@ class Grid {
     }
   }
 
-  _stateFunction(state, neighbors) {
+  _stateFunction(neighbors) {
     const avg =
       (neighbors.reduce((sum, state) => sum + state, 0) / neighbors.length) % 1;
-    state * this._cols, state * this._rows;
 
-    return ((avg % 1) + this._k) % 1;
+    return (avg + this._k) % 1;
   }
 
   draw(ctx) {

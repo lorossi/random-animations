@@ -13,7 +13,7 @@ import { PALETTES_HEX } from "./palettes.js";
 
 class Sketch extends Engine {
   preload() {
-    this._cols = 200;
+    this._slots = 200;
   }
 
   setup() {
@@ -24,17 +24,18 @@ class Sketch extends Engine {
 
     const palette_factory = PaletteFactory.fromHEXArray(PALETTES_HEX);
     const palette = palette_factory.getRandomPalette(this._xor128, false);
+    if (this._xor128.random_bool()) palette.reverse();
+
     const lightest = palette.colors.reduce(
       (a, b) => (a.luminance > b.luminance ? a : b),
       palette.colors[0]
     );
     this._bg = lightest;
 
-    const cell_size = Math.ceil(this.width / this._cols);
+    const cell_size = Math.ceil(this.width / this._slots);
 
     this._grid = new Grid(
-      this._cols,
-      this._cols,
+      this._slots,
       cell_size,
       palette,
       this._xor128.random_int(1e6)
