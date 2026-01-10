@@ -38,7 +38,7 @@ class HexagonGrid {
     return y * this._cols + x;
   }
 
-  _easeInOutPoly(t, n = 3) {
+  _easeInOutPoly(t, n = 4) {
     if (t < 0.5) return 0.5 * Math.pow(2 * t, n);
     return 1 - 0.5 * Math.pow(2 * (1 - t), n);
   }
@@ -77,9 +77,9 @@ class HexagonGrid {
   }
 
   _getNeighboursIndices(index) {
-    const [x, y] = this._indexToXY(index);
+    const [col, row] = this._indexToXY(index);
 
-    // It's correct for odd
+    // Neighbor offsets for flat-top hexagon grid
     const directions = [
       [0, -1], // top-left
       [1, -1], // top-right
@@ -91,19 +91,20 @@ class HexagonGrid {
 
     const neighbours = [];
 
-    directions.forEach(([dx, dy]) => {
-      let nx = x + dx;
-      let ny = y + dy;
+    for (const [dc, dr] of directions) {
+      let nc = col + dc;
+      let nr = row + dr;
 
-      // Adjust for even/odd rows
-      if (y % 2 === 0 && (dy == -1 || dy == 1)) {
-        nx -= 1;
+      // Adjust column offset for even rows (flat-top hexagon geometry)
+      if (row % 2 === 0 && (dr === -1 || dr === 1)) {
+        nc -= 1;
       }
 
-      if (nx >= 0 && nx < this._cols && ny >= 0 && ny < this._rows) {
-        neighbours.push(this._xyToIndex(nx, ny));
+      if (nc >= 0 && nc < this._cols && nr >= 0 && nr < this._rows) {
+        neighbours.push(this._xyToIndex(nc, nr));
       }
-    });
+    }
+
     return neighbours;
   }
 
