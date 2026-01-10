@@ -3,8 +3,8 @@
   --white: rgb(245, 245, 245);
   --gray: rgb(130, 130, 130);
 
-  --background-color: var(--white);
-  --text-color: var(--black);
+  --background-color: var(--black);
+  --text-color: var(--white);
   --visited-link-color: var(--gray);
 
   --text-size: 1.5rem;

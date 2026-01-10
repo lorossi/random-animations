@@ -20,6 +20,8 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(seed);
     this._noise = new SimplexNoise(seed);
     this._title = this._xor128.shuffle(Math.floor(seed * 1000).toString(16));
+    this._rotation = this._xor128.random_int(4) * (Math.PI / 2);
+    this._bg = this._white.mix(this._black, 0.5);
 
     this._background_gradient = this.ctx.createLinearGradient(
       0,
@@ -31,6 +33,8 @@ class Sketch extends Engine {
     this._background_gradient.addColorStop(0, this._gradient_start.rgba);
     // dark red at the end
     this._background_gradient.addColorStop(1, this._gradient_end.rgba);
+    // page background
+    document.body.style.background = this._bg.rgba;
   }
 
   draw() {
@@ -45,6 +49,7 @@ class Sketch extends Engine {
 
     this.ctx.translate(this.width / 2, this.height / 2);
     this.ctx.scale(this._scl, this._scl);
+    this.ctx.rotate(this._rotation);
     this.ctx.translate(-this.width / 2 + scl / 2, -this.height / 2 + scl / 2);
 
     for (let x = 0; x < this._cols; x++) {
