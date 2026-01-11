@@ -20,7 +20,6 @@ class Sketch extends Engine {
       ["#FFFFFF", "#F50A32", "#F5AF0A", "#0A697B", "#333333"],
       ["#FF445A", "#EDAE4C", "#F2F2F2", "#595959", "#0D0D0D"],
     ];
-    this._bg = Color.fromMonochrome(240);
     this._hexagon_scl = 0.8;
 
     this._duration = 900;
@@ -36,6 +35,7 @@ class Sketch extends Engine {
     const palette_factory = PaletteFactory.fromHEXArray(this._palettes_hex);
     const palette = palette_factory.getRandomPalette(this._xor128, false);
     if (this._xor128.random_bool()) palette.reverse();
+    this._bg = palette.getRandomColor(this._xor128);
 
     this._grid = new HexagonGrid(
       slots,
