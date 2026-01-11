@@ -34,7 +34,7 @@ class Spray {
 
   update(t) {
     const a = trigEaseInOut(t);
-    this._dx = (a * this._grid_size) / 2;
+    this._dx = (a * this._grid_size) / 4;
 
     if (t > 0.96) {
       this._dx = 0;
@@ -63,17 +63,16 @@ class Spray {
 
     ctx.save();
 
-    const w = (this._grid_size * this._scl - this._circle_size) / 2;
     ctx.rotate((Math.PI / 2) * this._direction);
-    ctx.translate(
-      -(this._grid_size / 2) * this._scl - w,
-      -(this._grid_size / 2) * this._scl
-    );
+    ctx.translate((-this._grid_size / 2) * this._scl, 0);
 
     ctx.fillStyle = this._body_color.rgba;
     ctx.globalAlpha = 0.8;
     ctx.beginPath();
-    ctx.rect(this._dx, 0, w, this._grid_size * this._scl);
+    // draw a triangle
+    ctx.moveTo(this._dx, -this._circle_size / 2);
+    ctx.lineTo(this._dx, this._circle_size / 2);
+    ctx.lineTo(this._dx + this._circle_size / 2, 0);
     ctx.fill();
     ctx.restore();
 

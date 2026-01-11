@@ -168,7 +168,6 @@ class Sketch extends Engine {
       this._rotateCircles();
     }
 
-    //this._circles = this._circles.filter((c) => c.y < this._cols);
     this.ctx.save();
     this._cutters.forEach((c) => {
       if (!moving_epoch) c.update(epoch_t);
@@ -224,14 +223,6 @@ class Sketch extends Engine {
       );
       this._circles.push(circle);
     }
-
-    // if (t == 0 && this.frameCount > 0 && this._recording) {
-    //   this._recording = false;
-    //   this.stopRecording();
-    //   console.log("%cRecording stopped. Saving...", "color:yellow");
-    //   this.saveRecording();
-    //   console.log("%cRecording saved", "color:green");
-    // }
   }
 
   _setCirclesDestination() {
