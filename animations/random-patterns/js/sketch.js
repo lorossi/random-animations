@@ -1,34 +1,35 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, Color, XOR128 } from "./lib.js";
 import { Pattern } from "./pattern.js";
 
 class Sketch extends Engine {
   preload() {
     this._scl = 0.95;
-    this._cols = 5;
-    this._pattern_scl = 0.9;
-    this._pattern_n = 10;
+    this._pattern_scl = 0.95;
     this._pattern_circle_scl = 0.9;
+    this._noise_scl = 0.02;
 
-    this._bg = Color.fromMonochrome(245);
+    this._bg = Color.fromMonochrome(230);
   }
 
   setup() {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
+    const pattern_n = this._xor128.random_int(8, 16);
+    const cols = 5; //this._xor128.random_int(4, 10);
 
-    const pattern_size = this.width / this._cols;
-    this._patterns = new Array(this._cols ** 2).fill().map((_, i) => {
-      const x = (i % this._cols) * pattern_size;
-      const y = Math.floor(i / this._cols) * pattern_size;
+    const pattern_size = this.width / cols;
+    this._patterns = new Array(cols ** 2).fill().map((_, i) => {
+      const x = (i % cols) * pattern_size;
+      const y = Math.floor(i / cols) * pattern_size;
       const circle_seed = this._xor128.random_int(2 ** 32);
       return new Pattern(
         x,
         y,
-        this._pattern_n,
+        pattern_n,
         pattern_size,
         this._pattern_scl,
         this._pattern_circle_scl,
+        this._noise_scl,
         circle_seed
       );
     });

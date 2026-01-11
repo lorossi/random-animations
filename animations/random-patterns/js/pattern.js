@@ -1,26 +1,34 @@
-import { XOR128 } from "./xor128.js";
-import { Color } from "./engine.js";
+import { XOR128, Color, SimplexNoise } from "./lib.js";
 
 class Pattern {
-  constructor(x, y, n, size, scl, circle_scl, seed) {
+  constructor(x, y, n, size, scl, circle_scl, noise_scl, seed) {
     this._x = x;
     this._y = y;
     this._n = n;
     this._size = size;
     this._scl = scl;
     this._circle_scl = circle_scl;
+    this._noise_scl = noise_scl;
     this._seed = seed;
 
     this._xor128 = new XOR128(seed);
-    this._probability = this._xor128.random(0.15, 0.4);
+    this._noise = new SimplexNoise(this._xor128.random_int(2 ** 32));
+
+    this._probability = this._xor128.random(0.3, 0.7);
   }
 
-  _easeIn(t, n = 2) {
-    return t ** n;
+  _drawCircle(ctx, r) {
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
   }
 
-  _easeOut(t, n = 2) {
-    return 1 - (1 - t) ** n;
+  _drawRect(ctx, r) {
+    ctx.beginPath();
+    ctx.rect(-r, -r, r * 2, r * 2);
+    ctx.closePath();
+    ctx.fill();
   }
 
   _drawCanvas() {
@@ -30,39 +38,40 @@ class Pattern {
     quarter_canvas.height = this._size / 2;
     const quarter_ctx = quarter_canvas.getContext("2d");
 
-    const fill_c = Color.fromHSL(this._xor128.random(0, 360), 40, 40);
-    const shape = this._xor128.random_int(0, 2);
+    const fill_c = Color.fromHSL(this._xor128.random(0, 360), 40, 50);
+    const draw_f = this._xor128.pick([this._drawCircle, this._drawRect]);
 
     // draw the pattern on the canvas
     quarter_ctx.save();
     const circle_r = this._size / (this._n + 1) / 4;
     for (let x = 0; x < this._n; x++) {
       for (let y = 0; y < this._n; y++) {
-        if (this._xor128.random() >= this._probability) continue;
+        // const a = this._xor128.random(0.5, 1);
+        const n1 = this._noise.noise(
+          (((x + 0.5) * this._size) / this._n) * this._noise_scl,
+          (((y + 0.5) * this._size) / this._n) * this._noise_scl,
+          1000
+        );
+        if ((n1 + 1) / 2 > this._probability) continue;
 
-        const a = this._xor128.random(0.5, 1);
+        const n2 = this._noise.noise(
+          (((x + 0.5) * this._size) / this._n) * this._noise_scl,
+          (((y + 0.5) * this._size) / this._n) * this._noise_scl,
+          2000
+        );
+        const a = ((n2 + 1) / 2) * 0.8 + 0.2;
+
         const xx = (x + 0.5) * (this._size / this._n / 2);
         const yy = (y + 0.5) * (this._size / this._n / 2);
 
         quarter_ctx.save();
         quarter_ctx.translate(xx, yy);
         quarter_ctx.scale(this._circle_scl, this._circle_scl);
-
-        quarter_ctx.beginPath();
-        switch (shape) {
-          case 0: // circle
-            quarter_ctx.arc(0, 0, circle_r, 0, Math.PI * 2);
-            break;
-          case 1: // square
-            quarter_ctx.rect(-circle_r, -circle_r, circle_r * 2, circle_r * 2);
-            break;
-        }
-
-        quarter_ctx.closePath();
-
         fill_c.a = a;
         quarter_ctx.fillStyle = fill_c.rgba;
-        quarter_ctx.fill();
+
+        draw_f.call(this, quarter_ctx, circle_r);
+
         quarter_ctx.restore();
       }
     }
