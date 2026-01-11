@@ -50,8 +50,8 @@ jobs:
       - name: Prepare files for deployment
         run: |
           mkdir -p ${{ env.SITE_DIR }}
-          cp index.html ${{ env.SITE_DIR }}/
-          cp -r css ${{ env.SITE_DIR }}/
+          cp homepage/index.html ${{ env.SITE_DIR }}/
+          cp -r homepage/css ${{ env.SITE_DIR }}/
           cp -r animations ${{ env.SITE_DIR }}/
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3

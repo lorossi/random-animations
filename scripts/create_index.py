@@ -30,7 +30,7 @@ def base_indent(content: str) -> int:
 
 def embed_urls(urls: list[tuple[str, str]]) -> int:
     """Embed the urls in the page."""
-    with open("index_template.html") as f:
+    with open("homepage/index_template.html") as f:
         content = f.read()
 
     links_line = [f for f in content.split("\n") if "{{ LINKS }}" in f][0]
@@ -46,7 +46,7 @@ def embed_urls(urls: list[tuple[str, str]]) -> int:
 
     content = content.replace("{{ COUNT }}", str(len(urls)))
 
-    with open("index.html", "w") as f:
+    with open("homepage/index.html", "w") as f:
         f.write(content)
 
     return len(content)
