@@ -1,4 +1,4 @@
-import { Color } from "../../rotations-deformations/js/engine.js";
+import { Color } from "./lib.js";
 
 class Texture {
   constructor(size, scale, xor128) {

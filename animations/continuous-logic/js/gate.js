@@ -32,15 +32,39 @@ class XNORGate extends Gate {
   }
 }
 
-class NOTGate extends Gate {
+class LNOTGate extends Gate {
   constructor() {
     super((x, _) => 1 - x);
   }
 }
 
-class IDGate extends Gate {
+class RNOTGate extends Gate {
+  constructor() {
+    super((_, y) => 1 - y);
+  }
+}
+
+class LIDGate extends Gate {
   constructor() {
     super((x, _) => x);
+  }
+}
+
+class RIDGate extends Gate {
+  constructor() {
+    super((_, y) => y);
+  }
+}
+
+class LSUPGate extends Gate {
+  constructor() {
+    super((x, y) => (x > y ? x : 0));
+  }
+}
+
+class RSUPGate extends Gate {
+  constructor() {
+    super((x, y) => (y > x ? y : 0));
   }
 }
 
@@ -49,9 +73,15 @@ const GATE_TYPES = {
   OR: ORGate,
   XOR: XORGate,
   XNOR: XNORGate,
-  NOT: NOTGate,
-  ID: IDGate,
+  LNOT: LNOTGate,
+  LID: LIDGate,
+  RNOT: RNOTGate,
+  RID: RIDGate,
+  LSUP: LSUPGate,
+  RSUP: RSUPGate,
 };
+
+Object.freeze(GATE_TYPES);
 
 class GateFactory {
   static createGate(type) {
@@ -70,4 +100,4 @@ class GateFactory {
   }
 }
 
-export { ANDGate, ORGate, XORGate, XNORGate, NOTGate, GateFactory };
+export { GateFactory };

@@ -1,1 +1,32 @@
-import{Sketch}from"./sketch.js";document.addEventListener("DOMContentLoaded",()=>{let e,t,a;e=document.querySelector("#sketch"),e.getContext&&(t=e.getContext("2d",{alpha:!1}),a=new Sketch(e,t)),e.addEventListener("click",e=>a._clickCallback(e)),e.addEventListener("mousedown",e=>a._mouseDownCallback(e)),e.addEventListener("mouseup",e=>a._mouseUpCallback(e)),e.addEventListener("mousemove",e=>a._mouseMoveCallback(e)),e.addEventListener("touchstart",e=>a._mouseDownCallback(e),{passive:!0}),e.addEventListener("touchend",e=>a._mouseUpCallback(e),{passive:!0}),e.addEventListener("touchmove",e=>a._mouseMoveCallback(e),{passive:!0}),document.addEventListener("keypress",e=>a._keyPressCallback(e)),document.addEventListener("keydown",e=>a._keyDownCallback(e)),document.addEventListener("keyup",e=>a._keyUpCallback(e))});
+/**
+ * @file inject.js
+ * @description This file is the entry point of the project. It is responsible for creating the canvas and the sketch object.
+ */
+import { Sketch } from "./sketch.js";
+
+document.addEventListener("DOMContentLoaded", () => {
+  // page loaded
+  const canvas = document.querySelector("#sketch");
+  // create sketch
+  const s = new Sketch(canvas);
+
+  // mouse event listeners
+  canvas.addEventListener("click", (e) => s.clickHandler(e));
+  canvas.addEventListener("mousedown", (e) => s.mouseDownHandler(e));
+  canvas.addEventListener("mouseup", (e) => s.mouseUpHandler(e));
+  canvas.addEventListener("mousemove", (e) => s.mouseMoveHandler(e));
+  // touchscreen event listeners
+  canvas.addEventListener("touchstart", (e) => s.mouseDownHandler(e), {
+    passive: true,
+  });
+  canvas.addEventListener("touchend", (e) => s.mouseUpHandler(e), {
+    passive: true,
+  });
+  canvas.addEventListener("touchmove", (e) => s.mouseMoveHandler(e), {
+    passive: true,
+  });
+  // keyboard event listeners
+  document.addEventListener("keypress", (e) => s.keyPressHandler(e));
+  document.addEventListener("keydown", (e) => s.keyDownHandler(e));
+  document.addEventListener("keyup", (e) => s.keyUpHandler(e));
+});

@@ -1,13 +1,15 @@
 import { GateFactory } from "./gate.js";
-import { Palette } from "./palette-factory.js";
+import { XOR128, SimplexNoise } from "./lib.js";
 class Grid {
-  constructor(rows, cols, gates_num, size, xor128, palette) {
+  constructor(rows, cols, gates_num, size, seed, palette) {
     this._rows = rows;
     this._cols = cols;
     this._gates_num = gates_num;
     this._size = size;
-    this._xor128 = xor128;
+    this._seed = seed;
     this._palette = palette.copy().shuffle(this._xor128);
+
+    this._xor128 = new XOR128(this._seed);
 
     this._flip = new Array(2).fill(0).map(() => this._xor128.pick([-1, 1]));
 
@@ -66,8 +68,10 @@ class Grid {
 
       this._states.forEach((state, c) => {
         if (c > 0 && c < this._cols - 1 && r > 0 && r < this._rows - 1) {
-          const color_index = Math.floor(state * this._palette.length);
-          const current_color = this._palette.getColor(color_index);
+          const current_color = this._palette.getSmoothColor(
+            state,
+            this._easeInOutPoly
+          );
 
           const x = c * cell_size;
           ctx.fillStyle = current_color.rgba;
