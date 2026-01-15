@@ -1,5 +1,5 @@
 import { Vector } from "./vectors.js";
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Umbrella {
   constructor(x, y, size) {
@@ -22,8 +22,6 @@ class Umbrella {
   }
 
   getNormal(x) {
-    // intersect x with circle
-    // x**2 + y**2 = r**2 => y = sqrt(r**2 - x**2)
     const y = Math.sqrt(this._r ** 2 - (x - this._pos.x) ** 2);
     const normal = new Vector(x, y);
     return normal.sub(this._pos).normalize();

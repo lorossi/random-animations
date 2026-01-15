@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, Point, Color, XOR128 } from "./lib.js";
 import { Drop } from "./drop.js";
 import { Umbrella } from "./umbrella.js";
 
@@ -7,13 +6,13 @@ class Sketch extends Engine {
   preload() {
     this._bg = Color.fromHEX("#fdfdff");
     this._umbrella_color = Color.fromHEX("#393d3f");
-    this._drop_color = Color.fromHEX("#a3cef1");
+    this._drop_color = Color.fromHEX("#2482cf");
     this._max_drops = 1000;
     this._drops_per_frame = 2;
     this._drop_size = 3;
     this._umbrella_elasticity = 0.5;
-    this._umbrella_cols = 5;
-    this._umbrella_rows = 4;
+    this._umbrella_cols = 6;
+    this._umbrella_rows = 5;
     this._umbrella_scl = 0.75;
     this._width_factor = 0.8;
     this._height_factor = 0.8;
@@ -23,7 +22,6 @@ class Sketch extends Engine {
     this._click_spread = 20;
 
     this._show_fps = true;
-    this._time = performance.now();
 
     this._duration = 900;
     this._recording = false;
@@ -38,13 +36,14 @@ class Sketch extends Engine {
       .map((_, i) => {
         const x = i % this._umbrella_cols;
         const y = Math.floor(i / this._umbrella_cols);
-        const dy = ((1 - this._height_factor) * this.height) / 2;
         const w = (this.width * this._width_factor) / this._umbrella_cols;
+        const dy = ((1 - this._height_factor) * this.height) / 2;
+        const dx = Math.floor(i / this._umbrella_cols) % 2 == 1 ? w / 2 : 0;
 
         const pos_x =
-          x * w + w / 2 + (this.width * (1 - this._width_factor)) / 2;
+          x * w + w / 2 + (this.width * (1 - this._width_factor)) / 2 + dx;
         const pos_y =
-          dy + y * w + w / 2 + (this.height * (1 - this._height_factor)) / 2;
+          y * w + w / 2 + (this.height * (1 - this._height_factor)) / 2 + dy;
         const size = w * this._umbrella_scl;
 
         const u = new Umbrella(pos_x, pos_y, size);
@@ -59,7 +58,7 @@ class Sketch extends Engine {
     }
   }
 
-  draw() {
+  draw(dt) {
     const t = (this.frameCount / this._duration) % 1;
 
     if (this._clicked && this._drops.length < this._max_drops) {
@@ -75,10 +74,6 @@ class Sketch extends Engine {
     }
 
     this.background(this._bg.rgb);
-
-    const now = performance.now();
-    const dt = now - this._time;
-    this._time = now;
 
     this.ctx.save();
     this._drops.forEach((drop) => {
@@ -99,7 +94,7 @@ class Sketch extends Engine {
       .filter((drop) => drop.x > 0 && drop.x < this.width);
 
     // write drops count and fps
-    if (this._show_fps) this._showFps(dt);
+    if (this._show_fps) this._showFps();
 
     if (t == 0 && this.frameCount > 0 && this._recording) {
       this._recording = false;
@@ -119,9 +114,9 @@ class Sketch extends Engine {
     return d;
   }
 
-  _showFps(dt) {
-    const fps = this.frameRate.toFixed(2);
-    const dt_ms = dt.toFixed(2);
+  _showFps() {
+    const fps = this.frameRateAverage.toFixed(2);
+    const dt_ms = this.deltaTimeAverage.toFixed(2);
     this.ctx.save();
     this.ctx.fillStyle = "black";
     this.ctx.font = "20px monospace";

@@ -1,21 +1,29 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, PaletteFactory, Palette } from "./lib.js";
 import { ParticleFactory } from "./particle.js";
-import { PaletteFactory } from "./palette.js";
 
 class Sketch extends Engine {
   preload() {
-    this._cols = 200;
+    this._cols = 100;
+    this._hex_palettes = [
+      ["#0077b6", "#00b4d8", "#90e0ef"],
+      ["#007f5f", "#aacc00", "#ffff3f"],
+      ["#04b2d9", "#27296d", "#da4167"],
+      ["#02205f", "#ffcb05", "#5595b2"],
+      ["#5f0f40", "#9a031e", "#fb8b24"],
+      ["#390099", "#9e0059", "#ff0054"],
+    ];
   }
 
   setup() {
     this._seed = new Date().getTime();
     this._xor128 = new XOR128(this._seed);
-    this._palette = PaletteFactory.getRandomPalette(this._xor128);
+
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
     this._start_score = this._xor128.random_int(1, 4);
 
     this._particle_scl = this.width / this._cols;
-    this._map = new Array(this._cols ** 2).fill(0).map((_, i) => {
+    this._map = new Array(this._cols ** 2).fill(0).map(() => {
       const t = this._xor128.random_int(0, 3);
       return ParticleFactory.fromIndex(t, this._palette, this._start_score);
     });
@@ -24,6 +32,8 @@ class Sketch extends Engine {
   }
 
   draw() {
+    if (this._ended) return;
+
     this.ctx.save();
     this.background(0);
 
@@ -41,8 +51,6 @@ class Sketch extends Engine {
       neighbors.forEach(([_, q]) => p.fight(q));
     });
 
-    if (this._ended) return;
-
     // replace dead particles
     let anything_changed = false;
     this._map.forEach((p, i) => {
@@ -54,8 +62,6 @@ class Sketch extends Engine {
           this._start_score
         );
         anything_changed = true;
-      } else {
-        p.resetScore();
       }
     });
 
