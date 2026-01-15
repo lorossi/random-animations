@@ -25,6 +25,7 @@ class Sketch extends Engine {
     const theta_1 = this._xor128.random(Math.PI * 2);
     const span = Math.PI * 0.975;
     const theta_2 = theta_1 + span;
+    const lines = this._xor128.random_int(3, 8);
 
     this._half_circle = new HalfCircle(
       this.width / 2,
@@ -33,7 +34,8 @@ class Sketch extends Engine {
       inner_r,
       theta_1,
       theta_2,
-      this._fg_color
+      this._fg_color,
+      lines
     );
     0.95;
 
