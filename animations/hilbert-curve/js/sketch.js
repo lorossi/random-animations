@@ -1,16 +1,14 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Color } from "./lib.js";
 
 class Sketch extends Engine {
   preload() {
     this._level = 8;
     this._scl = 0.95;
     this._all_at_once = false; // if true, draw all at once
-    this._one_at_time = true; // if true, draw one line at time
+    this._one_at_time = false; // if true, draw one line at time
     this._color_repeat = true; // if true, repeat colors the same amount of times as the level
     this._black_and_white = false; // if true, draw in black and white
-    this._duration = 600;
-
+    this._duration = 900;
     this._background_color = Color.fromMonochrome(15);
   }
   setup() {
@@ -22,17 +20,17 @@ class Sketch extends Engine {
       ? 1
       : Math.ceil(this._curve.length / this._duration);
     this._actual_duration = Math.ceil(
-      this._curve.length / this._steps_per_frame
+      this._curve.length / this._steps_per_frame,
     );
 
     this.ctx.resetTransform();
-    this.background(this._background_color.rgb);
+    this.background(this._background_color);
     this.ctx.translate(this.width / 2, this.height / 2);
     this.ctx.scale(this._scl, this._scl);
     this.ctx.translate(-this.width / 2, -this.height / 2);
     this._transformations = this.ctx.getTransform();
     console.log(
-      `Steps per frame: ${this._steps_per_frame}, duration: ${this._actual_duration} frames`
+      `Steps per frame: ${this._steps_per_frame}, duration: ${this._actual_duration} frames`,
     );
     if (this._recording && !this._all_at_once) {
       this.startRecording();
@@ -79,7 +77,7 @@ class Sketch extends Engine {
       const repetitions = this._color_repeat ? this._level : 1;
       const hue = ((i / this._curve.length) * repetitions * 360) % 360;
       const stroke = Color.fromHSL(hue, 100, 50);
-      this.ctx.strokeStyle = stroke.rgb;
+      this.ctx.strokeStyle = stroke;
     }
 
     if (this._level <= 3) this.ctx.lineWidth = 3;
@@ -153,18 +151,26 @@ class Sketch extends Engine {
 
   keyPress(_, code) {
     switch (code) {
-      case 13: // enter
+      case "Enter": // enter
         this.saveFrame();
         break;
-      case 32: // space
+      case "Space": // space
         this.setup();
         break;
-      case 119: // w
+      case "KeyW": // w
         this._level++;
         this.setup();
         break;
-      case 115: // s
+      case "KeyS": // s
         this._level = Math.max(1, this._level - 1);
+        this.setup();
+        break;
+      case "KeyA": // a
+        this._color_repeat = !this._color_repeat;
+        this.setup();
+        break;
+      case "KeyD": // d
+        this._black_and_white = !this._black_and_white;
         this.setup();
         break;
       default:
