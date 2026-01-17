@@ -9,6 +9,8 @@ on:
       - "scripts/**"
       - "index_template.html"
       - ".github/workflows/**"
+  workflow_dispatch:
+
 
 permissions:
   contents: read
@@ -16,26 +18,15 @@ permissions:
   id-token: write
 
 env:
-  SITE_DIR: _site
+  SITE_DIR: dest
 
 jobs:
-  check-titles:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.13'
-
-      - name: Run name test script
-        run: python3 ./scripts/check_titles.py
+  check-animations:
+    uses : ./.github/workflows/check-animations.yml
 
   build:
     runs-on: ubuntu-latest
-    needs: check-titles
+    needs: check-animations
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -45,15 +36,11 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Create index
-        run: python3 ./scripts/create_index.py
+      - name: Install dependencies
+        run: pip install -r ./scripts/requirements.txt
 
-      - name: Prepare files for deployment
-        run: |
-          mkdir -p ${{ env.SITE_DIR }}
-          cp homepage/index.html ${{ env.SITE_DIR }}/
-          cp -r homepage/css ${{ env.SITE_DIR }}/
-          cp -r animations ${{ env.SITE_DIR }}/
+      - name: Create index
+        run: python3 ./scripts/build_website.py --destination ${{ env.SITE_DIR }}
 
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
