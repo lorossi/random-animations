@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+<!--
+Inspiration: https://www.tylerxhobbs.com/
+-->
+
+<!doctype html>
 <html lang="en">
   <head>
     <meta name="description" content="Random animations by Lorenzo Rossi" />
@@ -17,45 +21,9 @@
 
   <body>
     <div class="top">
-      <div class="center-container">
-        <h1 class="title">random animations</h1>
-        <h2 class="subtitle">
-          by <a href="https://lorenzoros.si">Lorenzo Rossi</a>
-        </h2>
-      </div>
+      <a href="https://lorenzoros.si">Lorenzo Rossi</a>
+      <a href="https://lorenzoros.si/random-animations">random animations</a>
     </div>
-    <div class="center-container">
-      <div class="description">
-        <p>
-          This is a collection of ({{ COUNT }}) random animations and static
-          images I made in JS, using my
-          <a href="https://github.com/lorossi/empty-html5-canvas-project"
-            >template/library/crude engine</a
-          >
-          to manipulate HTML5 canvases.
-        </p>
-        <p>
-          Some of these animations are interactive, some are not: generally, if
-          you don't see anything moving, try clicking on the canvas.
-        </p>
-        <p>
-          Finally, some of these animations are very cpu intensive, so they
-          might not work on mobile devices and may cause your browser to freeze.
-        </p>
-        <p>
-          You can see the source code for these animations on my
-          <a href="https://github.com/lorossi/random-animations"
-            >GitHub repository</a
-          >.
-        </p>
-        <p>
-          Not all of these animations are finished, and sometimes I might add
-          new features to the existing ones. Click around and find out!
-        </p>
-      </div>
-    </div>
-    <div class="content">
-      <div class="animations-list">{{ LINKS }}</div>
-    </div>
+    <div class="content">{{ ANIMATIONS }}</div>
   </body>
 </html>

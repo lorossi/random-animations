@@ -1,14 +1,40 @@
 @font-face {
-  font-family: Roboto;
-  src: url(fonts/Roboto-Light.ttf);
+  font-family: Raleway;
+  src: url(fonts/Raleway.ttf);
+  font-weight: 0 1000;
+}
+
+@font-face {
+  font-family: RalewayItalic;
+  src: url(fonts/Raleway-Italic.ttf);
+  font-weight: 0 1000;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 * {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
-  font-family: Roboto;
-  color: var(--text-color);
+  font-family: Raleway;
+  font-weight: 400;
 }
 
 body {
@@ -26,95 +52,80 @@ a:active {
 }
 
 .top {
-  margin-top: 3rem;
-  margin-left: 2rem;
+  margin-top: 0;
+  margin-left: 0;
 
   display: flex;
   flex-direction: row;
-  justify-content: center;
-}
-
-.center-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.title {
-  font-size: 3rem;
-}
-
-.description {
-  margin-top: 2.5rem;
-  font-size: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  text-align: center;
-  max-width: 80vw;
-}
-
-.description p:last-child {
-  margin-top: 1rem;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
   justify-content: space-between;
   align-items: center;
 }
 
-.animations-list {
-  margin-top: 5rem;
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  grid-template-columns: repeat(5, 1fr);
+.top a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: var(--title-size);
+  padding: var(--title-size);
 
-  font-size: 1.5rem;
-  margin-left: 2rem;
-  margin-right: 2rem;
-  margin-bottom: 4rem;
-  text-align: center;
+  font-weight: 800;
 }
 
-.animations-list a {
-  margin-bottom: 0.5rem;
+.content {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: auto;
+  grid-gap: 0;
+}
+
+.animation * {
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.animation {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  aspect-ratio: 1;
+  animation: fadeInUp 0.5s forwards;
+}
+
+.animation .preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  grid-area: 1 / 1; /* both occupy the same grid cell */
+  overflow: hidden;
+}
+
+.animation .description {
+  grid-area: 1 / 1; /* overlaps with image */
+  align-self: center;
+  justify-self: center;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100%;
+  font-size: var(--text-size);
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.animation:hover .description {
+  opacity: 1;
+  transition: opacity 0.3s;
 }
 
 @media only screen and (max-width: 1200px) {
-  .animations-list {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }
 
 @media only screen and (max-width: 800px) {
-  .title {
-    font-size: 2rem;
-  }
-
-  .description {
-    font-size: 0.9rem;
-  }
-  .animations-list {
-    font-size: 0.9rem;
-  }
-
-  .footer {
-    justify-content: space-around;
-  }
-
-  .animations-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media only screen and (max-width: 400px) {
-  .animations-list {
-    grid-template-columns: repeat(1, 1fr);
-  }
 }
