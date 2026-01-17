@@ -1,5 +1,3 @@
-import { Color } from "./engine.js";
-
 class Cell {
   constructor(x, y, size, circle_scl = 0.85) {
     this._x = x;
@@ -49,7 +47,7 @@ class Cell {
         this._y + this._size / 2,
         ((this._size / 2) * this._circle_scl) / 2 ** i,
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
       ctx.fill();
     }

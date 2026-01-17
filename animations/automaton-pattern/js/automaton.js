@@ -1,20 +1,16 @@
-import { Color } from "./engine.js";
-import { PaletteFactory } from "./palette.js";
-
 class Automaton {
-  constructor(wolfram_code, width, height, cols, radix = 2) {
+  constructor(wolfram_code, width, height, cols, radix, palette) {
     // convert wolfram code from base64
     this._wolfram_code = parseInt(atob(wolfram_code));
     this._width = width;
     this._height = height;
     this._cols = cols;
     this._radix = radix;
+    this._palette = palette;
 
     this._col_size = this._width / this._cols;
     this._rows = Math.floor(this._height / this._col_size);
     this.reset();
-
-    this._palette = PaletteFactory.createPalette(0);
 
     this._decodeRules();
   }
@@ -82,7 +78,7 @@ class Automaton {
 
     for (let i = 0; i < this._cols; i++) {
       const state = this._state[i + 1].value;
-      const color = this._palette.colors[state];
+      const color = this._palette.getColor(state);
       const x = i * this._col_size;
       ctx.fillStyle = color.rgba;
 

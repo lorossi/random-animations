@@ -1,5 +1,4 @@
-import { XOR128 } from "./xor128.js";
-import { Color } from "./engine.js";
+import { Color, XOR128 } from "./lib.js";
 
 class Grid {
   constructor(size, min_cell_size, seed) {
@@ -56,7 +55,7 @@ class Grid {
 
   setPalette(palette) {
     this._cells.forEach((cell) =>
-      cell.setFill(palette.getRandomColor(this.xor128))
+      cell.setFill(palette.getRandomColor(this.xor128)),
     );
   }
 }
@@ -75,7 +74,7 @@ class CircleGrid extends Grid {
       this._y - this._r,
       2 * this._r,
       2 * this._r,
-      seed
+      seed,
     );
     this._cells = this._cells.filter((cell) => container_cell.intersects(cell));
   }

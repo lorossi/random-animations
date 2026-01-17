@@ -1,4 +1,4 @@
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Arc {
   constructor(scl, noise, random) {
