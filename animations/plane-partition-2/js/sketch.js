@@ -53,7 +53,7 @@ class Sketch extends Engine {
         (i % this._grid_cols) * grid_size,
         Math.floor(i / this._grid_cols) * grid_size,
         grid_size,
-        grid_size
+        grid_size,
       );
       return new Grid(rect, params);
     });

@@ -1,12 +1,4 @@
-import {
-  Engine,
-  SimplexNoise,
-  Point,
-  Color,
-  XOR128,
-  Palette,
-  PaletteFactory,
-} from "./lib.js";
+import { Engine, XOR128, PaletteFactory } from "./lib.js";
 import { HexagonGrid } from "./grid.js";
 
 class Sketch extends Engine {
@@ -32,17 +24,17 @@ class Sketch extends Engine {
 
     const slots = this._xor128.random_int(50, 100);
 
-    const palette_factory = PaletteFactory.fromHEXArray(this._palettes_hex);
-    const palette = palette_factory.getRandomPalette(this._xor128, false);
-    if (this._xor128.random_bool()) palette.reverse();
-    this._bg = palette.getRandomColor(this._xor128);
+    this._palette_factory = PaletteFactory.fromHEXArray(this._palettes_hex);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128, false);
+    if (this._xor128.random_bool()) this._palette.reverse();
+    this._bg = this._palette.getRandomColor(this._xor128);
 
     this._grid = new HexagonGrid(
       slots,
       this.width,
       this._hexagon_scl,
       this._xor128.random_int(1e6),
-      palette
+      this._palette,
     );
 
     document.body.style.background = this._bg.hex;
@@ -72,7 +64,7 @@ class Sketch extends Engine {
     }
   }
 
-  click(x, y) {
+  click() {
     this.setup();
   }
 }
