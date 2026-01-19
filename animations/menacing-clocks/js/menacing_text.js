@@ -39,7 +39,7 @@ class MenacingText {
       this._x - rect_width / 2,
       this._y - rect_height / 2,
       rect_width,
-      rect_height
+      rect_height,
     );
     ctx.fill();
     ctx.stroke();
@@ -47,7 +47,7 @@ class MenacingText {
     ctx.fillStyle = this._fg.rgba;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(text, this._x, this._y);
+    ctx.fillText(text, this._x, this._y + this._font_size * 0.1);
 
     ctx.restore();
   }
