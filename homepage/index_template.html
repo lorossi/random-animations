@@ -26,7 +26,20 @@ Inspiration: https://www.tylerxhobbs.com/
     </div>
 
     <div class="center">
-      <div class="content">{{ ANIMATIONS }}</div>
+      <div class="content">
+        {% for animation in animations %}
+        <a href="/animations/{{ animation.folder }}">
+          <div
+            class="animation"
+            style="animation-delay: {{ animation.delay }}s"
+          >
+            <img loading="lazy" class="preview" src="{{ animation.preview }}" />
+            <div class="description"><p>{{ animation.title }}</p></div>
+          </div>
+        </a>
+
+        {% endfor %}
+      </div>
     </div>
   </body>
 </html>

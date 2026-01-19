@@ -6,37 +6,40 @@ import random
 import shutil
 import warnings
 
+from jinja2 import Environment, FileSystemLoader
 from load_animations import AnimationsLoader
 from PIL import Image
 
 
 def build_index(randomize: bool = False) -> None:
     """Create the index.html file from the template."""
-    with open("homepage/index_template.html") as f:
-        template = f.read()
+    env = Environment(loader=FileSystemLoader("homepage/"))
+    template = env.get_template("index_template.html")
 
-    animations_html = ""
+    html = ""
     default_preview = "./assets/placeholder.png"
 
     animations = sorted(AnimationsLoader.load_animations())
     if randomize:
         random.shuffle(animations)
 
+    output = []
+
     for animation in animations:
         preview = animation.preview if animation.preview else default_preview
         delay = random.uniform(0.1, 1)
-        animations_html += (
-            f'<a href="/animations/{animation.folder}">'
-            f'<div class="animation" style="animation-delay: {delay}s">'
-            f'<img loading="lazy" class="preview" src="{preview}">'
-            f'<div class="description"><p>{animation.title}'
-            "</p></div></div></a>"
+        output.append(
+            {
+                "folder": animation.folder,
+                "preview": preview,
+                "title": animation.title,
+                "delay": delay,
+            }
         )
 
-    index_content = template.replace("{{ ANIMATIONS }}", animations_html)
-    with open("homepage/index.html", "w") as f:
-        f.write(index_content)
-
+    html = template.render(animations=output)
+    with open("homepage/index.html", "w", encoding="utf-8") as f:
+        f.write(html)
     print("Created index.html file")
 
 
