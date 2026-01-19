@@ -67,7 +67,7 @@ class Sketch extends Engine {
           this._click_pos.x,
           this._click_pos.y,
           this._click_spread,
-          this._click_spread
+          this._click_spread,
         );
         this._drops.push(new_drop);
       }

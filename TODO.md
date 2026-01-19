@@ -107,7 +107,7 @@
 - [ ] poster-7
 - [ ] poster-8
 - [ ] poster-9
-- [ ] prim
+- [x] prim
 - [ ] rain
 - [ ] random-letters
 - [ ] random-patterns
