@@ -1,5 +1,3 @@
-import { Color } from "./engine.js";
-
 class Line {
   constructor(r, w, color, direction) {
     this._r = r;
