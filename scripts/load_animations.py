@@ -70,15 +70,13 @@ class Animation:
 
     def validate_title(self) -> bool:
         """Check if the title is valid."""
-        clean_folder = re.sub(r"\s+|-|_|\d+", "", self.folder.strip().lower())
-        clean_title = re.sub(r"\s+|-|_|\d+", "", self.title.strip().lower())
-        return clean_folder == clean_title
+        clean_folder = self.folder.strip().upper().replace("-", " ")
+        return clean_folder == self.title
 
     def validate_description(self) -> bool:
         """Check if the description is valid."""
-        clean_folder = re.sub(r"\s+|-|_|\d+", "", self.folder.strip().lower())
-        clean_description = re.sub(r"\s+|-|_|\d+", "", self.description.strip().lower())
-        return clean_folder == clean_description
+        clean_folder = self.folder.strip().upper().replace("-", " ")
+        return clean_folder == self.description and self.title == self.description
 
     def validate_previews(self) -> bool:
         """Check if there is at least one preview image."""
@@ -95,5 +93,5 @@ class AnimationsLoader:
     @staticmethod
     def load_animations() -> Generator[Animation, None, None]:
         """Load all animations from the animations folder."""
-        for folder in glob("animations/*"):
+        for folder in sorted(glob("animations/*")):
             yield Animation.from_folder(folder)
