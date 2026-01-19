@@ -1,96 +1,107 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, PaletteFactory, Color } from "./lib.js";
 
 class Sketch extends Engine {
   preload() {
-    this._cols = 20;
-    this._texture_scl = 4;
+    this._texture_scl = 2;
+
+    this._hex_palettes = [
+      ["#ffbe0b", "#fb5607", "#ff006e", "#3a86ff", "#3a86ff"],
+      ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"],
+      ["#f72585", "#7209b7", "#3a0ca3", "#4361ee", "#4cc9f0"],
+      ["#ffbc42", "#d81159", "#8f2d56", "#218380", "#73d2de"],
+      ["#5f0f40", "#9a031e", "#fb8b24", "#e36414", "#0f4c5c"],
+      ["#001427", "#708d81", "#f4d58d", "#bf0603", "#8d0801"],
+      ["#27187e", "#758bfd", "#aeb8fe", "#f1f2f6", "#ff8600"],
+      ["#355070", "#6d597a", "#b56576", "#e56b6f", "#eaac8b"],
+      ["#2e86ab", "#a23b72", "#f18f01", "#c73e1d", "#3b1f2b"],
+    ];
   }
 
   setup() {
-    const seed = new Date().getTime();
-    this._xor128 = new XOR128(seed);
+    this._seed = new Date().getTime();
+    this._xor128 = new XOR128(this._seed);
 
-    const col_scl = this.width / this._cols;
-    const palette = PaletteFactory.getRandomPalette(this._xor128);
-    const [bg, ...colors] = palette.colors;
+    this._slots = this._xor128.random_int(15, 25);
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128, true);
+
+    this._col_scl = this.width / this._slots;
+    [this._bg, ...this._colors] = this._palette.colors;
+
+    document.body.style.backgroundColor = this._bg.rgb;
+  }
+
+  draw() {
+    this.noLoop();
+
+    const phi = (this._xor128.random_int(1, 4) * Math.PI) / 2 + Math.PI / 4;
 
     this.ctx.save();
-    this.ctx.clearRect(0, 0, this.width, this.height);
-    this.ctx.fillStyle = bg.rgb;
-    this.ctx.fillRect(0, 0, this.width, this.height);
+    this.background(this._bg);
 
-    const temp_canvas = document.createElement("canvas");
-    temp_canvas.width = this.width;
-    temp_canvas.height = this.height;
-    const temp_ctx = temp_canvas.getContext("2d");
+    this.ctx.translate(this.width / 2, this.height / 2);
+    this.ctx.rotate(phi);
+    this.ctx.scale(Math.SQRT2, Math.SQRT2);
+    this.ctx.translate(-this.width / 2, -this.height / 2);
 
     for (let r = 0; r < 1; r++) {
-      const y_breaks = this._fillShuffleArray(this._cols);
-      const x_starts = this._fillShuffleArray(this._cols);
-      for (let i = 0; i < this._cols; i++) {
-        const x_start = x_starts[i] * col_scl;
-        const y_break = y_breaks[i] * col_scl;
-        const fill = this._xor128.pick(colors);
+      const y_breaks = this._xor128.shuffle(
+        new Array(this._slots).fill(0).map((_, i) => i),
+      );
+      const x_starts = this._xor128.shuffle(
+        new Array(this._slots).fill(0).map((_, i) => i),
+      );
+      //
+      for (let i = 0; i < this._slots; i++) {
+        const x_start = x_starts[i] * this._col_scl;
+        const y_break = y_breaks[i] * this._col_scl;
+        const fill = this._xor128.pick(this._colors);
 
         const border = fill.copy();
         border.l *= 0.8;
 
-        temp_ctx.save();
-        temp_ctx.fillStyle = fill.rgb;
-        temp_ctx.strokeStyle = border.rgb;
+        this.ctx.save();
+        this.ctx.fillStyle = fill.rgb;
+        this.ctx.strokeStyle = border.rgb;
 
-        temp_ctx.beginPath();
-        temp_ctx.moveTo(x_start, 0);
-        temp_ctx.lineTo(x_start, y_break);
-        temp_ctx.lineTo(this.width, y_break);
-        temp_ctx.lineTo(this.width, y_break - col_scl);
-        temp_ctx.lineTo(x_start + col_scl, y_break - col_scl);
-        temp_ctx.lineTo(x_start + col_scl, 0);
-        temp_ctx.closePath();
-        temp_ctx.fill();
-        temp_ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.moveTo(x_start, 0);
+        this.ctx.lineTo(x_start, y_break);
+        this.ctx.lineTo(this.width, y_break);
+        this.ctx.lineTo(this.width, y_break - this._col_scl);
+        this.ctx.lineTo(x_start + this._col_scl, y_break - this._col_scl);
+        this.ctx.lineTo(x_start + this._col_scl, 0);
+        this.ctx.closePath();
+        this.ctx.fill();
+        this.ctx.stroke();
 
-        temp_ctx.restore();
+        this.ctx.restore();
 
-        temp_ctx.save();
-        temp_ctx.fillStyle = border.rgb;
+        this.ctx.save();
+        this.ctx.fillStyle = border.rgb;
 
-        temp_ctx.beginPath();
-        temp_ctx.arc(
-          x_start + col_scl / 2,
-          y_break - col_scl / 2,
-          (col_scl / 2) * 0.8,
+        this.ctx.beginPath();
+        this.ctx.arc(
+          x_start + this._col_scl / 2,
+          y_break - this._col_scl / 2,
+          (this._col_scl / 2) * 0.8,
           0,
           Math.PI * 2,
-          true
+          true,
         );
-        temp_ctx.fill();
+        this.ctx.fill();
 
-        temp_ctx.restore();
+        this.ctx.restore();
       }
     }
 
-    // Draw the temp canvas to the main canvas
-    const phi = (this._xor128.random_int(1, 4) * Math.PI) / 2;
-    this.ctx.save();
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.rotate(-Math.PI / 4 + phi);
-    this.ctx.scale(Math.SQRT2, Math.SQRT2);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
-    this.ctx.drawImage(temp_canvas, 0, 0);
-    this.ctx.restore();
     this._addTexture();
     this.ctx.restore();
-
-    this.noLoop();
   }
-
-  draw() {}
 
   click() {
     this.setup();
+    this.loop();
   }
 
   _addTexture() {
@@ -107,13 +118,6 @@ class Sketch extends Engine {
     }
 
     this.ctx.restore();
-  }
-  _fillShuffleArray(n) {
-    return new Array(n)
-      .fill(0)
-      .map((_, i) => ({ i: i, order: this._xor128.random() }))
-      .sort((a, b) => a.order - b.order)
-      .map((v) => v.i);
   }
 }
 

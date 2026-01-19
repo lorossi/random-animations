@@ -1,10 +1,11 @@
-import { Point } from "./engine.js";
+import { Point } from "./lib.js";
 
 class Line {
-  constructor(length, range, seed, noise, xor128) {
+  constructor(length, range, seed, fg, noise, xor128) {
     this._length = length;
     this._range = range;
     this._seed = seed;
+    this._fg = fg;
     this._noise = noise;
     this._xor128 = xor128;
 
@@ -35,7 +36,7 @@ class Line {
           p1.x * this._noise_scl,
           p2.x * this._noise_scl,
           nx + this._seed,
-          ny + this._seed
+          ny + this._seed,
         );
 
         const mid_x = (p1.x + p2.x) / 2;
@@ -62,7 +63,7 @@ class Line {
       this._line[0].x * this._noise_scl,
       this._line[this._line.length - 1].x * this._noise_scl,
       nx + this._seed,
-      ny + this._seed
+      ny + this._seed,
     );
 
     this._alpha = (n + 1) / 4 + 0.25;
@@ -81,16 +82,19 @@ class Line {
   show(ctx) {
     if (!this._visible) return;
 
+    const c = this._fg.copy();
+    c.a = this._alpha;
+
     ctx.save();
 
-    ctx.strokeStyle = `rgba(240, 240, 240, ${this._alpha})`;
+    ctx.strokeStyle = c.rgba;
     ctx.beginPath();
     ctx.moveTo(this._line[0].x, this._line[0].y);
     this._line.forEach((p) => ctx.lineTo(p.x, p.y));
     ctx.stroke();
 
     // draw  a circle at the end
-    ctx.fillStyle = "rgba(200, 200, 200, 0.75)";
+    ctx.fillStyle = c.rgb;
     ctx.beginPath();
     ctx.arc(this._length, 0, 2, 0, Math.PI * 2);
     ctx.fill();

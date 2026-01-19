@@ -1,5 +1,4 @@
-import { XOR128, SimplexNoise } from "./lib.js";
-import { Palette } from "./palette-factory.js";
+import { XOR128, SimplexNoise, Palette } from "./lib.js";
 
 class Pairing {
   constructor(x, y, size, seed, noise_scl, colors) {
@@ -19,7 +18,7 @@ class Pairing {
     ];
     this._functions_weight = [3, 3, 2, 1, 1];
     this._cumulative_weights = this._createCumulativeWeights(
-      this._functions_weight
+      this._functions_weight,
     );
 
     this._xor128 = new XOR128(this._seed);
@@ -31,7 +30,8 @@ class Pairing {
   _createCumulativeWeights(weights) {
     const weights_sum = weights.reduce((a, b) => a + b, 0);
     const cumulative_weights = weights.map(
-      (_, i) => weights.slice(0, i + 1).reduce((a, b) => a + b, 0) / weights_sum
+      (_, i) =>
+        weights.slice(0, i + 1).reduce((a, b) => a + b, 0) / weights_sum,
     );
 
     return cumulative_weights;
@@ -45,7 +45,7 @@ class Pairing {
           this._x * this._noise_scl + i,
           this._y * this._noise_scl + i,
           tx,
-          ty
+          ty,
         ),
       }))
       .sort((a, b) => a.order - b.order)
@@ -56,7 +56,7 @@ class Pairing {
       this._x * this._noise_scl,
       this._y * this._noise_scl,
       tx + 2000,
-      ty + 2000
+      ty + 2000,
     );
     this._inner_rotation = (Math.floor((n1 + 1) * 2) * Math.PI) / 4;
 
@@ -64,10 +64,10 @@ class Pairing {
       this._x * this._noise_scl,
       this._y * this._noise_scl,
       tx + 3000,
-      ty + 3000
+      ty + 3000,
     );
     const drawing_i = Math.floor(
-      ((n2 + 1) / 2) * this._cumulative_weights.length
+      ((n2 + 1) / 2) * this._cumulative_weights.length,
     );
     this._inner_draw = this._drawing_functions[drawing_i];
   }

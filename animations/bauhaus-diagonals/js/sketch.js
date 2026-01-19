@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Shape } from "./shape.js";
 import { Title, Subtitle } from "./title.js";
 
@@ -41,7 +39,7 @@ class Sketch extends Engine {
       if ((n + 1) / 2 < this._empty_chances) continue;
 
       this._shapes.push(
-        new Shape(x, y, shape_size, this._shape_scl, shape_seed, this._colors)
+        new Shape(x, y, shape_size, this._shape_scl, shape_seed, this._colors),
       );
     }
 
@@ -50,17 +48,23 @@ class Sketch extends Engine {
       shape_size,
       shape_size * 2,
       this._fg,
-      this._bg
+      this._bg,
     );
     this._subtitle = new Subtitle(
       this._rows * shape_size - shape_size,
       this._rows * shape_size - shape_size,
       shape_size,
       this._fg,
-      this._bg
+      this._bg,
     );
 
     this._texture = this._createTexture();
+    this._font_loaded = false;
+
+    document.fonts.load(`12px Bauhaus`).then(() => {
+      this._font_loaded = true;
+      this.draw();
+    });
   }
 
   _createTexture() {

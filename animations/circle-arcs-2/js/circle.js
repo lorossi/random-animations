@@ -1,5 +1,4 @@
 import { Arc } from "./arc.js";
-import { Color } from "./engine.js";
 
 class Circle {
   constructor(x, y, r) {
@@ -17,7 +16,7 @@ class Circle {
     min_arc_length,
     max_arc_length,
     probability,
-    time_scl
+    time_scl,
   ) {
     this._rings = rings;
     this._min_arcs = min_arcs;
@@ -60,7 +59,7 @@ class Circle {
           outer_r * dr,
           start_angle,
           end_angle,
-          fill
+          fill,
         );
         new_arc.initDependencies(this._noise);
         this._arcs.push(new_arc);

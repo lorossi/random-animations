@@ -10,42 +10,42 @@
 - [x] automaton-pattern
 - [x] backtracking-maze
 - [x] backtracking-sudoku
-- [ ] barcodes
-- [ ] bauhaus-diagonals
-- [ ] binary-grid
-- [ ] blinds
-- [ ] breathe
-- [ ] breathing-exercise
-- [ ] broken-boxes
-- [ ] broken-boxes-2
-- [ ] broken-circle
-- [ ] broken-flowers
-- [ ] chaos-noise
-- [ ] circle-arcs
-- [ ] circle-arcs-2
-- [ ] circle-ball
-- [ ] circle-difference
-- [ ] circle-gradient
-- [ ] circle-hypnotise
-- [ ] circle-lines
-- [ ] circle-lines-2
-- [ ] circle-modernism
-- [ ] circle-noise
-- [ ] circle-particles
-- [ ] circle-rectangle
-- [ ] circle-rings
-- [ ] circle-slices
-- [ ] circle-sparks
-- [ ] circle-squares
-- [ ] circle-to-square
-- [ ] circle-waves
-- [ ] circles-factory
-- [ ] circles-something
-- [ ] circles-towers
-- [ ] circular-distribution
-- [ ] circular-distribution-2
-- [ ] collatz
-- [ ] color-grid
+- [x] barcodes
+- [x] bauhaus-diagonals
+- [x] binary-grid
+- [x] blinds
+- [x] breathe
+- [x] breathing-exercise
+- [x] broken-boxes
+- [x] broken-boxes-2
+- [x] broken-circle
+- [x] broken-flowers
+- [x] chaos-noise
+- [x] circle-arcs
+- [x] circle-arcs-2
+- [x] circle-ball
+- [x] circle-difference
+- [x] circle-gradient
+- [x] circle-hypnotise
+- [x] circle-lines
+- [x] circle-lines-2
+- [x] circle-modernism
+- [x] circle-noise
+- [x] circle-particles
+- [x] circle-rectangle
+- [x] circle-rings
+- [x] circle-slices
+- [x] circle-sparks
+- [x] circle-squares
+- [x] circle-to-square
+- [x] circle-waves
+- [x] circles-factory
+- [x] circles-something
+- [x] circles-towers
+- [x] circular-distribution
+- [x] circular-distribution-2
+- [x] collatz
+- [x] color-grid
 - [ ] comets
 - [ ] constellations
 - [ ] continuous-automaton

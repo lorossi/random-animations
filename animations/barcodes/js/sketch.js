@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Rect, Barcode } from "./barcode.js";
 import { QuestionMark } from "./questionmark.js";
 
@@ -40,7 +38,7 @@ class Sketch extends Engine {
           new Rect(x, y, w, h),
           random_seed,
           noise_seed,
-          this._fg
+          this._fg,
         );
         this._barcodes.push(barcode);
         last_x += w;
@@ -52,13 +50,24 @@ class Sketch extends Engine {
       this.width / 2,
       this.height / 2,
       this.height / 3,
-      this._xor128.random_int(1e6)
+      this._xor128.random_int(1e6),
     );
 
+    this._font_loaded = false;
+
     document.body.style.background = this._bg.hex;
+    document.fonts.load("16px Hack").then(() => {
+      this._font_loaded = true;
+      this.draw();
+    });
   }
 
   draw() {
+    if (!this._font_loaded) {
+      this.loop();
+      return;
+    }
+
     this.ctx.save();
     this.background(this._bg);
 
@@ -82,7 +91,7 @@ class Sketch extends Engine {
       for (let y = 0; y < this.height; y++) {
         const n = this._noise.noise(
           x * this._scramble_noise_scl,
-          y * this._scramble_noise_scl
+          y * this._scramble_noise_scl,
         );
         if ((n + 1) / 2 > this._scramble_rate) continue;
 

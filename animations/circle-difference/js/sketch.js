@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Circle } from "./circle.js";
 
 class Sketch extends Engine {
@@ -29,8 +28,9 @@ class Sketch extends Engine {
       return new Circle(x, y, r * this._circle_scl, this._xor128);
     });
 
-    this.background(this._bg.rgb);
+    this.background(this._bg);
 
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -38,7 +38,8 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = ((this.frameCount - this._frame_offset) / this._duration) % 1;
+    const delta_frame = this.frameCount - this._frame_offset;
+    const t = (delta_frame / this._duration) % 1;
 
     this.ctx.save();
     this.ctx.translate(this.width / 2, this.height / 2);
@@ -53,7 +54,7 @@ class Sketch extends Engine {
 
     this.ctx.restore();
 
-    if (t == 0 && this.frameCount - this._frame_offset > 0) {
+    if (t == 0 && delta_frame > 0) {
       if (this._recording) {
         this._recording = false;
         this.stopRecording();
@@ -62,8 +63,7 @@ class Sketch extends Engine {
         console.log("%cRecording saved", "color:green");
       }
 
-      this._frame_offset = this.frameCount;
-      this.background(this._bg.rgb);
+      this.background(this._bg);
     }
   }
 

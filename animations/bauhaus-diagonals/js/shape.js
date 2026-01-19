@@ -1,4 +1,4 @@
-import { XOR128 } from "./xor128.js";
+import { XOR128 } from "./lib.js";
 
 class Shape {
   constructor(x, y, size, scl, seed, colors) {
@@ -23,7 +23,7 @@ class Shape {
     const color_i = this._wrap(
       this._x + this._y * color_dir,
       0,
-      this._colors.length
+      this._colors.length,
     );
     const color = this._colors[color_i];
 

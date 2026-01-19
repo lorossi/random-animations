@@ -1,7 +1,5 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, PaletteFactory, XOR128, Color } from "./lib.js";
 import { Circle } from "./circle.js";
-import { PaletteFactory } from "./palette-factory.js";
 
 class Sketch extends Engine {
   preload() {
@@ -11,6 +9,16 @@ class Sketch extends Engine {
     this._noise_scl = 0.01;
     this._circle_scl = 0.9;
     this._segments_num = 200;
+
+    this._hex_palettes = [
+      ["#fdf0d5", "#780000", "#c1121f", "#003049", "#669bbc"],
+      ["#264653", "#2a9d8f", "#e9c46a", "#f4a261", "#e76f51"],
+      ["#f1faee", "#e63946", "#a8dadc", "#457b9d", "#1d3557"],
+      ["#eae2b7", "#003049", "#d62828", "#f77f00", "#fcbf49"],
+      ["#f2e8cf", "#386641", "#6a994e", "#a7c957", "#bc4749"],
+      ["#ef233c", "#2b2d42", "#8d99ae", "#edf2f4", "#d90429"],
+      ["#e0fbfc", "#3d5a80", "#98c1d9", "#ee6c4d", "#293241"],
+    ];
   }
 
   setup() {
@@ -18,33 +26,31 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(seed);
     this._noise = new SimplexNoise(this._xor128.random_int(1e9));
 
-    this._palette = PaletteFactory.getRandomPalette(this._xor128);
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
+
+    [this._bg, ...this._colors] = this._palette.colors;
 
     const circle_scl = this.width / this._cols;
     this._circles = new Array(this._cols ** 2).fill(0).map((_, i) => {
       const x = (0.5 + (i % this._cols)) * circle_scl;
       const y = (0.5 + Math.floor(i / this._cols)) * circle_scl;
       const c = new Circle(x, y, circle_scl * this._circle_scl);
-      c.setAttributes(
-        this._palette.colors,
-        this._noise_scl,
-        this._segments_num
-      );
+      c.setAttributes(this._colors, this._noise_scl, this._segments_num);
       c.initDependencies(this._xor128, this._noise);
       return c;
     });
 
     this._texture = this._createTexture();
 
-    this.background(this._palette.background.rgba);
+    this.background(this._bg.rgba);
     this._ctx.drawImage(this._texture, 0, 0);
-    document.body.style.backgroundColor = this._palette.background.rgba;
-    console.log(this._palette.background.hex);
+    document.body.style.backgroundColor = this._bg.rgba;
   }
 
   draw() {
     this._ctx.save();
-    // this._ctx.globalCompositeOperation = "multiply";
+    this._ctx.globalCompositeOperation = "multiply";
     this._ctx.translate(this.width / 2, this.height / 2);
     this._ctx.scale(this._scl, this._scl);
     this._ctx.translate(-this.width / 2, -this.height / 2);

@@ -1,4 +1,4 @@
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Flower {
   constructor(x, y, size, scl) {
@@ -28,7 +28,7 @@ class Flower {
     const n1 = this._noise.noise(
       this._x * this._noise_scl,
       this._y * this._noise_scl,
-      1000
+      1000,
     );
     this._phi = n1;
   }
@@ -45,14 +45,14 @@ class Flower {
       this._x * this._noise_scl,
       this._y * this._noise_scl,
       nx + 3000,
-      ny + 3000
+      ny + 3000,
     );
 
     const n2 = this._noise.noise(
       this._x * this._noise_scl,
       this._y * this._noise_scl,
       nx + 5000,
-      ny + 5000
+      ny + 5000,
     );
 
     this._petal_width = this._remap(n1, -1, 1, 0, 1);
@@ -82,7 +82,7 @@ class Flower {
         (this._size / 4) * this._petal_height,
         0,
         0,
-        Math.PI * 2
+        Math.PI * 2,
       );
       ctx.fill();
 

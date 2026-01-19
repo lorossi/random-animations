@@ -30,10 +30,10 @@ class Texture {
 
   draw(ctx) {
     const dx = Math.floor(
-      (this._size - ctx.canvas.width) * this._xor128.random()
+      (this._size - ctx.canvas.width) * this._xor128.random(),
     );
     const dy = Math.floor(
-      (this._size - ctx.canvas.height) * this._xor128.random()
+      (this._size - ctx.canvas.height) * this._xor128.random(),
     );
 
     ctx.save();
@@ -47,7 +47,7 @@ class Texture {
       0,
       0,
       this._size,
-      this._size
+      this._size,
     );
     ctx.restore();
   }

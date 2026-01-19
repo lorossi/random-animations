@@ -1,7 +1,6 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Color } from "./lib.js";
+import { RandomPaletteFactory } from "./random-palette.js";
 import { Box } from "./box.js";
-import { PaletteFactory } from "./palette.js";
 
 class Sketch extends Engine {
   preload() {
@@ -21,7 +20,7 @@ class Sketch extends Engine {
     this._bg_color = Color.fromMonochrome(this._xor128.random_int(230, 256));
     this._setBgColor(this._bg_color);
 
-    const palette = PaletteFactory.getRandomPalette(this._xor128);
+    const palette = RandomPaletteFactory.getRandomPalette(this._xor128);
 
     const scl = this.width / this._cols;
     this._boxes = new Array(this._cols * this._cols).fill(null).map((_, i) => {

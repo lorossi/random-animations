@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, PaletteFactory, XOR128, Color } from "./lib.js";
 import { Tower } from "./tower.js";
 
 class Sketch extends Engine {
@@ -11,6 +9,17 @@ class Sketch extends Engine {
     this._scl = 0.95;
     this._circles_scl = 0.95;
 
+    this._hex_palettes = [
+      // https://coolors.co/palette/5f0f40-9a031e-fb8b24-e36414-0f4c5c
+      ["#5f0f40", "#9a031e", "#fb8b24", "#e36414", "#0f4c5c"],
+      // https://coolors.co/palette/003049-d62828-f77f00-fcbf49-eae2b7
+      ["#003049", "#d62828", "#f77f00", "#fcbf49", "#eae2b7"],
+      // https://coolors.co/palette/edae49-d1495b-00798c-30638e-003d5b
+      ["#edae49", "#d1495b", "#00798c", "#30638e", "#003d5b"],
+      // https://coolors.co/palette/ef476f-ffd166-06d6a0-118ab2-073b4c
+      ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"],
+    ];
+
     this._duration = 300;
     this._recording = false;
   }
@@ -20,12 +29,9 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(this._seed);
     this._cols = this._xor128.random_int(3, 6);
 
-    const revese_palette = this._xor128.random_bool();
-    const palette = PaletteFactory.getRandomPalette(
-      this._xor128,
-      false,
-      revese_palette
-    );
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128, false);
+    if (this._xor128.random_bool()) this._palette = this._palette.reverse();
 
     const noise_seed = this._xor128.random_int(1e9);
     const tower_size = this.width / this._cols;
@@ -39,7 +45,7 @@ class Sketch extends Engine {
         noise_seed,
         this._noise_scl,
         this._circles_scl,
-        palette
+        this._palette,
       );
     });
 

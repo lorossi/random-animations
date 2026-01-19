@@ -1,5 +1,4 @@
-import { SimplexNoise } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { XOR128, SimplexNoise } from "./lib.js";
 
 class Tower {
   constructor(x, y, size, seed, noise_scl, scl, palette) {
@@ -26,7 +25,7 @@ class Tower {
         tx,
         ty,
         this._x * this._noise_scl + i * 10,
-        this._y * this._noise_scl + i * 10
+        this._y * this._noise_scl + i * 10,
       );
       return n * Math.PI * 2;
     });

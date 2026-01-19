@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Circle } from "./circle.js";
 
 class Sketch extends Engine {
@@ -13,9 +12,9 @@ class Sketch extends Engine {
     this._circle_inner_r = 0.6;
     this._points_num = 2500;
     this._noise_scl = 0.05;
-    this._time_scl = 0.1;
-    this._circle_color = Color.fromMonochrome(245);
-    this._background_color = Color.fromMonochrome(15);
+    this._time_scl = 0.75;
+    this._fg = Color.fromMonochrome(245);
+    this._bg = Color.fromMonochrome(15);
   }
 
   setup() {
@@ -30,18 +29,20 @@ class Sketch extends Engine {
       const c = new Circle(x, y, circle_r);
 
       c.initDependencies(this._xor128, this._noise);
-      c.setColor(this._circle_color);
+      c.setColor(this._fg);
       c.setAttributes(
         this._points_num,
         this._circle_scl,
         this._circle_inner_r,
         this._noise_scl,
-        this._time_scl
+        this._time_scl,
       );
       c.init();
       return c;
     });
 
+    document.body.style.backgroundColor = this._bg.rgb;
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -49,10 +50,11 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
+    const delta_frame = this.frameCount - this._frame_offset;
+    const t = (delta_frame / this._duration) % 1;
 
     this.ctx.save();
-    this.background(this._background_color.rgb);
+    this.background(this._bg.rgb);
     this.ctx.translate(this.width / 2, this.height / 2);
     this.ctx.scale(this._scl, this._scl);
     this.ctx.translate(-this.width / 2, -this.height / 2);
@@ -62,7 +64,7 @@ class Sketch extends Engine {
     });
     this.ctx.restore();
 
-    if (t == 0 && this.frameCount > 0 && this._recording) {
+    if (t == 0 && delta_frame > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");

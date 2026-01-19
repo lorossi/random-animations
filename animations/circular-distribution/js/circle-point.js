@@ -1,4 +1,4 @@
-import { Point } from "./engine.js";
+import { Point } from "./lib.js";
 
 class CirclePoint extends Point {
   constructor(x, y) {

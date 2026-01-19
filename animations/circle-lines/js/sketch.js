@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, SimplexNoise, Color } from "./lib.js";
 
 class Sketch extends Engine {
   preload() {
@@ -27,13 +26,10 @@ class Sketch extends Engine {
       0,
       0,
       this.width,
-      this.height
+      this.height,
     );
-    // light red at the start
     this._background_gradient.addColorStop(0, this._gradient_start.rgba);
-    // dark red at the end
     this._background_gradient.addColorStop(1, this._gradient_end.rgba);
-    // page background
     document.body.style.background = this._bg.rgba;
   }
 
@@ -59,7 +55,7 @@ class Sketch extends Engine {
 
         const dist = (x + y) / (2 * (this._cols - 1.5));
         const lines = Math.floor(
-          this._polyEaseInOut(dist, 4) * this._lines_num
+          this._polyEaseInOut(dist, 4) * this._lines_num,
         );
 
         this.ctx.save();
@@ -101,7 +97,7 @@ class Sketch extends Engine {
       (this._cols - 1) * scl,
       (scl / 2) * this._circle_scl,
       0,
-      Math.PI * 2
+      Math.PI * 2,
     );
     this.ctx.fill();
     this.ctx.restore();

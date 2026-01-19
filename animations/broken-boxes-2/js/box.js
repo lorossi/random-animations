@@ -1,4 +1,4 @@
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Box {
   constructor(x, y, scl, box_scl) {
@@ -26,12 +26,12 @@ class Box {
     const n1 = this._noise.noise(
       this._x * this._noise_scl,
       this._y * this._noise_scl,
-      1000
+      1000,
     );
     const n2 = this._noise.noise(
       this._x * this._noise_scl,
       this._y * this._noise_scl,
-      2000
+      2000,
     );
 
     this._phi = this._remap(n1, -1, 1, 0, 1);

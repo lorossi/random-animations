@@ -1,17 +1,38 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-
+import { Engine, Color, Point } from "./lib.js";
+import { Circle } from "./circle.js";
 class Sketch extends Engine {
   preload() {
     this._duration = 120;
     this._recording = false;
 
-    this._cols = 12;
+    this._slots = 12;
     this._scl = 0.9;
     this._circle_scl = 0.8;
+
+    this._bg = Color.fromMonochrome(168);
+    this._white = Color.fromMonochrome(240);
+    this._black = Color.fromMonochrome(15);
   }
 
   setup() {
+    this._circle_size = this.width / this._slots;
+    this._max_dist = this.width * Math.SQRT2;
+    this._circles = new Array(this._slots * this._slots).fill().map((_, i) => {
+      const x = i % this._slots;
+      const y = Math.floor(i / this._slots);
+      return new Circle(
+        x,
+        y,
+        this._circle_size,
+        this._circle_scl,
+        this._white,
+        this._black,
+      );
+    });
+
+    document.body.style.backgroundColor = this._bg.rgb;
+
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -19,52 +40,26 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
-    const scl = Math.min(this.width, this.height) / this._cols;
-
-    this.ctx.save();
-    this.background("rgb(168, 168, 168)");
-
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scl, this._scl);
-    this.ctx.translate(-this.width / 2 + scl / 2, -this.height / 2 + scl / 2);
+    const delta_frame = this.frameCount - this._frame_offset;
+    const t = (delta_frame / this._duration) % 1;
 
     const eased_t = this._polyEaseInOut(t, 1.25);
-    const center = new Point(
-      this.width * 0.35 * Math.cos(eased_t * Math.PI * 2),
-      this.height * 0.35 * Math.sin(eased_t * Math.PI * 2)
-    );
+    const theta = eased_t * Math.PI * 2;
+    const dy = Math.sin(theta) * (this.height * 0.5);
+    const center = new Point(this.width / 2, this.height / 2 + dy);
 
-    for (let x = 0; x < this._cols; x++) {
-      for (let y = 0; y < this._cols; y++) {
-        const pos = new Point(x * scl, y * scl);
-        const dist =
-          ((pos.x - center.x) ** 2 + (pos.y - center.y) ** 2) ** 0.5 /
-          (this.width * Math.SQRT2);
-        const phi = Math.PI * dist * 2 + Math.PI;
+    this.ctx.save();
+    this.background(this._bg);
+    this.scaleFromCenter(this._scl);
 
-        this.ctx.save();
-        this.ctx.translate(x * scl, y * scl);
-        this.ctx.rotate(phi);
-        this.ctx.scale(this._circle_scl, this._circle_scl);
+    this._circles.forEach((circle) => {
+      circle.update(center, this._max_dist);
+      circle.draw(this.ctx);
+    });
 
-        // upper circle, white
-        this.ctx.fillStyle = "rgb(255, 255, 255)";
-        this.ctx.beginPath();
-        this.ctx.arc(0, 0, scl / 2, Math.PI, 2 * Math.PI);
-        this.ctx.fill();
-        // lower circle, black
-        this.ctx.fillStyle = "rgb(0, 0, 0)";
-        this.ctx.beginPath();
-        this.ctx.arc(0, 0, scl / 2, 0, Math.PI);
-        this.ctx.fill();
-
-        this.ctx.restore();
-      }
-    }
     this.ctx.restore();
 
-    if (t >= 1 && this._recording) {
+    if (t == 0 && delta_frame > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");
@@ -77,6 +72,10 @@ class Sketch extends Engine {
     return x < 0.5
       ? Math.pow(2, n - 1) * Math.pow(x, n)
       : 1 - Math.pow(-2 * x + 2, n) / 2;
+  }
+
+  click() {
+    this.setup();
   }
 }
 

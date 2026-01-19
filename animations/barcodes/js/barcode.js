@@ -1,5 +1,4 @@
-import { XOR128 } from "./xor128.js";
-import { SimplexNoise } from "./engine.js";
+import { XOR128, SimplexNoise } from "./lib.js";
 
 class Rect {
   constructor(x, y, w, h) {
@@ -52,7 +51,7 @@ class Barcode {
       const n1 = this._noise.noise(
         x * this._noise_scl,
         y * this._noise_scl,
-        1000
+        1000,
       );
       const w = Math.floor(((n1 + 1) / 2) * this._step_size);
 

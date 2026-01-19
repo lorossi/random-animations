@@ -1,4 +1,4 @@
-import { XOR128 } from "./xor128.js";
+import { XOR128 } from "./lib.js";
 
 class Crown {
   constructor(max_size, thickness, color) {
@@ -75,7 +75,7 @@ class Circle {
       -this._size / 2,
       this._size,
       this._size,
-      this._size * 0.1
+      this._size * 0.1,
     );
     ctx.clip();
 

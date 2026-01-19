@@ -1,6 +1,4 @@
-import { XOR128 } from "./xor128.js";
-import { SimplexNoise } from "./engine.js";
-import { Point } from "./engine.js";
+import { Point, SimplexNoise, XOR128 } from "./lib.js";
 
 class Blind {
   constructor(x, y, size, seed, fill_c) {

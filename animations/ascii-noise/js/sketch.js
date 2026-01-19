@@ -1,13 +1,4 @@
-import {
-  Color,
-  Engine,
-  GradientPalette,
-  Palette,
-  PaletteFactory,
-  Point,
-  SimplexNoise,
-  XOR128,
-} from "./lib.js";
+import { Color, Engine, SimplexNoise, XOR128 } from "./lib.js";
 
 class Sketch extends Engine {
   preload() {
@@ -36,6 +27,9 @@ class Sketch extends Engine {
 
     this._slot_size = this.width / this._slots;
 
+    this._font_loaded = false;
+    document.fonts.load("16px Hack").then(() => (this._font_loaded = true));
+
     document.body.style.background = this._bg.rgba;
     this._frame_offset = this.frameCount;
     if (this._recording) {
@@ -45,6 +39,8 @@ class Sketch extends Engine {
   }
 
   draw(dt) {
+    if (!this._font_loaded) return;
+
     const delta_frame = this.frameCount - this._frame_offset;
     const t = (delta_frame / this._duration) % 1;
 
@@ -57,7 +53,7 @@ class Sketch extends Engine {
     this.scaleFromCenter(this._scl);
 
     this.ctx.fillStyle = this._fg.rgba;
-    this.ctx.font = `${this._slot_size}px Hack, monospace`;
+    this.ctx.font = `${this._slot_size}px Hack`;
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
 

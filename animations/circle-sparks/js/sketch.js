@@ -1,6 +1,5 @@
-import { Engine, SimplexNoise } from "./engine.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Line } from "./line.js";
-import { XOR128 } from "./xor128.js";
 
 class Sketch extends Engine {
   preload() {
@@ -12,25 +11,37 @@ class Sketch extends Engine {
     this._range = 2 ** 6;
     this._scl = 0.85;
     this._center_r = 15;
+    this._bg = Color.fromMonochrome(15);
+    this._fg = Color.fromMonochrome(240);
   }
 
   setup() {
-    const seed = new Date().getTime();
+    this._seed = new Date().getTime();
 
     const noises = Array(this._noises_num)
       .fill()
-      .map((_, i) => new SimplexNoise(seed + i * 10));
+      .map((_, i) => new SimplexNoise(this._seed + i * 10));
 
-    const xor128 = new XOR128(seed);
+    const xor128 = new XOR128(this._seed);
 
     this._lines = Array(this._lines_num)
       .fill()
       .map((_, i) => {
-        const seed = Math.sin((i / this._lines_num) * Math.PI * 2);
+        const line_seed = Math.sin((i / this._lines_num) * Math.PI * 2);
         const noise = noises[i % this._noises_num];
-        return new Line(this.width / 2, this._range, seed, noise, xor128);
+        return new Line(
+          this.width / 2,
+          this._range,
+          line_seed,
+          this._fg,
+          noise,
+          xor128,
+        );
       });
 
+    document.body.style.backgroundColor = this._bg.rgba;
+
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -38,11 +49,12 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
+    const delta_frame = this.frameCount - this._frame_offset;
+    const t = (delta_frame / this._duration) % 1;
     this._lines.forEach((l) => l.update(t));
 
     this.ctx.save();
-    this.background("rgb(15, 15, 15)");
+    this.background(this._bg);
     this.ctx.translate(this.width / 2, this.height / 2);
     this.ctx.scale(this._scl, this._scl);
 
@@ -54,7 +66,7 @@ class Sketch extends Engine {
     });
 
     this.ctx.save();
-    this.ctx.fillStyle = "rgb(240, 240, 240)";
+    this.ctx.fillStyle = this._fg.rgba;
 
     this.ctx.beginPath();
     this.ctx.arc(0, 0, this._center_r, 0, Math.PI * 2);
@@ -64,7 +76,7 @@ class Sketch extends Engine {
 
     this.ctx.restore();
 
-    if (t >= 1 && this._recording) {
+    if (t == 0 && delta_frame > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");
