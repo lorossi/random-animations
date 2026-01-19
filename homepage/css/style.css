@@ -44,6 +44,7 @@ body {
 
 a {
   user-select: none;
+  color: var(--text-color);
 }
 
 a:visited,
@@ -70,11 +71,18 @@ a:active {
   font-weight: 800;
 }
 
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .content {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(var(--cols), 1fr);
   grid-auto-rows: auto;
-  grid-gap: 0;
+  grid-gap: var(--grid-padding);
+  padding: var(--grid-padding);
 }
 
 .animation * {
@@ -88,7 +96,7 @@ a:active {
   height: 100%;
   opacity: 0;
   aspect-ratio: 1;
-  animation: fadeInUp 0.5s forwards;
+  animation: fadeInUp 1s forwards;
 }
 
 .animation .preview {

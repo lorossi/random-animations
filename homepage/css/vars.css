@@ -3,12 +3,14 @@
   --text-color: #f5f2f2;
   --text-size: 1rem;
   --title-size: 2rem;
-  --cell-size: 300px;
+  --cols: 4;
+  --grid-padding: 1rem;
 }
 
 @media only screen and (max-width: 600px) {
   :root {
     --text-size: 1.5rem;
-    --cell-size: 200px;
+    --cols: 3;
+    --grid-padding: 1rem;
   }
 }
