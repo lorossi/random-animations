@@ -35,7 +35,7 @@ class Sketch extends Engine {
     this._seed = new Date().getTime();
 
     this._xor128 = new XOR128(this._seed);
-    this._noise = new SimplexNoise(this._xor128.random_int(2 ** 32));
+    this._noise = new SimplexNoise(this._xor128.random_int(1e9));
 
     this._noise_scl = this._xor128.random(0.001, 0.01);
     this._time_scl = this._xor128.random(0.5, 2.0);
@@ -56,14 +56,14 @@ class Sketch extends Engine {
         this._plane_slots_num,
         i,
         this._planes_num,
-        color
+        color,
       );
     });
 
     this._texture = new Texture(
       this.width * this._texture_oversize,
       this._texture_scl,
-      this._xor128
+      this._xor128,
     );
 
     this._rotation = this._xor128.random_int(4) * (Math.PI / 2);

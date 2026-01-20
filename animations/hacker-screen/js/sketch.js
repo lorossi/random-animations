@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Radar } from "./radar.js";
 import { Bars } from "./bars.js";
 import { TextLines } from "./textlines.js";
@@ -41,11 +39,15 @@ class Sketch extends Engine {
         this._xor128.random_int(1e16),
         this._cols,
         this._omega,
-        this._layer_scl
+        this._layer_scl,
       );
     });
     document.body.style.backgroundColor = this._bg.rgba;
 
+    this._font_loaded = false;
+    document.fonts.load(`12px Hack`).then(() => (this._font_loaded = true));
+
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -53,7 +55,13 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
+    if (!this._font_loaded) {
+      this._frame_offset = this.frameCount;
+      return;
+    }
+
+    const delta_frame = this.frameCount - this._frame_offset;
+    const t = (delta_frame / this._duration) % 1;
 
     this.ctx.save();
     this.background(this._bg);
@@ -65,7 +73,7 @@ class Sketch extends Engine {
 
     this.ctx.restore();
 
-    if (t == 0 && this.frameCount > 0 && this._recording) {
+    if (t == 0 && delta_frame > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");

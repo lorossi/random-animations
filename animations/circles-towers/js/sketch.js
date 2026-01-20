@@ -10,13 +10,9 @@ class Sketch extends Engine {
     this._circles_scl = 0.95;
 
     this._hex_palettes = [
-      // https://coolors.co/palette/5f0f40-9a031e-fb8b24-e36414-0f4c5c
       ["#5f0f40", "#9a031e", "#fb8b24", "#e36414", "#0f4c5c"],
-      // https://coolors.co/palette/003049-d62828-f77f00-fcbf49-eae2b7
       ["#003049", "#d62828", "#f77f00", "#fcbf49", "#eae2b7"],
-      // https://coolors.co/palette/edae49-d1495b-00798c-30638e-003d5b
       ["#edae49", "#d1495b", "#00798c", "#30638e", "#003d5b"],
-      // https://coolors.co/palette/ef476f-ffd166-06d6a0-118ab2-073b4c
       ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"],
     ];
 

@@ -1,5 +1,4 @@
-import { XOR128 } from "./xor128.js";
-import { Point, SimplexNoise } from "./engine.js";
+import { XOR128, SimplexNoise } from "./lib.js";
 
 class Ribbon {
   constructor(max_width, height, color, seed, dy, noise_scl) {

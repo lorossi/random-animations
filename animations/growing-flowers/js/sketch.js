@@ -42,7 +42,7 @@ class Sketch extends Engine {
         this._radius,
         max_dist,
         this._circle_speed,
-        this._palette
+        this._palette,
       );
       c.setNoiseDetails(noise_details);
 
@@ -60,7 +60,7 @@ class Sketch extends Engine {
       this.height / 2,
       (Math.min(this.width, this.height) / 2) * this._scl,
       0,
-      2 * Math.PI
+      2 * Math.PI,
     );
     this.ctx.clip();
     // move to center

@@ -15,7 +15,11 @@ class Grid {
       .fill(null)
       .map(
         () =>
-          new Cell(this._cell_size, this._palette, this._xor128.random_int(1e9))
+          new Cell(
+            this._cell_size,
+            this._palette,
+            this._xor128.random_int(1e9),
+          ),
       );
   }
 

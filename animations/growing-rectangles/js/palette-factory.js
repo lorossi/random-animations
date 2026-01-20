@@ -54,16 +54,7 @@ class Palette {
   }
 }
 
-const PALETTES = [
-  // https://coolors.co/palette/2b2d42-8d99ae-edf2f4-ef233c
-  ["#2b2d42", "#8d99ae", "#edf2f4", "#ef233c"],
-  // https://coolors.co/palette/011627-fdfffc-2ec4b6-e71d36-ff9f1c
-  ["#011627", "#fdfffc", "#2ec4b6", "#e71d36", "#ff9f1c"],
-  // https://coolors.co/palette/001524-15616d-ffecd1-ff7d00-78290f
-  ["#001524", "#15616d", "#ffecd1", "#ff7d00", "#78290f"],
-];
-
-class PaletteFactory {
+const PALETTES = class PaletteFactory {
   static getRandomPalette(rand = Math, randomize = true) {
     const colors_index = Math.floor(rand.random() * PALETTES.length);
     let colors = PALETTES[colors_index].map((c) => {
@@ -93,6 +84,6 @@ class PaletteFactory {
   static getPalettesCount() {
     return PALETTES.length;
   }
-}
+};
 
 export { PaletteFactory, Palette };

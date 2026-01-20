@@ -1,5 +1,5 @@
+import { XOR128 } from "./lib.js";
 import { Hexagon } from "./hexagon.js";
-import { XOR128 } from "./xor128.js";
 
 class Grid {
   constructor(size, cols, seed, size_delta = 25) {

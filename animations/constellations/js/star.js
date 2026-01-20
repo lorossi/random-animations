@@ -1,4 +1,4 @@
-import { Point, Color } from "./engine.js";
+import { Point, Color } from "./lib.js";
 
 class Star {
   constructor(r, size, cols) {
@@ -26,7 +26,7 @@ class Star {
       nx + this._seed,
       ny + this._seed,
       tx + 10000,
-      ty + 10000
+      ty + 10000,
     );
     const x = this._noiseToF(n1);
     const y = this._noiseToF(n2);
@@ -52,7 +52,7 @@ class Star {
 
   _remap(x, old_min, old_max, new_min, new_max) {
     return Math.floor(
-      ((x - old_min) / (old_max - old_min)) * (new_max - new_min) + new_min
+      ((x - old_min) / (old_max - old_min)) * (new_max - new_min) + new_min,
     );
   }
 

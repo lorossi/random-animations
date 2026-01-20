@@ -91,7 +91,7 @@ class Sketch extends Engine {
 
       const color = this._palette[start_color_index].mix(
         this._palette[end_color_index],
-        p * this._palette.length - start_color_index
+        p * this._palette.length - start_color_index,
       );
 
       color.a = 0.7;
@@ -102,7 +102,7 @@ class Sketch extends Engine {
         scrambled_end,
         scrambled_slope,
         scrambled_section_y[i].y,
-        color
+        color,
       );
       return l;
     });

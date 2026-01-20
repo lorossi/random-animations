@@ -45,11 +45,8 @@ class Palette {
 }
 
 const PALETTES = [
-  // https://coolors.co/palette/ef476f-ffd166-06d6a0-118ab2-073b4c
   ["#EF476F", "#FFD166", "#06D6A0", "#118AB2", "#073B4C"],
-  // https://coolors.co/palette/55dde0-33658a-2f4858-f6ae2d-f26419
   ["#55DDE0", "#33658A", "#2F4858", "#F6AE2D", "#F26419"],
-  // https://coolors.co/palette/001219-005f73-0a9396-94d2bd-e9d8a6-ee9b00-ca6702-bb3e03-ae2012-9b2226
   [
     "#005F73",
     "#0A9396",

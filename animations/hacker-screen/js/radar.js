@@ -1,4 +1,4 @@
-import { XOR128 } from "./xor128.js";
+import { XOR128 } from "./lib.js";
 import { Layer } from "./layer.js";
 
 class Radar extends Layer {
@@ -28,7 +28,7 @@ class Radar extends Layer {
         const fy = (y + 0.5) * scl;
 
         const dist = Math.sqrt(
-          Math.pow(fx - this._size / 2, 2) + Math.pow(fy - this._size / 2, 2)
+          Math.pow(fx - this._size / 2, 2) + Math.pow(fy - this._size / 2, 2),
         );
         if (dist > this._size / 2) continue;
 

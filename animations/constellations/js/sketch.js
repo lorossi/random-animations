@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Constellation } from "./constellation.js";
 
 class Sketch extends Engine {
@@ -13,10 +12,10 @@ class Sketch extends Engine {
     this._cols = 4;
     this._stars_num = 5;
     this._stars_r = 3;
-    this._fg_color = Color.fromMonochrome(245);
+    this._fg = Color.fromMonochrome(245);
     this._star_color = Color.fromMonochrome(255);
     this._line_color = Color.fromMonochrome(200);
-    this._bg_color = Color.fromMonochrome(15);
+    this._bg = Color.fromMonochrome(15);
     this._noise_scl = 0.0002;
     this._time_scl = 0.125;
   }
@@ -41,19 +40,17 @@ class Sketch extends Engine {
         c_size,
         this._constellation_scl,
         this._stars_num,
-        this._constellations_cols
+        this._constellations_cols,
       );
       constellation.setStarsSeeds(star_seeds);
       constellation.setStarsR(this._stars_r);
       constellation.setNoise(this._noise, this._noise_scl, this._time_scl);
-      constellation.setColors(
-        this._fg_color,
-        this._star_color,
-        this._line_color
-      );
+      constellation.setColors(this._fg, this._star_color, this._line_color);
       return constellation;
     });
 
+    document.body.style.backgroundColor = this._bg.rgb;
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -61,10 +58,11 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
+    const delta_frame = this.frameCount - this._frame_offset;
+    const t = (delta_frame / this._duration) % 1;
 
     this.ctx.save();
-    this.background(this._bg_color);
+    this.background(this._bg);
     this.scaleFromCenter(this._scl);
 
     this._constellations.forEach((constellation) => {
@@ -74,7 +72,7 @@ class Sketch extends Engine {
 
     this.ctx.restore();
 
-    if (t == 0 && this.frameCount > 0 && this._recording) {
+    if (t == 0 && delta_frame > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");

@@ -66,7 +66,7 @@ class Line {
       (s, i) =>
         (s.length =
           (heights[i] / heights_sum) *
-          (this._height - this._sections_num * this._dy))
+          (this._height - this._sections_num * this._dy)),
     );
   }
 
@@ -95,7 +95,8 @@ class Line {
     this._sections = new Array(this._sections_num)
       .fill(null)
       .map(
-        (_, i) => new Section(0, this._palette.colors[i % this._palette.length])
+        (_, i) =>
+          new Section(0, this._palette.colors[i % this._palette.length]),
       );
   }
 }

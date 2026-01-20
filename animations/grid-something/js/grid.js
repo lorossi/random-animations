@@ -1,4 +1,4 @@
-import { Point } from "./engine.js";
+import { Point } from "./lib.js";
 import { Walker } from "./walker.js";
 
 class Grid {
@@ -12,7 +12,7 @@ class Grid {
     this._walkers = new Array(walkers_num).fill(null).map(() => {
       const start = new Point(
         this._xor128.random_int(1, this._cols),
-        this._xor128.random_int(1, this._cols)
+        this._xor128.random_int(1, this._cols),
       );
 
       return new Walker(this._cols, start, this._palette, this._xor128);

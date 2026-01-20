@@ -1,6 +1,4 @@
-import { Color, SimplexNoise } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette } from "./palette-factory.js";
+import { Color, XOR128, Palette, SimplexNoise } from "./lib.js";
 
 const DESTINATION_COST = 1e9; // high cost to prevent pathing through destinations
 
@@ -11,7 +9,10 @@ class Grid {
     this._destinations = [];
 
     this._fg_color = Color.fromMonochrome(15);
-    this._destination_palette = Palette.fromArrayHEX(["#FF0000", "#00FF00"]);
+    this._destination_palette = new Palette([
+      Color.fromHEX("#FF0000"),
+      Color.fromHEX("#00FF00"),
+    ]);
     this._source = 0;
     this._noise_scale = 0.1;
     this._noise_amplitude = 1;

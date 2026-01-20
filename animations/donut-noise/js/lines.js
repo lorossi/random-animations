@@ -5,15 +5,17 @@ class Line {
     this._length = length;
   }
 
-  setAttributes(points_num, displacement, noise_scl, seed_scl) {
+  setAttributes(points_num, displacement, noise_scl, seed_scl, fg) {
     this._points_num = points_num;
     this._displacement = displacement;
     this._noise_scl = noise_scl;
     this._seed_scl = seed_scl;
+    this._fg = fg;
 
     this._seed_x = 10 * this._seed_scl * Math.cos(this._angle);
     this._seed_y = 10 * this._seed_scl * Math.sin(this._angle);
   }
+
   initDependencies(xor128, noise) {
     this._noise = noise;
     this._xor128 = xor128;
@@ -29,7 +31,7 @@ class Line {
         x * this._noise_scl,
         y * this._noise_scl,
         this._seed_x + t * 10,
-        this._seed_y
+        this._seed_y,
       );
       const dx = nx * this._displacement;
 
@@ -37,7 +39,7 @@ class Line {
         x * this._noise_scl,
         y * this._noise_scl,
         this._seed_x,
-        this._seed_y + t * 10
+        this._seed_y + t * 10,
       );
       const dy = ny * this._displacement;
 
@@ -50,7 +52,7 @@ class Line {
     ctx.rotate(this._angle);
     ctx.translate(0, this._start);
     ctx.rotate(Math.PI / 2);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.01)";
+    ctx.strokeStyle = this._fg.rgba;
 
     ctx.beginPath();
     this._points.forEach((p, i) => {

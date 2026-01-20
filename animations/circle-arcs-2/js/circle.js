@@ -35,7 +35,7 @@ class Circle {
     this._xor128 = xor128;
     this._noise = noise;
 
-    this._seed = this._xor128.random(1e9);
+    this._seed = this._xor128.random(2 ** 32);
   }
 
   generate() {

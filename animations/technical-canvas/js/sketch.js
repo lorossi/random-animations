@@ -30,7 +30,7 @@ class Sketch extends Engine {
 
     this._texture = this._generateTexture(
       this._texture_scl,
-      this._texture_oversize
+      this._texture_oversize,
     );
 
     document.body.style.backgroundColor = this._bg.darken(0.03).rgb;
@@ -58,17 +58,17 @@ class Sketch extends Engine {
     this.ctx.fillText(
       "TECHNICAL CANVAS - STAND BY",
       this.width / 2,
-      this.height / 2
+      this.height / 2,
     );
 
     // apply the texture
     const dx = this._xor128.random_int(
       0,
-      this.width * (this._texture_oversize - 1)
+      this.width * (this._texture_oversize - 1),
     );
     const dy = this._xor128.random_int(
       0,
-      this.height * (this._texture_oversize - 1)
+      this.height * (this._texture_oversize - 1),
     );
     this.ctx.globalCompositeOperation = "multiply";
     this.ctx.drawImage(
@@ -76,7 +76,7 @@ class Sketch extends Engine {
       -dx,
       -dy,
       this.width * this._texture_oversize,
-      this.height * this._texture_oversize
+      this.height * this._texture_oversize,
     );
 
     this.ctx.restore();
@@ -99,7 +99,7 @@ class Sketch extends Engine {
 
     const height_sum = this._rows_heights.reduce((a, b) => a + b, 0);
     this._rows_heights = this._rows_heights.map(
-      (h) => (h / height_sum) * this.height
+      (h) => (h / height_sum) * this.height,
     );
     this._lines_y = [0];
     for (let i = 1; i < this._rows_num; i++) {
@@ -113,7 +113,7 @@ class Sketch extends Engine {
         this.width,
         this._rows_heights[i],
         seed,
-        this._fg
+        this._fg,
       );
     });
   }
@@ -121,7 +121,7 @@ class Sketch extends Engine {
   _generateTexture(texture_scl = 2, oversize = 4) {
     this._texture = new OffscreenCanvas(
       this.width * oversize,
-      this.height * oversize
+      this.height * oversize,
     );
     const ctx = this._texture.getContext("2d");
 
@@ -140,12 +140,12 @@ class Sketch extends Engine {
   async _beep(frequency = 800, duration = 100) {
     this._oscillator.frequency.setValueAtTime(
       frequency,
-      this._audio_context.currentTime
+      this._audio_context.currentTime,
     );
     await this._sleep(duration);
     this._oscillator.frequency.setValueAtTime(
       0,
-      this._audio_context.currentTime
+      this._audio_context.currentTime,
     );
   }
 

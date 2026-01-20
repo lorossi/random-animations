@@ -35,7 +35,7 @@ class Sketch extends Engine {
           this._fg,
           this._noise,
           this._tile_scale,
-          this._noise_scl
+          this._noise_scl,
         );
       });
   }
@@ -86,7 +86,7 @@ class Sketch extends Engine {
       this.width - bottom_text_width,
       this.height - this._tile_size,
       bottom_text_width,
-      this._tile_size
+      this._tile_size,
     );
     // fill text
     this.ctx.fillStyle = this._fg.rgb;

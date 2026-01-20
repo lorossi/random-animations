@@ -31,7 +31,7 @@ class Sketch extends Engine {
       const y = this._xor128.random(this.height);
       const noise_value = this._noise.noise(
         x * this._noise_scl,
-        y * this._noise_scl
+        y * this._noise_scl,
       );
       if (noise_value < 0) continue;
       this._points.push(new Point(x, y));
@@ -42,7 +42,7 @@ class Sketch extends Engine {
       this._points,
       this._fg,
       this._xor128,
-      4
+      4,
     );
     this._quadtree.split();
   }

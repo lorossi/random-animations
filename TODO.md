@@ -46,35 +46,34 @@
 - [x] circular-distribution-2
 - [x] collatz
 - [x] color-grid
-- [ ] comets
-- [ ] constellations
-- [ ] continuous-automaton
-- [ ] continuous-automaton-2
-- [ ] continuous-logic
-- [ ] cut-circles
-- [ ] cut-squares
-- [ ] dice
-- [ ] dijkstra-grid
-- [ ] dominoes
-- [ ] donut-noise
-- [ ] double-circle
-- [ ] falling-colors
-- [ ] falling-in
-- [ ] falling-ribbon
-- [ ] fighting-grid
-- [ ] grid-something
-- [ ] growing-flowers
-- [ ] growing-rectangles
-- [ ] hacker-screen
-- [ ] harmonograph
-- [ ] harmonograph-grid
-- [ ] hexagon-plane
-- [ ] hilbert-curve
-- [ ] intersections
-- [ ] inverted-squares
-- [ ] inverted-squares-static
-- [ ] irregular-grid
-- [ ] irregular-grid-2
+- [x] comets
+- [x] constellations
+- [x] continuous-automaton
+- [x] continuous-automaton-2
+- [x] continuous-logic
+- [x] cut-circles
+- [x] cut-squares
+- [x] dice
+- [x] dijkstra-grid
+- [x] dominoes
+- [x] donut-noise
+- [x] double-circle
+- [x] falling-colors
+- [x] falling-in
+- [x] falling-ribbon
+- [x] fighting-grid
+- [x] grid-something
+- [x] growing-flowers
+- [x] growing-rectangles
+- [x] hacker-screen
+- [x] harmonograph
+- [x] hexagon-plane
+- [x] hilbert-curve
+- [x] intersections
+- [x] inverted-squares
+- [x] inverted-squares-static
+- [x] irregular-grid
+- [x] irregular-grid-2
 - [ ] irregular-polygons
 - [ ] knight-spacing
 - [ ] layers

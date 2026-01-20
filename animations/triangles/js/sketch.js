@@ -31,7 +31,7 @@ class Sketch extends Engine {
           x * triangle_scl,
           y * triangle_scl,
           triangle_scl,
-          y / this._cols
+          y / this._cols,
         );
         t.setDependences(this._xor128, this._noise);
         t.setAttributes(this._fg, this._noise_scl, this._time_scl);

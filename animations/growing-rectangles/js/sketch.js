@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, PaletteFactory, Color } from "./lib.js";
 import { Rectangle } from "./rectangle.js";
 
 class Sketch extends Engine {
@@ -9,6 +7,11 @@ class Sketch extends Engine {
     this._recording = false;
 
     this._bg = Color.fromMonochrome(240);
+    this._hex_palettes = [
+      ["#2b2d42", "#8d99ae", "#edf2f4", "#ef233c"],
+      ["#011627", "#fdfffc", "#2ec4b6", "#e71d36", "#ff9f1c"],
+      ["#001524", "#15616d", "#ffecd1", "#ff7d00", "#78290f"],
+    ];
   }
 
   setup() {
@@ -16,7 +19,8 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(this._seed);
 
     this._rectangles_num = 30;
-    this._palette = PaletteFactory.getRandomPalette(this._xor128, false);
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128, false);
 
     this._radius = this.width / 5;
     this._rotations = 4;
@@ -33,7 +37,7 @@ class Sketch extends Engine {
     });
 
     document.body.style.background = this._xor128.pick(
-      this._palette.colors
+      this._palette.colors,
     ).hex;
 
     this._frame_offset = this.frameCount;

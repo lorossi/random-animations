@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, Palette, Color } from "./lib.js";
 import { Square } from "./square.js";
 import { Inverter } from "./inverter.js";
 
@@ -36,7 +34,7 @@ class Sketch extends Engine {
       const x = this._xor128.random_interval(this.width / 2, 0.4 * this.width);
       const y = this._xor128.random_interval(
         this.height / 2,
-        0.4 * this.height
+        0.4 * this.height,
       );
       const seed = this._xor128.random_int(0, 1e6);
       return new Inverter(x, y, r, seed, this._noise_scl);

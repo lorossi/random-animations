@@ -1,7 +1,5 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, PaletteFactory, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Square } from "./square.js";
-import { PaletteFactory } from "./palette.js";
 
 class Sketch extends Engine {
   preload() {
@@ -13,37 +11,47 @@ class Sketch extends Engine {
 
     this._duration = 300;
     this._recording = false;
-    this._current_palette = 0;
 
-    console.log("Available palettes:", PaletteFactory.getPaletteCount());
+    this._hex_palettes = [
+      ["#0F0F0F", "#F0F0F0"],
+      ["#130E0A", "#DCD7C4"],
+    ];
   }
 
   setup() {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
-    this._noise = new SimplexNoise(this._xor128);
+    this._noise = new SimplexNoise(this._xor128.random_int(2 ** 31));
     this._noise.setDetail(2, 0.25);
 
     this._createTexture();
-    this._palette = PaletteFactory.getPalette(this._current_palette);
 
-    document.body.style.backgroundColor = this._palette.background.rgb;
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128, true);
+
+    [this._bg, this._fg] = this._palette.colors;
+
+    document.body.style.backgroundColor = this._bg.rgb;
 
     const square_size = this.width / this._cols;
+    const phi = this._xor128.random(Math.PI * 2);
     this._squares = new Array(this._cols * this._cols)
       .fill(null)
       .map((_, i) => {
         const x = i % this._cols;
         const y = Math.floor(i / this._cols);
+
         return new Square(
           x * square_size,
           y * square_size,
           square_size,
           this._square_scl,
-          this._palette.foreground
+          phi,
+          this._fg,
         );
       });
 
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -51,13 +59,12 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
+    const delta_frame = this.frameCount - this._frame_offset;
+    const t = (delta_frame / this._duration) % 1;
 
     this.ctx.save();
-    this.background(this._palette.background.rgb);
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scl, this._scl);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.background(this._bg);
+    this.scaleFromCenter(this._scl);
 
     this._squares.forEach((square, i) => {
       const x = (i % this._cols) - this._cols / 2 + 0.5;
@@ -72,7 +79,7 @@ class Sketch extends Engine {
 
     this._drawTexture(this.ctx);
 
-    if (t >= 1 && this._recording) {
+    if (t == 0 && delta_frame > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");
@@ -107,8 +114,6 @@ class Sketch extends Engine {
   }
 
   click() {
-    this._current_palette =
-      (this._current_palette + 1) % PaletteFactory.getPaletteCount();
     this.setup();
     this.draw();
   }

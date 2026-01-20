@@ -55,11 +55,11 @@ class Sketch extends Engine {
     this.ctx.globalCompositeOperation = "multiply";
     const texture_x = this._xor128.random_int(
       0,
-      this._texture_size - this.width
+      this._texture_size - this.width,
     );
     const texture_y = this._xor128.random_int(
       0,
-      this._texture_size - this.height
+      this._texture_size - this.height,
     );
     this.ctx.drawImage(this._texture, -texture_x, -texture_y);
 

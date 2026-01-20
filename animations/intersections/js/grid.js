@@ -1,9 +1,7 @@
-import { Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette } from "./palette-factory.js";
+import { Color, Palette } from "./lib.js";
 
 class Grid {
-  constructor(size, cell_count, cell_scl, rect_count) {
+  constructor(size, cell_count, cell_scl, rect_count, xor128, palette) {
     this._size = size;
     this._cell_count = cell_count;
     this._cell_scl = cell_scl;
@@ -13,14 +11,13 @@ class Grid {
     this._intersection_color = Color.fromCSS("darkred");
     this._rect_colors = [Color.fromCSS("darkblue"), Color.fromCSS("darkgreen")];
 
-    this._xor128 = new XOR128();
+    this._xor128 = xor128;
+    this._palette = palette;
+
+    this._setPalette(palette);
   }
 
-  setRandom(seed) {
-    this._xor128 = new XOR128(seed);
-  }
-
-  setPalette(palette) {
+  _setPalette(palette) {
     // extract colors and sort by luminance
     const colors = palette.colors.sort((a, b) => a.l - b.l);
     let [grid, ...remaining] = colors;
@@ -51,7 +48,7 @@ class Grid {
       -grid_line_width,
       -grid_line_width,
       rect_size + grid_line_width,
-      rect_size + grid_line_width
+      rect_size + grid_line_width,
     );
     ctx.fill();
     ctx.stroke();
@@ -116,7 +113,7 @@ class Grid {
         grid_width,
         line_width,
         this._rect_colors.getColor(i),
-        ctx
+        ctx,
       );
     }
 

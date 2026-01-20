@@ -38,14 +38,14 @@ class Sketch extends Engine {
           this._container_scl,
           this._circles_scl,
           this._circles_bars_ratio,
-          this._circles_bars_num
+          this._circles_bars_num,
         );
         c.setColors(this._circles_color, this._outline_color);
         c.initDependencies(
           this._xor128,
           noise,
           this._noise_scl,
-          this._time_scl
+          this._time_scl,
         );
         c.init();
         return c;

@@ -1,3 +1,5 @@
+import { Engine } from "./lib.js";
+
 class Sketch extends Engine {
   preload() {
     this._rects = 9; // number of rects
@@ -7,6 +9,8 @@ class Sketch extends Engine {
     this._duration = 300; // duration of animation
     this._max_dy_fact = 0.2; // max displacement of rects
     this._recording = false;
+    this._palette_index = 0;
+    this._counter = 0;
 
     this._palette = [
       {
@@ -20,23 +24,33 @@ class Sketch extends Engine {
         fill: "rgb(127, 127, 127)",
       },
     ];
+
+    this._recording = false;
   }
 
   setup() {
-    this._counter = 0;
+    this._current_palette = this._palette[this._palette_index];
+
+    document.body.style.backgroundColor = this._current_palette.background;
+    this._frame_offset = this.frameCount;
+    if (this._recording) {
+      this.startRecording();
+      console.log("%cRecording started", "color:green");
+    }
   }
 
   draw() {
-    const t = (this.frameCount % this._duration) / this._duration;
-    const palette_index = Math.floor(this.frameCount / this._duration) % 2;
-    const current_palette = this._palette[palette_index];
+    const delta_frame = this.frameCount - this._frame_offset;
+    const t = (delta_frame % this._duration) / this._duration;
 
-    this.background(current_palette.background);
+    if (t == 0 && delta_frame > 0) {
+      this._palette_index = (this._palette_index + 1) % this._palette.length;
+      this.setup();
+    }
 
     this.ctx.save();
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scl, this._scl);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.background(this._current_palette.background);
+    this.scaleFromCenter(this._scl);
 
     this.ctx.lineWidth = 8;
 
@@ -70,9 +84,9 @@ class Sketch extends Engine {
       this.ctx.lineTo(w, -this.height / 2 - w * s);
       this.ctx.closePath();
 
-      this.ctx.fillStyle = current_palette.fill;
+      this.ctx.fillStyle = this._current_palette.fill;
       this.ctx.fill();
-      this.ctx.strokeStyle = current_palette.stroke;
+      this.ctx.strokeStyle = this._current_palette.stroke;
       this.ctx.stroke();
 
       this.ctx.restore();
@@ -80,18 +94,17 @@ class Sketch extends Engine {
 
     this.ctx.restore();
 
-    if (this._recording) {
-      if (t == 0 && this.frameCount == 0) {
-        this.startRecording();
-        console.log("%cRecording started", "color: green");
-      } else if (this.frameCount == this._duration * 2) {
-        console.log("%cRecording stopped", "color: red");
-        this.stopRecording();
-        this.saveRecording();
-        this.noLoop();
-        console.log("%cRecording saved!", "color: green");
-      }
+    if (t == 0 && delta_frame > 0 && this._recording) {
+      this._recording = false;
+      this.stopRecording();
+      console.log("%cRecording stopped. Saving...", "color:yellow");
+      this.saveRecording();
+      console.log("%cRecording saved", "color:green");
     }
+  }
+
+  click() {
+    this.setup();
   }
 }
 
@@ -100,3 +113,5 @@ const ease = (x, n = 2) =>
   x < 0.5
     ? Math.pow(2, n - 1) * Math.pow(x, n)
     : 1 - Math.pow(-2 * x + 2, n) / 2;
+
+export { Sketch };

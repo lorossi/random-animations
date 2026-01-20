@@ -24,11 +24,11 @@ class Sketch extends Engine {
     // select 4x4 tiles to overwrite with a big X
     const wrong_x = this._xor128.random_int(
       2,
-      this._cols - this._wrong_size - 1
+      this._cols - this._wrong_size - 1,
     );
     const wrong_y = this._xor128.random_int(
       2,
-      this._rows - this._wrong_size - 1
+      this._rows - this._wrong_size - 1,
     );
     this._wrong_tiles_coords = new Point(wrong_x, wrong_y);
 
@@ -50,7 +50,7 @@ class Sketch extends Engine {
         this._noise,
         this._tile_scale,
         this._noise_scl,
-        wrong
+        wrong,
       );
     });
   }
@@ -73,18 +73,18 @@ class Sketch extends Engine {
     this.ctx.lineWidth = this._tile_size / 4;
     this.ctx.translate(
       (this._wrong_tiles_coords.x + this._wrong_size / 2) * this._tile_size,
-      (this._wrong_tiles_coords.y + +this._wrong_size / 2) * this._tile_size
+      (this._wrong_tiles_coords.y + +this._wrong_size / 2) * this._tile_size,
     );
     this.ctx.scale(
       this._xor128.random(1.0, 1.25),
-      this._xor128.random(1.0, 1.25)
+      this._xor128.random(1.0, 1.25),
     );
     this.ctx.rotate(this._xor128.random(-0.1, 0.1));
 
     const cross_len = (this._wrong_size / 2) * this._tile_size;
     const d_pos = new Point(
       this._xor128.random_interval(0, cross_len / 8),
-      this._xor128.random_interval(0, cross_len / 8)
+      this._xor128.random_interval(0, cross_len / 8),
     );
     this.ctx.beginPath();
     this.ctx.moveTo(-cross_len + d_pos.x, -cross_len + d_pos.y);
@@ -116,7 +116,7 @@ class Sketch extends Engine {
     const title_x = this._xor128.random(0, this.width - title_width);
     const title_y = this._xor128.random(
       2 * this._tile_size,
-      this.height - text_margin
+      this.height - text_margin,
     );
 
     this.ctx.textAlign = "left";

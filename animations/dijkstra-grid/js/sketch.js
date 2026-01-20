@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, Palette, PaletteFactory, Color } from "./lib.js";
 import { Grid } from "./grid.js";
 
 class Sketch extends Engine {
@@ -10,7 +8,32 @@ class Sketch extends Engine {
     this._grid_noise_amplitude = 5;
     this._destinations_num = 20;
     this._bg_color = Color.fromHEX("#f4f1de");
-    this._palette_count = 0;
+
+    this._hex_palettes = [
+      // https://pinterest.com/pin/216876538286161490/
+      [
+        "#fde8cd",
+        "#d0514b",
+        "#29607f",
+        "#44896a",
+        "#97b68a",
+        "#e79972",
+        "#e1af32",
+      ],
+      // https://pinterest.com/pin/1618549862727273/
+      ["#c71c0b", "#e05b11", "#ec9a4e", "#eabe7c", "#578382", "#024145"],
+      // https://pinterest.com/pin/492649952993461/
+      [
+        "#CEA81F",
+        "#D15C30",
+        "#008F7D",
+        "#AD4738",
+        "#7D812C",
+        "#032040",
+        "#EAD3B1",
+        "#5E190A",
+      ],
+    ];
   }
 
   setup() {
@@ -18,9 +41,10 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(seed);
 
     // extract a palette from the factory, sort by luminance
-    const colors = PaletteFactory.getRandomPalette(this._xor128).colors.sort(
-      (b, a) => a.l - b.l
-    );
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    const colors = this._palette_factory
+      .getRandomPalette(this._xor128)
+      .colors.sort((b, a) => a.l - b.l);
 
     this._bg_color = colors.shift();
     const palette = new Palette(colors);
@@ -29,11 +53,11 @@ class Sketch extends Engine {
     this._grid.setSeed(seed);
     this._grid.setSource(
       Math.floor(this._grid_cols / 2),
-      Math.floor(this._grid_cols / 2)
+      Math.floor(this._grid_cols / 2),
     );
     this._grid.setNoiseDetails(
       this._grid_noise_scl,
-      this._grid_noise_amplitude
+      this._grid_noise_amplitude,
     );
     this._grid.setDestinationPalette(palette);
 

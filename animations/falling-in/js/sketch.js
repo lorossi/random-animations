@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, PaletteFactory } from "./lib.js";
 import { HalfCircle } from "./half-circle.js";
 import { Particle } from "./particle.js";
 
@@ -11,13 +9,18 @@ class Sketch extends Engine {
 
     this._scl = 0.9;
     this._particle_count = 2500;
+    this._hex_palettes = [
+      ["#DCDCDC", "#0F0F0F"],
+      ["#EEE7D7", "#27221F"],
+    ];
   }
 
   setup() {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
 
-    const palette = PaletteFactory.getRandomPalette(this._xor128);
+    const palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    const palette = palette_factory.getRandomPalette(this._xor128);
     [this._bg_color, this._fg_color] = palette.colors;
 
     const circle_r = this.height * 0.5;
@@ -35,7 +38,7 @@ class Sketch extends Engine {
       theta_1,
       theta_2,
       this._fg_color,
-      lines
+      lines,
     );
     0.95;
 

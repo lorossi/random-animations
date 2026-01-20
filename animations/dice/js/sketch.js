@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Die } from "./die.js";
 
 class Sketch extends Engine {
@@ -31,8 +29,8 @@ class Sketch extends Engine {
             Math.floor(i / this._cols) * size,
             size,
             dice_seed,
-            this._noise_scl
-          )
+            this._noise_scl,
+          ),
       );
 
     document.body.style.background = this._bg.hex;

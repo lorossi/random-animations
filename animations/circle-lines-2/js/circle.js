@@ -23,7 +23,7 @@ class Circle {
 
   update() {
     if (!this._created) {
-      const seed = this._xor128.random(1e9);
+      const seed = this._xor128.random(2 ** 32);
       const inner_r = this._scl / 20;
       this._segments = new Array(this._segments_num)
         .fill(0)
@@ -43,7 +43,7 @@ class Circle {
             seed,
             this._noise_scl,
             angle,
-            this._scl / 2
+            this._scl / 2,
           );
           s.initDependencies(this._xor128, this._noise);
           return s;

@@ -20,7 +20,7 @@ class Sketch extends Engine {
   setup() {
     this._seed = new Date().getTime();
     this._xor128 = new XOR128(this._seed);
-    this._noise = new SimplexNoise(this._xor128.random_int(2 ** 32));
+    this._noise = new SimplexNoise(this._xor128.random_int(1e9));
 
     this._slots = this._xor128.random_int(30, 80);
     [this._bg, this._fg] = this._xor128.pick(this._palettes);

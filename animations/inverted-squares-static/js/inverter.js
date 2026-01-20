@@ -1,5 +1,4 @@
-import { SimplexNoise } from "./engine.js";
-import { Color } from "./engine.js";
+import { Color, SimplexNoise } from "./lib.js";
 
 class Inverter {
   constructor(x, y, r, seed, noise_scl) {

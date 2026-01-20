@@ -9,9 +9,7 @@ class Sketch extends Engine {
     this._min_cell_size = 50;
 
     this._hex_palettes = [
-      // https://coolors.co/palette/0d1b2a-1b263b-415a77-778da9-e0e1dd
       ["#0D1B2A", "#1B263B", "#415A77", "#778DA9", "#E0E1DD"],
-      // https://coolors.co/palette/0d3b66-faf0ca-f4d35e-ee964b-f95738
       ["#0D3B66", "#FAF0CA", "#F4D35E", "#EE964B", "#F95738"],
     ];
   }

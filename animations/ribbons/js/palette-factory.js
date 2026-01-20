@@ -45,23 +45,14 @@ class Palette {
 }
 
 const PALETTES = [
-  // black and white
   ["#0F0F0F", "#373737", "#606060", "#898989", "#B2B2B2", "#DBDBDB"],
-  // https://coolors.co/palette/086788-07a0c3-f0c808-fff1d0-dd1c1a
   ["#086788", "#07a0c3", "#f0c808", "#fff1d0", "#dd1c1a"],
-  // https://coolors.co/palette/0c0a3e-7b1e7a-b33f62-f9564f-f3c677
   ["#0c0a3e", "#7b1e7a", "#b33f62", "#f9564f", "#f3c677"],
-  // https://coolors.co/palette/0d1b2a-1b263b-415a77-778da9-e0e1dd
   ["#0d1b2a", "#1b263b", "#415a77", "#778da9", "#e0e1dd"],
-  // https://coolors.co/palette/0d1321-1d2d44-3e5c76-748cab-f0ebd8
   ["#0d1321", "#1d2d44", "#3e5c76", "#748cab", "#f0ebd8"],
-  // https://coolors.co/palette/0a2463-3e92cc-fffaff-d8315b-1e1b18
   ["#0a2463", "#3e92cc", "#fffaff", "#d8315b", "#1e1b18"],
-  // https://coolors.co/palette/011627-fdfffc-2ec4b6-e71d36-ff9f1c
   ["#011627", "#fdfffc", "#2ec4b6", "#e71d36", "#ff9f1c"],
-  // https://coolors.co/palette/ef476f-ffd166-06d6a0-118ab2-073b4c
   ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"],
-  // https://coolors.co/palette/2f4858-33658a-86bbd8-f6ae2d-f26419
   ["#2f4858", "#33658a", "#86bbd8", "#f6ae2d", "#f26419"],
 ];
 

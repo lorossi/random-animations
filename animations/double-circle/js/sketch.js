@@ -1,19 +1,24 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, SimplexNoise, XOR128, Color, PaletteFactory } from "./lib.js";
 
 class Sketch extends Engine {
   preload() {
     this._bg = Color.fromMonochrome(200);
     this._scl = 0.8;
     this._texture_scl = 3;
+
+    this._hex_palettes = [
+      ["#f6f7eb", "#e94f37", "#393e41"],
+      ["#f4f1de", "#e07a5f", "#3d405b"],
+      ["#26547c", "#ef476f", "#ffd166"],
+    ];
   }
 
   setup() {
     this._seed = new Date().getTime();
     this._xor128 = new XOR128(this._seed);
-    this._noise = new SimplexNoise(this._xor128);
-    this._palette = PaletteFactory.getRandomPalette(this._xor128);
+    this._noise = new SimplexNoise(this._xor128.random_int(1e9));
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
     this._bg = this._palette.getColor(0);
 
     let circles = this._xor128.random_int(7, 15);

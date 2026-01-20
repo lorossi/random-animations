@@ -31,7 +31,7 @@ class Sketch extends Engine {
         square_size,
         steps,
         this._palette,
-        square_seed + i
+        square_seed + i,
       );
     });
 

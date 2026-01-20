@@ -6,7 +6,7 @@ class Arc {
     this._random = random;
 
     this._r = this._random.random(scl / 4, scl / 2);
-    this._seed = this._random.random(1e9);
+    this._seed = this._random.random(2 ** 32);
 
     this._grey = this._random.random_int(80, 170);
     this._black = this._random.random_int(20, 60);
@@ -45,7 +45,7 @@ class Line {
     this._alpha = this._random.random(0.4, 0.6);
     this._red = this._random.random_int(230, 255);
 
-    this._seed = random.random(1e9);
+    this._seed = random.random(2 ** 32);
   }
 
   move(tx, ty) {

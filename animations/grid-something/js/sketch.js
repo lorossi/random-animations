@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, PaletteFactory, Color } from "./lib.js";
 import { Grid } from "./grid.js";
 
 class Sketch extends Engine {
@@ -10,6 +8,12 @@ class Sketch extends Engine {
     this._grid_cols = 10;
     this._scl = 0.9;
     this._texture_scl = 2;
+
+    this._hex_palettes = [
+      ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"],
+      ["#2F4858", "#33658A", "#86BBD8", "#F6AE2D", "#F26419"],
+      ["#2F4858", "#33658A", "#86BBD8", "#F6AE2D", "#F26419"],
+    ];
   }
 
   setup() {
@@ -17,7 +21,8 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(seed);
 
     const walkers_num = 2;
-    const palette = PaletteFactory.getRandomPalette(this._xor128);
+    const palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    const palette = palette_factory.getRandomPalette(this._xor128);
 
     this._grid = new Grid(
       this.width,
@@ -25,10 +30,11 @@ class Sketch extends Engine {
       walkers_num,
       this._grid_color,
       palette,
-      this._xor128
+      this._xor128,
     );
 
     this._texture = this._createTexture();
+    document.body.style.backgroundColor = this._bg_color.hex;
   }
 
   draw() {
