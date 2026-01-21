@@ -1,4 +1,4 @@
-import { SimplexNoise } from "./engine.js";
+import { SimplexNoise } from "./lib.js";
 
 class Potato {
   constructor(x, y, radius, noise_seed) {

@@ -79,9 +79,8 @@ class Sketch extends Engine {
 
     this.ctx.restore();
 
-    const t = (this.frameCount / this._duration) % 1;
-
-    if (t >= 1 && this._recording) {
+    const delta_frame = this.frameCount - this._frame_offset;
+    if (delta_frame >= this._duration && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");

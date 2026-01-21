@@ -54,19 +54,11 @@ class Sketch extends Engine {
 
     this.ctx.save();
     this.background(this._bg);
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scl, this._scl);
+    this.scaleFromCenter(this._scl);
 
     this.ctx.strokeStyle = this._fg.rgba;
     this.ctx.lineWidth = 2;
-    this.ctx.strokeRect(
-      -this.width / 2,
-      -this.height / 2,
-      this.width,
-      this.height,
-    );
-
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.ctx.strokeRect(0, 0, this.width, this.height);
 
     this._lines.forEach((line) => {
       const line_t = t / (line.nodes_count / this._max_nodes);

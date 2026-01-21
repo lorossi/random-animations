@@ -1,5 +1,4 @@
-import { XOR128 } from "./xor128.js";
-import { Color, SimplexNoise } from "./engine.js";
+import { Color, SimplexNoise, XOR128 } from "./lib.js";
 
 class Rectangle {
   constructor(x, y, w, h) {

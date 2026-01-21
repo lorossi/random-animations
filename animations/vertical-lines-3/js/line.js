@@ -1,9 +1,9 @@
 class Line {
-  constructor(x, length) {
+  constructor(x, length, color) {
     this._x = x;
     this._length = length;
 
-    this._color = "black";
+    this._color = color;
     this._points = [];
     this._has_break = false;
   }
