@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, PaletteFactory, Color } from "./lib.js";
 import { Ring, Circle } from "./ring.js";
 
 class Sketch extends Engine {
@@ -8,6 +6,12 @@ class Sketch extends Engine {
     this._bg = Color.fromMonochrome(127);
     this._fg = Color.fromMonochrome(240);
     this._scl = 0.9;
+    this._hex_palettes = [
+      ["#DCDCDC", "#0F0F0F"],
+      ["#EDF2F4", "#2B2D42"],
+      ["#FB8500", "#F1FAEE"],
+      ["#FFFFFF", "#EF476F"],
+    ];
 
     this._duration = 900;
     this._recording = false;
@@ -17,7 +21,9 @@ class Sketch extends Engine {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
 
-    this._palette = PaletteFactory.getRandomPalette(this._xor128);
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
+
     [this._fg, this._bg] = [...this._palette.colors];
 
     this._phi = this._xor128.random(Math.PI * 2);
@@ -36,7 +42,7 @@ class Sketch extends Engine {
         let current_rings = [];
         for (let j = 0; j < 2; j++) {
           current_rings.push(
-            new Ring(r, length, phi + j * Math.PI, omega, this._fg)
+            new Ring(r, length, phi + j * Math.PI, omega, this._fg),
           );
         }
         return current_rings;

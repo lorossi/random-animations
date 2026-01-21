@@ -1,6 +1,5 @@
+import { XOR128 } from "./lib.js";
 import { Layer } from "./layer.js";
-import { XOR128 } from "./xor128.js";
-import { SimplexNoise } from "./engine.js";
 
 class TextLines extends Layer {
   constructor(x, y, size, fg_color, seed, cols, omega, scl) {

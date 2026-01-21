@@ -1,4 +1,4 @@
-import { Point, SimplexNoise } from "./engine.js";
+import { Point } from "./lib.js";
 
 class Walker {
   constructor(grid_size, start_pos, palette, xor128) {
@@ -20,7 +20,7 @@ class Walker {
     this._trail.forEach((p, i) =>
       i === 0
         ? ctx.moveTo(p.x * scl, p.y * scl)
-        : ctx.lineTo(p.x * scl, p.y * scl)
+        : ctx.lineTo(p.x * scl, p.y * scl),
     );
     ctx.stroke();
     ctx.restore();

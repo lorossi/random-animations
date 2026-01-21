@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Letter } from "./letter.js";
 
 class Sketch extends Engine {
@@ -35,7 +33,7 @@ class Sketch extends Engine {
         this._trail_length,
         letter,
         this._fg,
-        this._xor128
+        this._xor128,
       );
     });
 
@@ -48,6 +46,12 @@ class Sketch extends Engine {
 
     this._first_frame_preloaded = false;
     this._preload_length = 10;
+
+    document.body.style.backgroundColor = this._bg.hex;
+
+    this._font_loaded = false;
+    document.fonts.load(`16px Wartext`).then(() => (this._font_loaded = true));
+
     this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
@@ -56,6 +60,12 @@ class Sketch extends Engine {
   }
 
   draw() {
+    if (!this._font_loaded) {
+      // move the frame offset
+      this._frame_offset = this.frameCount;
+      return;
+    }
+
     const delta_frame = this.frameCount - this._frame_offset;
     const t = (delta_frame / this._duration) % 1;
 

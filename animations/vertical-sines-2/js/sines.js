@@ -1,4 +1,4 @@
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Sine {
   constructor(x, y, width, height) {
@@ -38,7 +38,7 @@ class Sine {
 
     // the lines fill the canvas until the text
     this._lines_num = Math.floor(
-      (this._height - this._text_width) / this._line_scl
+      (this._height - this._text_width) / this._line_scl,
     );
   }
 
@@ -61,7 +61,7 @@ class Sine {
         tx + this._seed,
         ty + this._seed,
         i * this._color_noise_scl,
-        this._seed + 1000
+        this._seed + 1000,
       );
       const ch = (this._fill_ch * (n + 1)) / 2;
       return Color.fromMonochrome(ch, 1);

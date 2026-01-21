@@ -21,7 +21,7 @@ class Slice {
           this._random,
           this._noise,
           particle_color,
-          noise_scl
+          noise_scl,
         );
         return p;
       });

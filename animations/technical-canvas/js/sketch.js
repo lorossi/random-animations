@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Row } from "./row.js";
 class Sketch extends Engine {
   preload() {
@@ -18,28 +16,50 @@ class Sketch extends Engine {
     this._oscillator = this._audio_context.createOscillator();
     this._oscillator.type = "sine";
     this._oscillator.connect(this._audio_context.destination);
+
+    this._duration = 600;
+    this._recording = false;
   }
 
   setup() {
     this._seed = new Date().getTime();
     this._xor128 = new XOR128(this._seed);
-    this._simplex = new SimplexNoise(this._xor128);
+    this._simplex = new SimplexNoise(this._xor128.random_int(1e9));
 
     this._generateRows();
     this._last_refresh = this.frameCount;
 
     this._texture = this._generateTexture(
       this._texture_scl,
-      this._texture_oversize
+      this._texture_oversize,
     );
 
-    document.body.style.backgroundColor = this._bg.darken(0.03).rgb;
+    document.body.style.backgroundColor = this._bg.rgb;
+    this._font_loaded = false;
+    document.fonts
+      .load("bold 90px WarText")
+      .then(() => (this._font_loaded = true));
+
+    this._frame_offset = this.frameCount;
+    this._last_refresh = this.frameCount;
+
+    if (this._recording) {
+      this.startRecording();
+      console.log("%cRecording started", "color:green");
+    }
   }
 
   draw() {
-    if (this.frameCount - this._last_refresh > this._refresh) {
-      this._generateRows();
+    if (!this._font_loaded) {
+      this._frame_offset = this.frameCount;
+      this._last_refresh = this.frameCount;
+      return;
+    }
 
+    const frame_delta = this.frameCount - this._frame_offset;
+
+    if (this.frameCount > this._last_refresh + this._refresh) {
+      this._generateRows();
       const frequency = this._xor128.random_int(600, 1200);
       this._beep(frequency);
       this._last_refresh = this.frameCount;
@@ -58,17 +78,17 @@ class Sketch extends Engine {
     this.ctx.fillText(
       "TECHNICAL CANVAS - STAND BY",
       this.width / 2,
-      this.height / 2
+      this.height / 2,
     );
 
     // apply the texture
     const dx = this._xor128.random_int(
       0,
-      this.width * (this._texture_oversize - 1)
+      this.width * (this._texture_oversize - 1),
     );
     const dy = this._xor128.random_int(
       0,
-      this.height * (this._texture_oversize - 1)
+      this.height * (this._texture_oversize - 1),
     );
     this.ctx.globalCompositeOperation = "multiply";
     this.ctx.drawImage(
@@ -76,10 +96,18 @@ class Sketch extends Engine {
       -dx,
       -dy,
       this.width * this._texture_oversize,
-      this.height * this._texture_oversize
+      this.height * this._texture_oversize,
     );
 
     this.ctx.restore();
+
+    if (frame_delta > this._duration && this._recording) {
+      this._recording = false;
+      this.stopRecording();
+      console.log("%cRecording stopped. Saving...", "color:yellow");
+      this.saveRecording();
+      console.log("%cRecording saved", "color:green");
+    }
   }
 
   click() {
@@ -99,7 +127,7 @@ class Sketch extends Engine {
 
     const height_sum = this._rows_heights.reduce((a, b) => a + b, 0);
     this._rows_heights = this._rows_heights.map(
-      (h) => (h / height_sum) * this.height
+      (h) => (h / height_sum) * this.height,
     );
     this._lines_y = [0];
     for (let i = 1; i < this._rows_num; i++) {
@@ -113,7 +141,7 @@ class Sketch extends Engine {
         this.width,
         this._rows_heights[i],
         seed,
-        this._fg
+        this._fg,
       );
     });
   }
@@ -121,7 +149,7 @@ class Sketch extends Engine {
   _generateTexture(texture_scl = 2, oversize = 4) {
     this._texture = new OffscreenCanvas(
       this.width * oversize,
-      this.height * oversize
+      this.height * oversize,
     );
     const ctx = this._texture.getContext("2d");
 
@@ -140,12 +168,12 @@ class Sketch extends Engine {
   async _beep(frequency = 800, duration = 100) {
     this._oscillator.frequency.setValueAtTime(
       frequency,
-      this._audio_context.currentTime
+      this._audio_context.currentTime,
     );
     await this._sleep(duration);
     this._oscillator.frequency.setValueAtTime(
       0,
-      this._audio_context.currentTime
+      this._audio_context.currentTime,
     );
   }
 

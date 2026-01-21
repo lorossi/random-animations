@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Container } from "./container.js";
 
 class Sketch extends Engine {
@@ -38,19 +37,20 @@ class Sketch extends Engine {
           this._container_scl,
           this._circles_scl,
           this._circles_bars_ratio,
-          this._circles_bars_num
+          this._circles_bars_num,
         );
         c.setColors(this._circles_color, this._outline_color);
         c.initDependencies(
           this._xor128,
           noise,
           this._noise_scl,
-          this._time_scl
+          this._time_scl,
         );
         c.init();
         return c;
       });
 
+    this._frame_started = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -58,7 +58,8 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
+    const delta_frames = this.frameCount - this._frame_started;
+    const t = (delta_frames / this._duration) % 1;
 
     this.ctx.save();
     this.background(this._background_color.rgb);
@@ -72,7 +73,7 @@ class Sketch extends Engine {
     });
     this.ctx.restore();
 
-    if (t == 0 && this.frameCount > 0 && this._recording) {
+    if (t == 0 && delta_frames > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");

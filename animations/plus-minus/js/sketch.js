@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, PaletteFactory } from "./lib.js";
 import { Plus } from "./plus.js";
 
 class Sketch extends Engine {
@@ -9,13 +7,22 @@ class Sketch extends Engine {
 
     this._duration = 180;
     this._recording = false;
+
+    this._hex_palettes = [
+      ["#EDF2F4", "#2B2D42"],
+      ["#0F0F0F", "#F2F2F2"],
+      ["#0D1321", "#F0EBD8"],
+      ["#FFFCF2", "#252422"],
+      ["#101012", "#28EBCF"],
+    ];
   }
 
   setup() {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
 
-    this._palette = PaletteFactory.getRandomPalette(this._xor128);
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
 
     this._cols = this._xor128.random_int(6, 12);
     this._plus_scl = this.width / this._cols;
@@ -39,8 +46,8 @@ class Sketch extends Engine {
             py,
             this._plus_scl,
             this._palette.getColor(0),
-            this._rotation_directions[x % 2]
-          )
+            this._rotation_directions[x % 2],
+          ),
         );
         x++;
       }
@@ -55,17 +62,14 @@ class Sketch extends Engine {
             py,
             this._plus_scl,
             this._palette.getColor(1),
-            this._rotation_directions[(x + 1) % 2]
-          )
+            this._rotation_directions[(x + 1) % 2],
+          ),
         );
         x++;
       }
     }
 
-    this._movement_vector = [
-      this._xor128.random() > 0.5 ? 1 : -1,
-      this._xor128.random() > 0.5 ? 1 : -1,
-    ];
+    this._scl = new Array(2).fill(0).map(() => this._xor128.pick([-1, 1]));
     this._dt = this._xor128.random();
     document.body.style.backgroundColor = this._palette.getColor(0).rgba;
 
@@ -85,14 +89,11 @@ class Sketch extends Engine {
     this.ctx.save();
 
     this.background(this._palette.getColor((this._phase + 1) % 2));
-
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._movement_vector[0], this._movement_vector[1]);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.scaleFromCenter(...this._scl);
 
     this.ctx.translate(
       (-this._plus_scl * t * 5) / 3,
-      (-this._plus_scl * t * 5) / 3
+      (-this._plus_scl * t * 5) / 3,
     );
 
     if (this._phase == 0) {

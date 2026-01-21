@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Circle } from "./circle.js";
 
 class Sketch extends Engine {
@@ -112,7 +111,7 @@ class Sketch extends Engine {
       this.ctx.save();
       this.ctx.translate(
         dest_x + scrambled_square_scl / 2,
-        dest_y + scrambled_square_scl / 2
+        dest_y + scrambled_square_scl / 2,
       );
       this.ctx.translate(-scrambled_square_scl / 2, -scrambled_square_scl / 2);
 
@@ -125,7 +124,7 @@ class Sketch extends Engine {
         0,
         0,
         scrambled_square_scl,
-        scrambled_square_scl
+        scrambled_square_scl,
       );
       this.ctx.restore();
     });

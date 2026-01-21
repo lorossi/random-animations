@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Cell } from "./cell.js";
 
 class Sketch extends Engine {
@@ -51,7 +49,7 @@ class Sketch extends Engine {
         fill_color,
         this._noise,
         this._noise_scl,
-        this._circle_scl
+        this._circle_scl,
       );
     });
 

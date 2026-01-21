@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Line } from "./line.js";
 
 class Sketch extends Engine {
@@ -10,8 +9,8 @@ class Sketch extends Engine {
     this._break_margin = 4;
     this._noise_dx = 100;
     this._font_size = 64;
-    this._line_color = Color.fromMonochrome(205);
-    this._background_color = Color.fromMonochrome(15);
+    this._fg = Color.fromMonochrome(205);
+    this._bg = Color.fromMonochrome(15);
   }
 
   setup() {
@@ -49,32 +48,33 @@ class Sketch extends Engine {
       const length = this.height;
       const line = new Line(x, length);
       line.setNoise(this._noise, this._noise_scl, this._noise_dx);
-      line.setColor(this._line_color);
+      line.setColor(this._fg);
       if (has_break && !is_break_margin) line.setBreak(break_y, break_length);
 
       line.update();
       return line;
     });
+
+    document.body.style.background = this._bg.rgba;
+    this._font_loaded = false;
+    document.fonts
+      .load("64px Staatliches")
+      .then(() => (this._font_loaded = true));
   }
 
   click() {
     this.setup();
-    this.draw();
+    this.loop();
   }
 
   draw() {
-    this.noLoop();
+    if (!this._font_loaded) return;
 
     this.ctx.save();
-    this.background(this._background_color);
+    this.background(this._bg);
+    this.scaleFromCenter(this._scl);
 
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scl, this._scl);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
-
-    this._lines.forEach((line) => {
-      line.draw(this.ctx);
-    });
+    this._lines.forEach((line) => line.draw(this.ctx));
 
     // draw text
     this._drawText(this._font_size);
@@ -83,13 +83,15 @@ class Sketch extends Engine {
     this._drawFrame();
 
     this.ctx.restore();
+
+    this.noLoop();
   }
 
   _drawText(font_size = 64) {
     this.ctx.save();
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
-    this.ctx.fillStyle = this._line_color.rgba;
+    this.ctx.fillStyle = this._fg.rgba;
     this.ctx.font = `${font_size}px Staatliches`;
 
     const text_box = this.ctx.measureText("MISTAKES MAKE ELEGANCE");
@@ -100,14 +102,14 @@ class Sketch extends Engine {
     const by = font_size;
     this.ctx.save();
     this.ctx.lineWidth = 3;
-    this.ctx.strokeStyle = this._line_color.rgba;
+    this.ctx.strokeStyle = this._fg.rgba;
     this.ctx.translate(-bx / 2, -by / 2 - 0.05 * font_size);
     this.ctx.beginPath();
     this.ctx.rect(0, 0, bx, by);
     this.ctx.stroke();
     this.ctx.restore();
 
-    this.ctx.fillStyle = this._line_color.rgba;
+    this.ctx.fillStyle = this._fg.rgba;
     this.ctx.fillText("MISTAKES MAKE ELEGANCE", 0, 0);
 
     this.ctx.restore();
@@ -116,7 +118,7 @@ class Sketch extends Engine {
   _drawFrame() {
     this.ctx.save();
     this.ctx.lineWidth = 3;
-    this.ctx.strokeStyle = this._line_color.rgba;
+    this.ctx.strokeStyle = this._fg.rgba;
     this.ctx.beginPath();
     this.ctx.moveTo(0, 0);
     this.ctx.lineTo(this.width, 0);

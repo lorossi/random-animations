@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, Palette, PaletteFactory } from "./lib.js";
 import { Circle } from "./circle.js";
 
 class Sketch extends Engine {
@@ -9,13 +7,23 @@ class Sketch extends Engine {
     this._scl = 0.95;
     this._circle_scl = 0.8;
     this._circle_noise_radius = 0.5;
+    this._hex_palettes = [
+      ["#e63946", "#f1faee", "#a8dadc", "#457b9d", "#1d3557"],
+      ["#2b2d42", "#8d99ae", "#edf2f4", "#ef233c", "#d90429"],
+      ["#da2c38", "#226f54", "#87c38f", "#f4f0bb", "#43291f"],
+      ["#011627", "#fdfffc", "#2ec4b6", "#e71d36", "#ff9f1c"],
+      ["#f4f1de", "#e07a5f", "#3d405b", "#81b29a", "#f2cc8f"],
+      ["#d00000", "#ffba08", "#3f88c5", "#032b43", "#136f63"],
+    ];
   }
 
   setup() {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
 
-    const palette = PaletteFactory.getRandomPalette(this._xor128);
+    const palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    const palette = palette_factory.getRandomPalette(this._xor128);
+
     [this._bg, ...this._fg] = palette.colors;
     this._palette = new Palette(this._fg);
 
@@ -32,6 +40,8 @@ class Sketch extends Engine {
       c.setPalette(this._palette);
       return c;
     });
+
+    document.body.style.backgroundColor = this._bg.rgb;
   }
 
   draw() {

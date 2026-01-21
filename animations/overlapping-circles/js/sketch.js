@@ -1,12 +1,17 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, Point, PaletteFactory } from "./lib.js";
 import { Circle } from "./circle.js";
 
 class Sketch extends Engine {
   preload() {
     this._duration = 600;
     this._recording = false;
+
+    this._hex_palettes = [
+      ["#DCDCDC", "#0F0F0F"],
+      ["#EEE7D7", "#27221F"],
+      ["#f1faee", "#1d3557"],
+      ["#edf2f4", "#2b2d42"],
+    ];
   }
 
   setup() {
@@ -17,14 +22,15 @@ class Sketch extends Engine {
     const phi = (this._xor128.random_int(4) * Math.PI) / 2;
     const circle_r = (this.width / 2) * Math.sin(Math.PI / lines_num);
 
-    const palette = PaletteFactory.getRandomPalette(this._xor128);
-    [this._bg_color, this._fg_color] = palette.colors;
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
+    [this._bg_color, this._fg_color] = this._palette.colors;
 
     const coords = new Array(circles_num).fill(null).map((_, i) => {
       const theta_to_point = (theta) => {
         return new Point(
           (this.width / 2 - circle_r) * Math.cos(theta) + this.width / 2,
-          (this.width / 2 - circle_r) * Math.sin(theta) + this.height / 2
+          (this.width / 2 - circle_r) * Math.sin(theta) + this.height / 2,
         );
       };
       return {
@@ -39,7 +45,7 @@ class Sketch extends Engine {
         coords[i].to,
         circle_r,
         lines_num,
-        this._fg_color
+        this._fg_color,
       );
     });
 

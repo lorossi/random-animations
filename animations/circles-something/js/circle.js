@@ -1,4 +1,4 @@
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Circle {
   constructor(x, y, size, scl, xor128) {

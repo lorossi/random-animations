@@ -21,7 +21,7 @@ class Sketch extends Engine {
     this._patterns = new Array(cols ** 2).fill().map((_, i) => {
       const x = (i % cols) * pattern_size;
       const y = Math.floor(i / cols) * pattern_size;
-      const circle_seed = this._xor128.random_int(2 ** 32);
+      const circle_seed = this._xor128.random_int(1e9);
       return new Pattern(
         x,
         y,
@@ -30,7 +30,7 @@ class Sketch extends Engine {
         this._pattern_scl,
         this._pattern_circle_scl,
         this._noise_scl,
-        circle_seed
+        circle_seed,
       );
     });
   }

@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, Point, Color, XOR128 } from "./lib.js";
 import { Tile } from "./tile.js";
 
 class Sketch extends Engine {
@@ -9,6 +8,7 @@ class Sketch extends Engine {
     this._tile_scale = 0.8;
     this._noise_scl = 0.005;
     this._wrong_size = 4;
+    this._cross_color = Color.fromHEX("#FF3131");
   }
 
   setup() {
@@ -24,11 +24,11 @@ class Sketch extends Engine {
     // select 4x4 tiles to overwrite with a big X
     const wrong_x = this._xor128.random_int(
       2,
-      this._cols - this._wrong_size - 1
+      this._cols - this._wrong_size - 1,
     );
     const wrong_y = this._xor128.random_int(
       2,
-      this._rows - this._wrong_size - 1
+      this._rows - this._wrong_size - 1,
     );
     this._wrong_tiles_coords = new Point(wrong_x, wrong_y);
 
@@ -50,41 +50,45 @@ class Sketch extends Engine {
         this._noise,
         this._tile_scale,
         this._noise_scl,
-        wrong
+        wrong,
       );
     });
+
+    this._font_loaded = false;
+    document.fonts
+      .load("10pt RadioCanada")
+      .then(() => (this._font_loaded = true));
+    document.body.style.background = this._bg.rgb;
   }
 
   draw() {
-    this.noLoop();
+    if (!this._font_loaded) return;
 
     this.ctx.save();
     this.background(this._bg);
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scale, this._scale);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.scaleFromCenter(this._scale);
 
     this._tiles.forEach((t) => t.draw(this.ctx));
 
     // select 4 contiguous random tiles to overwrite with a big X
 
     this.ctx.save();
-    this.ctx.strokeStyle = Color.fromHEX("#FF3131").rgba;
+    this.ctx.strokeStyle = this._cross_color.rgba;
     this.ctx.lineWidth = this._tile_size / 4;
     this.ctx.translate(
       (this._wrong_tiles_coords.x + this._wrong_size / 2) * this._tile_size,
-      (this._wrong_tiles_coords.y + +this._wrong_size / 2) * this._tile_size
+      (this._wrong_tiles_coords.y + this._wrong_size / 2) * this._tile_size,
     );
     this.ctx.scale(
       this._xor128.random(1.0, 1.25),
-      this._xor128.random(1.0, 1.25)
+      this._xor128.random(1.0, 1.25),
     );
     this.ctx.rotate(this._xor128.random(-0.1, 0.1));
 
     const cross_len = (this._wrong_size / 2) * this._tile_size;
     const d_pos = new Point(
       this._xor128.random_interval(0, cross_len / 8),
-      this._xor128.random_interval(0, cross_len / 8)
+      this._xor128.random_interval(0, cross_len / 8),
     );
     this.ctx.beginPath();
     this.ctx.moveTo(-cross_len + d_pos.x, -cross_len + d_pos.y);
@@ -105,18 +109,20 @@ class Sketch extends Engine {
     text.forEach((t) => this._write_title(t));
 
     this.ctx.restore();
+    this.noLoop();
   }
 
   _write_title(text) {
     const text_margin = this._tile_size * 2;
+
     this.ctx.save();
-    this.ctx.font = `bold ${this._tile_size * 1.25}px RadioCanada`;
+    this.ctx.font = `${this._tile_size * 1.25}px RadioCanada`;
 
     const title_width = this.ctx.measureText(text).width;
     const title_x = this._xor128.random(0, this.width - title_width);
     const title_y = this._xor128.random(
       2 * this._tile_size,
-      this.height - text_margin
+      this.height - text_margin,
     );
 
     this.ctx.textAlign = "left";
@@ -131,7 +137,7 @@ class Sketch extends Engine {
 
   click() {
     this.setup();
-    this.draw();
+    this.loop();
   }
 }
 

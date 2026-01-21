@@ -1,6 +1,5 @@
-import { Color } from "./engine.js";
 import { Potato } from "./potato.js";
-import { XOR128 } from "./xor128.js";
+import { XOR128 } from "./lib.js";
 
 class Grid {
   constructor(x, y, cols, rows, hole_r) {

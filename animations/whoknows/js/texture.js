@@ -1,5 +1,4 @@
-import { XOR128 } from "./xor128.js";
-import { Color } from "./engine.js";
+import { XOR128, Color } from "./lib.js";
 
 class Texture {
   constructor(size, scale, seed) {

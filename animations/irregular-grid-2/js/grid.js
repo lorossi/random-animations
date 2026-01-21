@@ -1,4 +1,4 @@
-import { XOR128 } from "./xor128.js";
+import { XOR128 } from "./lib.js";
 
 class Grid {
   constructor(size, cols, seed) {

@@ -1,4 +1,4 @@
-import { Color, Point } from "./engine.js";
+import { Color, Point } from "./lib.js";
 
 class Sine {
   constructor(rho, omega, phi) {

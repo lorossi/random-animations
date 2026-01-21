@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Frame, Sine } from "./frame.js";
 
 class Sketch extends Engine {
@@ -41,6 +40,7 @@ class Sketch extends Engine {
     });
 
     this.background(this._bg);
+    document.body.style.background = this._bg.rgb;
 
     if (this._recording) {
       this.startRecording();

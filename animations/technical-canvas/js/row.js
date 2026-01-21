@@ -1,5 +1,4 @@
-import { Color, SimplexNoise } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { XOR128, SimplexNoise } from "./lib.js";
 
 class Row {
   constructor(y, width, height, seed, color) {
@@ -23,7 +22,7 @@ class Row {
     });
     const columns_sum = this._cols_width.reduce((a, b) => a + b, 0);
     this._cols_width = this._cols_width.map(
-      (w) => (w / columns_sum) * this._width
+      (w) => (w / columns_sum) * this._width,
     );
     this._cols_x = [0];
     for (let i = 1; i < this._col_num; i++) {
@@ -51,7 +50,7 @@ class Row {
         spacing,
         line_width,
         rotation,
-        color_copy
+        color_copy,
       );
 
       const n = this._noise.noise(this._y * 0.01, this._cols_x[i] * 0.01);

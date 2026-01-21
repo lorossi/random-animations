@@ -1,19 +1,19 @@
+import { Engine, XOR128, Color, Point } from "./lib.js";
+
 class Sketch extends Engine {
   preload() {
     this._recording = false;
 
     this._seed = null;
-    this._num = 500;
+    this._num = 250;
     this._r = 2;
     this._scl = 0.9;
+
+    this._bg = Color.fromMonochrome(15);
+    this._fg = Color.fromMonochrome(245);
   }
 
   setup() {
-    if (this._recording) {
-      this.startRecording();
-      console.log("%cRecording started", "color:green");
-    }
-
     if (this._seed == null) this._seed = Date.now();
 
     this._random = new XOR128(this._seed);
@@ -22,33 +22,35 @@ class Sketch extends Engine {
       .fill(0)
       .map(() => {
         const x = Math.floor(
-          this._random.random(1 - this._scl, this._scl) * this.width
+          this._random.random(1 - this._scl, this._scl) * this.width,
         );
         const y = Math.floor(
-          this._random.random(1 - this._scl, this._scl) * this.height
+          this._random.random(1 - this._scl, this._scl) * this.height,
         );
         return new Point(x, y);
       });
 
     this._tree = prim(this._points, this.width, this.height);
+    this._edges = [];
+    this.ctx.fillStyle = this._fg.rgba;
 
-    this.background("rgb(15, 15, 15)");
-    this.ctx.fillStyle = "rgb(245, 245, 245)";
+    document.body.style.backgroundColor = this._bg.rgba;
 
-    this._points.forEach((p) => {
-      this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, this._r, 0, Math.PI * 2);
-      this.ctx.fill();
-    });
+    if (this._recording) {
+      this.startRecording();
+      console.log("%cRecording started", "color:green");
+    }
   }
 
   draw() {
     const e = this._tree.next();
+    this._edges.push(e);
     if (!e.done) {
       const u = e.value.u;
       const v = e.value.v;
+
       this.ctx.save();
-      this.ctx.strokeStyle = "rgb(200, 200, 200)";
+      this.ctx.strokeStyle = this._fg.rgba;
       this.ctx.beginPath();
       this.ctx.moveTo(u.x, u.y);
       this.ctx.lineTo(v.x, v.y);
@@ -56,13 +58,38 @@ class Sketch extends Engine {
       this.ctx.restore();
     } else {
       this.noLoop();
-      console.log("End of sketch. Click to restart.");
-      if (this._recording) {
-        this.stopRecording();
-        console.log("%cRecording stopped", "color:red");
-        this.saveRecording();
-        console.log("%cRecording saved", "color:green");
-      }
+    }
+
+    this.ctx.save();
+    this.background(this._bg);
+
+    this._points.forEach((p) => {
+      this.ctx.beginPath();
+      this.ctx.arc(p.x, p.y, this._r, 0, Math.PI * 2);
+      this.ctx.fill();
+    });
+
+    this._edges.forEach((edge) => {
+      if (edge.done) return;
+      const u = edge.value.u;
+      const v = edge.value.v;
+
+      this.ctx.save();
+      this.ctx.strokeStyle = this._fg.rgba;
+      this.ctx.beginPath();
+      this.ctx.moveTo(u.x, u.y);
+      this.ctx.lineTo(v.x, v.y);
+      this.ctx.stroke();
+      this.ctx.restore();
+    });
+
+    this.ctx.restore();
+
+    if (this._recording && e.done) {
+      this.stopRecording();
+      console.log("%cRecording stopped", "color:red");
+      this.saveRecording();
+      console.log("%cRecording saved", "color:green");
     }
   }
 
@@ -120,3 +147,5 @@ const closest = (S, N) => {
 
   return found;
 };
+
+export { Sketch };

@@ -1,4 +1,4 @@
-import { Color, Point } from "./engine.js";
+import { Color } from "./lib.js";
 import { Star } from "./star.js";
 
 class Constellation {

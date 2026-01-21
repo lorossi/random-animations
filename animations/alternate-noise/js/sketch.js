@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Slice } from "./slice.js";
 
 class Sketch extends Engine {
@@ -34,7 +33,7 @@ class Sketch extends Engine {
           this._random,
           this._noises[i % this._seeds_num],
           this._particle_color,
-          this._noise_scl
+          this._noise_scl,
         );
 
         return s;

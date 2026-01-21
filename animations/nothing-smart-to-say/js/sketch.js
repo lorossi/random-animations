@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Color } from "./lib.js";
 
 class Sketch extends Engine {
   preload() {
@@ -7,7 +6,7 @@ class Sketch extends Engine {
     this._rows = 500;
     this._scl = 0.8;
 
-    this._white = Color.fromMonochrome(245);
+    this._bg = Color.fromMonochrome(245);
     this._black = Color.fromMonochrome(15);
 
     this._line = "NOTHING SMART TO SAY";
@@ -20,18 +19,21 @@ class Sketch extends Engine {
 
     this._rect_scl = Math.min(
       this.width / this._cols,
-      this.height / this._rows
+      this.height / this._rows,
     );
+
+    document.body.style.backgroundColor = this._bg.rgb;
+
+    this._frame_offset = this.frameCount;
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
+    const delta_frames = this.frameCount - this._frame_offset;
+    const t = (delta_frames / this._duration) % 1;
 
     this.ctx.save();
-    this.background(this._white.rgb);
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scl, this._scl);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.background(this._bg.rgb);
+    this.scaleFromCenter(this._scl);
 
     this.ctx.fillStyle = this._black.rgb;
     this.ctx.fillRect(this._dx, 0, this._width - 2 * this._dx, this._height);
@@ -60,7 +62,7 @@ class Sketch extends Engine {
           x * this._rect_scl,
           y * this._rect_scl,
           this._rect_scl,
-          this._rect_scl
+          this._rect_scl,
         );
         this.ctx.fill();
         this.ctx.stroke();

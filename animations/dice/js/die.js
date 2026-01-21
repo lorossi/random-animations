@@ -1,5 +1,4 @@
-import { Color, SimplexNoise } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Color, SimplexNoise, XOR128 } from "./lib.js";
 
 class Die {
   constructor(x, y, size, seed, noise_scl) {
@@ -24,7 +23,7 @@ class Die {
       this._x * this._noise_scl,
       this._y * this._noise_scl,
       tx,
-      ty
+      ty,
     );
     this._value = Math.floor(((n1 + 1) / 2) * 6) + 1;
 
@@ -32,7 +31,7 @@ class Die {
       this._x * this._noise_scl,
       this._y * this._noise_scl,
       tx + 1000,
-      ty + 1000
+      ty + 1000,
     );
     this._rotated = n2 > 0;
   }
@@ -70,7 +69,7 @@ class Die {
         this._drawPip(
           ctx,
           this._size - cell_size / 2,
-          this._size - cell_size / 2
+          this._size - cell_size / 2,
         );
         break;
       case 3:
@@ -79,7 +78,7 @@ class Die {
         this._drawPip(
           ctx,
           this._size - cell_size / 2,
-          this._size - cell_size / 2
+          this._size - cell_size / 2,
         );
         break;
       case 4:
@@ -89,7 +88,7 @@ class Die {
         this._drawPip(
           ctx,
           this._size - cell_size / 2,
-          this._size - cell_size / 2
+          this._size - cell_size / 2,
         );
         break;
       case 5:
@@ -100,7 +99,7 @@ class Die {
         this._drawPip(
           ctx,
           this._size - cell_size / 2,
-          this._size - cell_size / 2
+          this._size - cell_size / 2,
         );
         break;
       case 6:
@@ -112,7 +111,7 @@ class Die {
         this._drawPip(
           ctx,
           this._size - cell_size / 2,
-          this._size - cell_size / 4
+          this._size - cell_size / 4,
         );
         break;
     }

@@ -1,9 +1,7 @@
-import { Color, SimplexNoise } from "./engine.js";
+import { Color, SimplexNoise, XOR128, Palette } from "./lib.js";
 import { Grid } from "./grid.js";
-import { Palette } from "./palette-factory.js";
 import { Potato } from "./potato.js";
 import { Rectangle } from "./rectangle.js";
-import { XOR128 } from "./xor128.js";
 
 class Circle {
   constructor(x, y, radius, scl) {

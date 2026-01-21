@@ -3,12 +3,12 @@ class Sines {
     x,
     width,
     height,
-    phi = 0,
-    omega = 2,
-    vertical_omega = 1,
-    segments = 10,
-    color = "#101010",
-    shade = "#101010"
+    phi,
+    omega,
+    vertical_omega,
+    segments,
+    color,
+    shade,
   ) {
     this._x = x;
     this._width = width;
@@ -22,7 +22,7 @@ class Sines {
 
     this._border = 0.85;
     this._t = 0;
-    this._h = 8;
+    this._h = 12;
   }
 
   _drawLine(ctx, w) {

@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Point, Color } from "./lib.js";
 import { Harmonograph } from "./harmonograph.js";
 
 class Sketch extends Engine {
@@ -25,7 +24,7 @@ class Sketch extends Engine {
       const h = new Harmonograph(
         x * h_scl + h_scl / 2,
         y * h_scl + h_scl / 2,
-        h_scl / 2
+        h_scl / 2,
       );
       h.setDependences(this._xor128);
       h.setAttributes(this._fg_color);
@@ -43,7 +42,8 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = ((this.frameCount - this._frame_offset) / this._duration) % 1;
+    const frame_delta = this.frameCount - this._frame_offset;
+    const t = (frame_delta / this._duration) % 1;
 
     this.ctx.save();
     this.ctx.translate(this.width / 2, this.height / 2);
@@ -58,7 +58,7 @@ class Sketch extends Engine {
     this.ctx.restore();
 
     if (t == 0) {
-      if (this.frameCount > 0 && this._recording) {
+      if (frame_delta > 0 && this._recording) {
         this._recording = false;
         this.stopRecording();
         console.log("%cRecording stopped. Saving...", "color:yellow");
@@ -66,8 +66,7 @@ class Sketch extends Engine {
         console.log("%cRecording saved", "color:green");
       }
 
-      if (this.frameCount - this._frame_offset > 0)
-        this.background(this._bg.rgb);
+      if (frame_delta > 0) this.background(this._bg.rgb);
     }
   }
 

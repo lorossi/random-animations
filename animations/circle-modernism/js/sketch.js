@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Color } from "./lib.js";
 
 class Sketch extends Engine {
   preload() {
@@ -31,8 +30,9 @@ class Sketch extends Engine {
     this._mask_r_factor = this._xor128.random_interval(1, 0.2);
 
     this._texture = this._createTexture();
-    this._frame_started = this.frameCount;
 
+    document.body.style.backgroundColor = this._bg.rgba;
+    this._frame_started = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -40,7 +40,8 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = ((this.frameCount - this._frame_started) / this._duration) % 1;
+    const delta_frame = this.frameCount - this._frame_started;
+    const t = (delta_frame / this._duration) % 1;
 
     this.ctx.save();
     this.background(this._bg.rgba);
@@ -64,7 +65,7 @@ class Sketch extends Engine {
     this.ctx.save();
     this.ctx.fillStyle = this._title_color.rgba;
     const font_height = Math.floor(
-      this._circle_y_size * this._rows_offset * 0.4
+      this._circle_y_size * this._rows_offset * 0.4,
     );
 
     this.ctx.font = `${font_height}px HelveticaNeue`;
@@ -81,7 +82,7 @@ class Sketch extends Engine {
     this.ctx.fillText(
       "what does function mean to you?",
       par_indent,
-      font_height * 1.7
+      font_height * 1.7,
     );
 
     this.ctx.restore();
@@ -89,7 +90,7 @@ class Sketch extends Engine {
 
     this._drawTexture(this.ctx, this._texture);
 
-    if (t == 0 && this.frameCount > 0 && this._recording) {
+    if (t == 0 && delta_frame > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");

@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128 } from "./lib.js";
 import { Rectangle } from "./rectangle.js";
 
 class Sketch extends Engine {
@@ -23,7 +22,7 @@ class Sketch extends Engine {
         this.height,
         this._xor128,
         this._noise,
-        bias
+        bias,
       ),
     ];
     this._ended = false;

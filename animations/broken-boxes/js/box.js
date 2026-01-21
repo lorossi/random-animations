@@ -1,5 +1,4 @@
-import { XOR128 } from "./xor128.js";
-import { Color, SimplexNoise } from "./engine.js";
+import { XOR128, SimplexNoise } from "./lib.js";
 
 class Box {
   constructor(x, y, size, angle_radius, scale) {
@@ -45,7 +44,7 @@ class Box {
     ctx.save();
     const palette_n = this._noise_range(this._palette.length, 1000);
 
-    const fill_color = this._palette[palette_n];
+    const fill_color = this._palette.getColor(palette_n);
 
     const clip_region = new Path2D();
     clip_region.roundRect(
@@ -53,7 +52,7 @@ class Box {
       -this._size / 2,
       this._size,
       this._size,
-      this._angle_radius
+      this._angle_radius,
     );
 
     ctx.save();
@@ -76,7 +75,7 @@ class Box {
     ctx.restore();
   }
 
-  _carveHole(ctx, fill_color) {
+  _carveHole(ctx) {
     const x = this._xor128.random_interval(0, this._size / 2);
     const y = this._xor128.random_interval(0, this._size / 2);
     const r = this._xor128.random(this._size / 16, this._size / 2);
@@ -91,7 +90,7 @@ class Box {
     const n = this._noise.noise(
       this._x * this._noise_scl,
       this._y * this._noise_scl,
-      seed
+      seed,
     );
     return Math.floor(((n + 1) / 2) * max);
   }

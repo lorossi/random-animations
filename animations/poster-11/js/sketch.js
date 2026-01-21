@@ -1,11 +1,15 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, PaletteFactory, XOR128 } from "./lib.js";
 import { Tile } from "./tile.js";
 
 class Sketch extends Engine {
   preload() {
     this._scale = 0.8;
+    this._hex_palettes = [
+      ["#DCDCDC", "#0F0F0F"],
+      ["#EEE7D7", "#27221F"],
+      ["#F1FAEE", "#1D3557"],
+      ["#EDF2F4", "#2B2D42"],
+    ];
   }
 
   setup() {
@@ -14,9 +18,11 @@ class Sketch extends Engine {
 
     this._cols = this._xor128.random_int(8, 15);
     this._tile_size = Math.floor(this.width / this._cols);
-    [this._fg, this._bg] = PaletteFactory.getRandomPalette(
+
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    [this._fg, this._bg] = this._palette_factory.getRandomPalette(
       this._xor128,
-      true
+      true,
     ).colors;
     this._exp = this._xor128.random(1, 2);
 
@@ -36,7 +42,7 @@ class Sketch extends Engine {
         probability,
         this._tile_size * 2,
         this._fg,
-        this._xor128
+        this._xor128,
       );
     });
   }

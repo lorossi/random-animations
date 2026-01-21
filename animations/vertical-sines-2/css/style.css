@@ -13,16 +13,10 @@
   padding: 0;
   overflow: hidden;
   font-family: Roboto;
-  color: var(--text-color);
 }
 
-a {
-  user-select: none;
-}
-
-a:visited,
-a:active {
-  color: var(--visited-link-color);
+body {
+  background-color: rgb(240, 240, 240);
 }
 
 .container {
@@ -42,29 +36,9 @@ a:active {
   touch-action: none;
 }
 
-.footer {
-  position: absolute;
-  width: 100vw;
-  bottom: 0;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer * {
-  padding: 1rem;
-  font-size: 1.5rem;
-}
-
 @media only screen and (max-width: 600px) {
   #sketch {
     height: 90vw;
     width: 90vw;
-  }
-
-  .footer {
-    justify-content: space-around;
   }
 }

@@ -1,12 +1,17 @@
 :root {
-  --background-color: rgb(15, 15, 15);
-  --text-color: rgb(245, 245, 245);
-
-  --text-size: 1.5rem;
+  --background-color: #0c0c0c;
+  --text-color: #f5f2f2;
+  --text-size: 1rem;
+  --title-size: 2rem;
+  --cols: 4;
+  --grid-padding: 1rem;
 }
 
 @media only screen and (max-width: 600px) {
   :root {
+    --title-size: 1rem;
     --text-size: 0.75rem;
+    --cols: 3;
+    --grid-padding: 0.75rem;
   }
 }

@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Inverter } from "./inverter.js";
 import { Square } from "./square.js";
 
@@ -15,11 +14,9 @@ class Sketch extends Engine {
     this._max_stripes_num = 9;
 
     this._min_inverter_scl = 4;
-    this._min_inverter_density = 0.25;
-    this._max_inverter_density = 1;
 
     this._texture_scl = 2;
-    this._texture_oversampling = 2;
+    this._texture_oversampling = 1.05;
 
     this._colors = [Color.fromMonochrome(15), Color.fromMonochrome(245)];
   }
@@ -31,7 +28,7 @@ class Sketch extends Engine {
     const cols = this._xor128.random_int(this._min_cols, this._max_cols);
     const stripes_num = this._xor128.random_int(
       this._min_stripes_num,
-      this._max_stripes_num
+      this._max_stripes_num,
     );
     const stripe_scl = this.width / cols / stripes_num;
     const inverter_scl =
@@ -58,12 +55,12 @@ class Sketch extends Engine {
     this._inverters = Array(inverters_num)
       .fill()
       .map(
-        () => new Inverter(this.width, this.height, inverter_scl, this._xor128)
+        () => new Inverter(this.width, this.height, inverter_scl, this._xor128),
       );
 
     this._noise_texture = this._generateNoiseTexture(
       this._texture_scl,
-      this._texture_oversampling
+      this._texture_oversampling,
     );
 
     if (this._recording) {
@@ -121,10 +118,10 @@ class Sketch extends Engine {
 
   _applyNoiseTexture(texture) {
     const dx = -this._xor128.random_int(
-      this.width * (this._texture_oversampling - 1)
+      this.width * (this._texture_oversampling - 1),
     );
     const dy = -this._xor128.random_int(
-      this.height * (this._texture_oversampling - 1)
+      this.height * (this._texture_oversampling - 1),
     );
 
     this.ctx.save();
@@ -134,7 +131,7 @@ class Sketch extends Engine {
       dx,
       dy,
       this.width * this._texture_oversampling,
-      this.height * this._texture_oversampling
+      this.height * this._texture_oversampling,
     );
     this.ctx.restore();
   }

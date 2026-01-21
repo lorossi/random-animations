@@ -17,7 +17,7 @@ class Ring {
     const theta = this.t * this._omega * Math.PI * 2 - this._phi;
 
     ctx.save();
-    ctx.strokeStyle = this._color;
+    ctx.strokeStyle = this._color.rgba;
     ctx.lineWidth = 16;
     ctx.lineCap = "round";
     ctx.rotate(theta);
@@ -38,7 +38,7 @@ class Circle {
 
   draw(ctx) {
     ctx.save();
-    ctx.strokeStyle = this._color;
+    ctx.strokeStyle = this._color.rgba;
     ctx.beginPath();
     ctx.arc(0, 0, this._radius, 0, Math.PI * 2);
     ctx.stroke();

@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { PaletteFactory } from "./palette-factory.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, PaletteFactory, Color } from "./lib.js";
 
 // inspired by https://pinterest.com/pin/354447433192469891/ and https://pinterest.com/pin/378654281183132577/
 
@@ -11,13 +9,35 @@ class Sketch extends Engine {
     this._noise_scl = 0.05;
     this._texture_scl = 2;
     this._bg_color = Color.fromMonochrome(245);
+
+    this._hex_palettes = [
+      ["#d6d6d6", "#ffee32", "#ffd100", "#202020", "#333533"],
+      ["#011627", "#fdfffc", "#2ec4b6", "#e71d36", "#ff9f1c"],
+      ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"],
+      ["#3d348b", "#7678ed", "#f7b801", "#f18701", "#f35b04"],
+      ["#3d348b", "#7678ed", "#f7b801", "#f18701", "#f35b04"],
+      [
+        "#001219",
+        "#005f73",
+        "#0a9396",
+        "#94d2bd",
+        "#e9d8a6",
+        "#ee9b00",
+        "#ca6702",
+        "#bb3e03",
+        "#ae2012",
+        "#9b2226",
+      ],
+      ["#ff595e", "#ffca3a", "#8ac926", "#1982c4", "#6a4c93"],
+    ];
   }
 
   setup() {
     this._seed = Date.now();
     this._xor128 = new XOR128(this._seed);
     this._noise = new SimplexNoise(this._xor128.random_int(1e16));
-    this._palette = PaletteFactory.getRandomPalette(this._xor128);
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
 
     this._texture_canvas = this._generateTextureCanvas();
   }
@@ -37,7 +57,7 @@ class Sketch extends Engine {
       for (let y = 0; y < this._cols; y++) {
         const dist = Math.hypot(
           x - this._cols / 2 + 0.5,
-          y - this._cols / 2 + 0.5
+          y - this._cols / 2 + 0.5,
         );
 
         const dist_n = dist / (this._cols / 2);

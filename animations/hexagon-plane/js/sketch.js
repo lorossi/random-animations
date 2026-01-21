@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Grid } from "./grid.js";
 
 class Sketch extends Engine {
@@ -17,7 +15,7 @@ class Sketch extends Engine {
     this._grid = new Grid(
       this.width,
       this._cols,
-      this._xor128.random_int(1e16)
+      this._xor128.random_int(1e16),
     );
 
     this._frame_offset = this.frameCount;

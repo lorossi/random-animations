@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Blind } from "./blind.js";
 
 class Sketch extends Engine {
@@ -8,8 +6,8 @@ class Sketch extends Engine {
     this._cols = 9;
     this._duration = 900;
     this._recording = false;
-    this._texture_oversize = 1.1;
-    this._texture_scl = 3;
+    this._texture_oversize = 1.05;
+    this._texture_scl = 2;
     this._scl = 0.9;
     this._bg = Color.fromMonochrome(245);
     this._fg = Color.fromMonochrome(15);
@@ -72,8 +70,8 @@ class Sketch extends Engine {
     const ctx = canvas.getContext("2d");
     for (let x = 0; x < canvas.width; x += this._texture_scl) {
       for (let y = 0; y < canvas.height; y += this._texture_scl) {
-        const c = this._xor128.random_int(255);
-        const color = Color.fromMonochrome(c, 0.05);
+        const c = this._xor128.random_int(127);
+        const color = Color.fromMonochrome(c, 0.075);
         ctx.fillStyle = color.rgba;
         ctx.fillRect(x, y, this._texture_scl, this._texture_scl);
       }
@@ -84,16 +82,20 @@ class Sketch extends Engine {
 
   _applyTexture(ctx) {
     const dx = this._xor128.random_int(
-      this.width * (this._texture_oversize - 1)
+      this.width * (this._texture_oversize - 1),
     );
     const dy = this._xor128.random_int(
-      this.height * (this._texture_oversize - 1)
+      this.height * (this._texture_oversize - 1),
     );
 
     ctx.save();
     ctx.globalCompositeOperation = "dodge";
     ctx.drawImage(this._texture, -dx, -dy);
     ctx.restore();
+  }
+
+  click() {
+    this.setup();
   }
 }
 

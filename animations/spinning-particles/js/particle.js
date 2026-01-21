@@ -1,7 +1,7 @@
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Particle {
-  constructor(rho, xor128) {
+  constructor(rho, palette, xor128) {
     this._rho = rho;
     this._xor128 = xor128;
 
@@ -16,14 +16,9 @@ class Particle {
 
     this._r = this._xor128.random(5, 25);
 
-    this._palette = this._xor128.pick([
-      ["#ffbe0b", "#fb5607", "#ff006e", "#8338ec", "#3a86ff"],
-      ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"],
-      ["#5f0f40", "#9a031e", "#fb8b24", "#e36414", "#0f4c75"],
-      ["#9b5de5", "#f15bb5", "#fee440", "#00bbf9", "#00f5d4"],
-    ]);
+    this._palette = palette;
 
-    this._color = Color.fromHEX(this._xor128.pick(this._palette));
+    this._color = Color.fromHEX(this._palette.getRandomColor(this._xor128));
   }
 
   draw(ctx) {

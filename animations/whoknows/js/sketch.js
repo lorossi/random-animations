@@ -1,6 +1,11 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import {
+  Engine,
+  SimplexNoise,
+  XOR128,
+  Color,
+  Palette,
+  PaletteFactory,
+} from "./lib.js";
 import { Grid } from "./grid.js";
 import { Texture } from "./texture.js";
 
@@ -13,6 +18,14 @@ class Sketch extends Engine {
     this._shuffle_chance = 0.1;
     this._shuffle_radius = 8;
 
+    this._hex_palettes = [
+      ["#D92555", "#75AABF", "#024959", "#011F26", "#F2380F"],
+      ["#5F49F2", "#527AF2", "#F2B807", "#F28907", "#F2220F"],
+      ["#034AA6", "#0367A6", "#ADD4D9", "#F29544", "#D95204"],
+      ["#E81A0A", "#FFCC1C", "#1C33FF", "#E86F19", "#B400FF"],
+      ["#025159", "#F2D479", "#D9BB84", "#F27141", "#8C3D2B"],
+      ["#FFA622", "#000000", "#D4591C", "#A6A6A6", "#383838"],
+    ];
     this._texture_scl = 4;
   }
 
@@ -21,7 +34,8 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(this._seed);
     this._noise = new SimplexNoise(this._xor128.random_int(1e6));
 
-    const palette = PaletteFactory.getRandomPalette(this._xor128, true);
+    const palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    const palette = palette_factory.getRandomPalette(this._xor128, true);
     const dc = this._xor128.random_int(0, 32);
     const disruption_palette = new Palette([
       Color.fromMonochrome(dc),
@@ -46,9 +60,16 @@ class Sketch extends Engine {
     this._bg = this._grid.getDominantColor();
 
     document.body.style.background = this._bg.hex;
+
+    this._font_loaded = false;
+    document.fonts
+      .load("10pt RobotoBold")
+      .then(() => (this._font_loaded = true));
   }
 
   draw() {
+    if (!this._font_loaded) return;
+
     this.ctx.save();
 
     this.ctx.save();
@@ -66,7 +87,7 @@ class Sketch extends Engine {
 
   click() {
     this.setup();
-    this.draw();
+    this.loop();
   }
 
   _drawQuestionMark(ctx, x, y, rotation) {

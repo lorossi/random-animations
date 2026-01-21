@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, PaletteFactory, Point, Color } from "./lib.js";
 import { Sines } from "./sines.js";
 
 class Sketch extends Engine {
@@ -7,22 +6,31 @@ class Sketch extends Engine {
     this._duration = 300;
     this._recording = false;
 
-    this._sines_num = 6;
     this._omega = 2;
-    this._vertical_omega = 2;
-    this._background = "#01112e";
-    this._sines_colors = ["#e8a93f", "#0B87BA"];
-    this._sines_shades = ["#D38F5E", "#014D69"];
+    this._hex_palettes = [
+      ["#E8A93F", "#0B87BA", "#01112E"],
+      ["#EDAE49", "#D1495B", "#00798C"],
+      ["#2274A5", "#F75C03", "#F1C40F"],
+      ["#084C61", "#DB504A", "#E3B505"],
+      ["#006D77", "#83C5BE", "#EDF6F9"],
+    ];
     this._segments_num = 25;
 
     this._scl = 0.9;
   }
 
   setup() {
-    if (this._recording) {
-      this.startRecording();
-      console.log("%cRecording started", "color:green");
-    }
+    const seed = new Date().getTime();
+    this._xor128 = new XOR128(seed);
+
+    this._sines_num = this._xor128.random_int(4, 8);
+    this._vertical_omega = this._xor128.random(1, 2);
+
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
+
+    let colors;
+    [this._bg, ...colors] = this._palette.colors;
 
     this._sines = [];
     for (let i = 0; i < this._sines_num; i++) {
@@ -38,36 +46,43 @@ class Sketch extends Engine {
         this._omega,
         this._vertical_omega,
         this._segments_num,
-        this._sines_colors[i % this._sines_colors.length],
-        this._sines_shades[i % this._sines_shades.length]
+        colors[i % colors.length],
+        colors[i % colors.length].darken(0.25),
       );
       this._sines.push(s);
+    }
+
+    document.body.style.background = this._bg.rgba;
+    this._frame_offset = this.frameCount;
+    if (this._recording) {
+      this.startRecording();
+      console.log("%cRecording started", "color:green");
     }
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
+    const delta_frame = this.frameCount - this._frame_offset;
+    const t = (delta_frame / this._duration) % 1;
 
     this.ctx.save();
-    this.ctx.clearRect(0, 0, this.width, this.height);
-    this.ctx.fillStyle = this._background;
-    this.ctx.fillRect(0, 0, this.width, this.height);
-
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scl, this._scl);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.background(this._bg);
+    this.scaleFromCenter(this._scl);
 
     this._sines.forEach((s) => s.show(this.ctx, t));
 
     this.ctx.restore();
 
-    if (t >= 1 && this._recording) {
+    if (t == 0 && delta_frame > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");
       this.saveRecording();
       console.log("%cRecording saved", "color:green");
     }
+  }
+
+  click() {
+    this.setup();
   }
 }
 

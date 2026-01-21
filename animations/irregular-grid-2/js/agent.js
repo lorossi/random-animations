@@ -1,5 +1,4 @@
-import { XOR128 } from "./xor128.js";
-import { Color } from "./engine.js";
+import { XOR128 } from "./lib.js";
 
 class Agent {
   constructor(grid, seed, color) {

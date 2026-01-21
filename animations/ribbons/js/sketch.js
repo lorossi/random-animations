@@ -1,7 +1,5 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Palette, PaletteFactory } from "./lib.js";
 import { Grid } from "./grid.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
 
 class Sketch extends Engine {
   preload() {
@@ -10,6 +8,18 @@ class Sketch extends Engine {
     this._walker_noise_scl = 0.005;
     this._scl = 0.95;
 
+    this._hex_palettes = [
+      ["#0F0F0F", "#373737", "#606060", "#898989", "#B2B2B2", "#DBDBDB"],
+      ["#086788", "#07a0c3", "#f0c808", "#fff1d0", "#dd1c1a"],
+      ["#0c0a3e", "#7b1e7a", "#b33f62", "#f9564f", "#f3c677"],
+      ["#0d1b2a", "#1b263b", "#415a77", "#778da9", "#e0e1dd"],
+      ["#0d1321", "#1d2d44", "#3e5c76", "#748cab", "#f0ebd8"],
+      ["#0a2463", "#3e92cc", "#fffaff", "#d8315b", "#1e1b18"],
+      ["#011627", "#fdfffc", "#2ec4b6", "#e71d36", "#ff9f1c"],
+      ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"],
+      ["#2f4858", "#33658a", "#86bbd8", "#f6ae2d", "#f26419"],
+    ];
+
     this._recording = false;
   }
 
@@ -17,15 +27,14 @@ class Sketch extends Engine {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
 
-    const palette = PaletteFactory.getRandomPalette(this._xor128);
-
-    // sort either from low to high or high to low so the background is always either dark or light
-    const sort_direction = this._xor128.random_bool() ? 1 : -1;
-    const colors = palette.colors.sort((a, b) => sort_direction * (a.h - b.h));
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128, false);
+    if (this._xor128.random_bool()) this._palette.reverse();
 
     // extract the first color as the background color and the rest as the walkers' palette
-    this._bg = colors[0];
-    this._walkers_palette = new Palette(colors.slice(1));
+    let colors;
+    [this._bg, ...colors] = this._palette.colors;
+    this._walkers_palette = new Palette(colors);
     // initialize the grid
     this._grid = new Grid(this._cols, this.width);
     this._grid.setRandomSeed(this._xor128.random_int(1e16));

@@ -1,4 +1,4 @@
-import { XOR128 } from "./xor128.js";
+import { XOR128 } from "./lib.js";
 
 class Cell {
   constructor(x, y, width, height, palette, seed, scl = 0.9) {

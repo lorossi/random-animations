@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, PaletteFactory, Color } from "./lib.js";
 import { Square } from "./square.js";
 
 class Sketch extends Engine {
@@ -8,15 +6,24 @@ class Sketch extends Engine {
     this._duration = 300;
     this._recording = false;
 
-    this._bg = Color.fromMonochrome(240);
     this._scl = 0.95;
+    this._hex_palettes = [
+      ["#003049", "#D62828", "#F77F00", "#FCBF49", "#EAE2B7"],
+      ["#264653", "#2A9D8F", "#E9C46A", "#F4A261", "#E76F51"],
+      ["#E63946", "#F1FAEE", "#A8DADC", "#457B9D", "#1D3557"],
+      ["#EF476F", "#FFD166", "#06D6A0", "#118AB2", "#073B4C"],
+      ["#233D4D", "#FE7F2D", "#FCCA46", "#A1C181", "#619B8A"],
+      ["#4D5F5F", "#91B7B7", "#B9E1DC", "#EC4B36", "#F58120"],
+    ];
   }
 
   setup() {
     this._seed = new Date().getTime();
     this._xor128 = new XOR128(this._seed);
 
-    this._palette = PaletteFactory.getRandomPalette(this._xor128);
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
+
     this._cols = this._xor128.random_int(8, 15);
 
     const square_size = Math.min(this.width, this.height) / this._cols;
@@ -31,9 +38,12 @@ class Sketch extends Engine {
         square_size,
         steps,
         this._palette,
-        square_seed + i
+        square_seed + i,
       );
     });
+
+    this._bg = this._palette.getRandomColor(this._xor128);
+    document.body.style.backgroundColor = this._bg.rgb;
 
     this._frame_offset = this.frameCount;
     if (this._recording) {

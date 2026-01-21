@@ -1,5 +1,4 @@
-import { XOR128 } from "./xor128.js";
-import { Color } from "./engine.js";
+import { Color, XOR128 } from "./lib.js";
 
 class Hexagon {
   constructor(x, y, size, size_delta, seed) {
@@ -29,7 +28,7 @@ class Hexagon {
       this._size - this._size_delta,
       this._size_delta,
       this._seed,
-      this._xor128
+      this._xor128,
     );
   }
 

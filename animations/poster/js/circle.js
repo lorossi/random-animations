@@ -1,5 +1,5 @@
 import { Band } from "./band.js";
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 class Circle {
   constructor(x, y, r, bands_scl) {
     this._x = x;

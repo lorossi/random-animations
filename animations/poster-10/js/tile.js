@@ -41,7 +41,7 @@ class Tile {
         0,
         this._size / 2,
         Math.PI / 2,
-        (3 / 2) * Math.PI
+        (3 / 2) * Math.PI,
       );
       ctx.fill();
       ctx.stroke();
@@ -52,7 +52,7 @@ class Tile {
         0,
         this._size / 2,
         (3 / 2) * Math.PI,
-        (5 / 2) * Math.PI
+        (5 / 2) * Math.PI,
       );
       ctx.fill();
       ctx.stroke();

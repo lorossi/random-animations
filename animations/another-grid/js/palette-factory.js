@@ -31,20 +31,7 @@ class Palette {
   }
 }
 
-const PALETTES = [
-  // https://coolors.co/palette/2f4858-33658a-86bbd8-f6ae2d-f26419
-  ["#2f4858", "#33658a", "#86bbd8", "#f6ae2d", "#f26419"],
-  // https://coolors.co/palette/ff595e-ffca3a-8ac926-1982c4-6a4c93
-  ["#ff595e", "#ffca3a", "#8ac926", "#1982c4", "#6a4c93"],
-  // https://coolors.co/palette/edae49-d1495b-00798c-30638e-003d5b
-  ["#edae49", "#d1495b", "#00798c", "#30638e", "#003d5b"],
-  // https://coolors.co/palette/ffbe0b-fb5607-ff006e-8338ec-3a86ff
-  ["#ffbe0b", "#fb5607", "#ff006e", "#8338ec", "#3a86ff"],
-  // https://coolors.co/palette/5f0f40-9a031e-fb8b24-e36414-0f4c5c
-  ["#5f0f40", "#9a031e", "#fb8b24", "#e36414", "#0f4c5c"],
-];
-
-class PaletteFactory {
+const PALETTES = class PaletteFactory {
   static getRandomPalette(xor128, randomize = true) {
     const colors = xor128.pick(PALETTES).map((c) => Color.fromHEX(c));
     const palette = new Palette(colors);
@@ -64,6 +51,6 @@ class PaletteFactory {
   static getPalettesCount() {
     return PALETTES.length;
   }
-}
+};
 
 export { PaletteFactory, Palette };

@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { ColorFactory } from "./palette.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 
 class Sketch extends Engine {
   preload() {
@@ -16,24 +14,29 @@ class Sketch extends Engine {
 
     this._xor128 = new XOR128(this._seed);
     this._noise = new SimplexNoise(this._seed);
-    this._colorFactory = new ColorFactory(this._xor128);
+
+    this._colors = this._generateColors();
+    this._bg = Color.fromMonochrome(240);
 
     this._noise_scl *= this._xor128.random_interval(1, 0.1);
     this._distortion_scl *= this._xor128.random_interval(1, 0.1);
-    this._title = `warped-noise-${this._xor128.shuffle(this._seed.toString())}`;
+
+    document.body.style.backgroundColor = this._bg.rgb;
   }
 
   draw() {
     this.noLoop();
 
     this.ctx.save();
+    this.background(this._bg);
 
     for (let x = 0; x < this.width; x += this._rect_scl) {
       for (let y = 0; y < this.height; y += this._rect_scl) {
         const nx = x * this._noise_scl;
         const ny = y * this._noise_scl;
         const levels = this._warpNoise(nx, ny);
-        const c = this._colorFactory.mix(levels);
+
+        const c = this._mixColors(levels);
         this.ctx.fillStyle = c.rgb;
         this.ctx.fillRect(x, y, this._rect_scl, this._rect_scl);
       }
@@ -45,7 +48,7 @@ class Sketch extends Engine {
   _warpNoise(x, y, level = 0, color = undefined) {
     if (level == this._noises_count) return color;
 
-    const p = this._noise.noise(x, y);
+    const p = this._noise.noise(x, y, 1000);
     const d = p * this._distortion_scl;
     const c = (p + 1) / 2;
 
@@ -60,15 +63,30 @@ class Sketch extends Engine {
     this.draw();
   }
 
-  keyPress(_, c) {
-    console.log(c);
-    switch (c) {
-      case 13: // enter
-        this.saveFrame(this._title);
-        break;
-      default:
-        break;
-    }
+  _generateColors() {
+    const h = this._xor128.random_int(0, 360);
+    return new Array(3)
+      .fill(0)
+      .map((_, i) => Color.fromHSL((h + i * 30) % 360, 100, 50));
+  }
+
+  _mixColors(levels) {
+    let components = new Array(3).fill(0);
+    levels = levels
+      .map((l) => l / levels.reduce((acc, curr) => acc + curr, 0)) // normalize
+      .forEach((l, i) => {
+        if (i < this._colors.length) {
+          // get the rgb values
+          components[0] += this._colors[i].r * l;
+          components[1] += this._colors[i].g * l;
+          components[2] += this._colors[i].b * l;
+        }
+      });
+
+    components = components.map((c) =>
+      Math.min(255, Math.max(0, Math.floor(c))),
+    );
+    return new Color(...components);
   }
 }
 

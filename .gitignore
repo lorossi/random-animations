@@ -1,4 +1,12 @@
-*/output/*
+# Ignore IDE settings
 .vscode
-/index.html
-node_modules/
+
+# Ignore build output
+/homepage/index.html
+/homepage/assets/*
+!/homepage/assets/placeholder.png
+dist/
+
+# Ignore python cache files
+__pycache__/
+*.pyc

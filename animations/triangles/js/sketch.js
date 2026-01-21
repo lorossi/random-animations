@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Triangle } from "./triangle.js";
 
 class Sketch extends Engine {
@@ -31,7 +30,7 @@ class Sketch extends Engine {
           x * triangle_scl,
           y * triangle_scl,
           triangle_scl,
-          y / this._cols
+          y / this._cols,
         );
         t.setDependences(this._xor128, this._noise);
         t.setAttributes(this._fg, this._noise_scl, this._time_scl);

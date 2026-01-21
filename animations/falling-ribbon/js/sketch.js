@@ -1,6 +1,10 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import {
+  Engine,
+  SimplexNoise,
+  XOR128,
+  Palette,
+  PaletteFactory,
+} from "./lib.js";
 import { Ribbon } from "./ribbon.js";
 
 class Sketch extends Engine {
@@ -13,6 +17,36 @@ class Sketch extends Engine {
 
     this._ribbon_noise_scl = 0.003;
     this._noise_scl = 0.0001;
+
+    this._hex_palettes = [
+      ["#FFFFED", "#FFBE0B", "#FB5607", "#FF006E", "#8338EC", "#3A86FF"],
+      [
+        "#0A0a0a",
+        "#F8F9FA",
+        "#E9ECEF",
+        "#DEE2E6",
+        "#CED4DA",
+        "#ADB5BD",
+        "#6C757D",
+        "#495057",
+        "#343A40",
+        "#212529",
+      ],
+      [
+        "#E9D8A6",
+        "#001219",
+        "#005F73",
+        "#0A9396",
+        "#94D2BD",
+        "#EE9B00",
+        "#CA6702",
+        "#BB3E03",
+        "#AE2012",
+        "#9B2226",
+      ],
+      ["#FFFCF2", "#CCC5B9", "#403D39", "#252422", "#EB5E28"],
+      ["#EDAE49", "#D1495B", "#00798C", "#30638E", "#003D5B"],
+    ];
   }
 
   setup() {
@@ -20,7 +54,8 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(this._seed);
     this._simplex = new SimplexNoise(this._seed);
 
-    const full_palette = PaletteFactory.getRandomPalette(this._xor128, false);
+    const palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    const full_palette = palette_factory.getRandomPalette(this._xor128, false);
 
     this._bg = full_palette.getColor(0);
     let rest = full_palette.colors.slice(1, full_palette.length);
@@ -40,7 +75,7 @@ class Sketch extends Engine {
           palette.getColor(i),
           seed,
           this._dy,
-          this._ribbon_noise_scl
+          this._ribbon_noise_scl,
         );
       });
 

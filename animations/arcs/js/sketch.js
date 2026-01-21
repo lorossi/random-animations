@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, Color, XOR128 } from "./lib.js";
 import { Shape } from "./arcs.js";
 
 class Sketch extends Engine {
@@ -27,8 +26,8 @@ class Sketch extends Engine {
             Math.floor(i / this._cols),
             this._arc_scl,
             this._noise,
-            this._random
-          )
+            this._random,
+          ),
       );
 
     if (this._recording) {

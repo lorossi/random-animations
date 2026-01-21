@@ -1,6 +1,4 @@
-import { XOR128 } from "./xor128.js";
-import { Color, Point, SimplexNoise } from "./engine.js";
-import { Palette } from "./palette-factory.js";
+import { Color, Point, SimplexNoise, XOR128, Palette } from "./lib.js";
 
 const Direction = {
   Right: { x: 1, y: 0 },
@@ -45,11 +43,11 @@ class Walker {
       // check if the direction does not lead to a poisition that has already been visited
       const new_position = new Point(
         this._positions_history[this._positions_history.length - 1].x + d.x,
-        this._positions_history[this._positions_history.length - 1].y + d.y
+        this._positions_history[this._positions_history.length - 1].y + d.y,
       );
       return (
         this._positions_history.every(
-          (h) => h.x != new_position.x || h.y != new_position.y
+          (h) => h.x != new_position.x || h.y != new_position.y,
         ) &&
         new_position.x >= 0 &&
         new_position.x < this._cols &&
@@ -71,14 +69,14 @@ class Walker {
       this._positions_history[this._positions_history.length - 1];
     const n = this._noise.noise(
       last_position.x * this._noise_scl,
-      last_position.y * this._noise_scl
+      last_position.y * this._noise_scl,
     );
     const new_direction_index = Math.floor(((n + 1) / 2) * directions.length);
     const new_direction = directions[new_direction_index];
 
     const new_position = new Point(
       last_position.x + new_direction.x,
-      last_position.y + new_direction.y
+      last_position.y + new_direction.y,
     );
 
     this._grid[new_position.x][new_position.y] = true;
@@ -224,15 +222,15 @@ class Walker {
         const start_position = p;
         const n = this._noise.noise(
           start_position.x * this._noise_scl,
-          start_position.y * this._noise_scl
+          start_position.y * this._noise_scl,
         );
         const start_direction_index = Math.floor(
-          ((n + 1) / 2) * directions.length
+          ((n + 1) / 2) * directions.length,
         );
         const start_direction = directions[start_direction_index];
         this._split_position = new Point(
           start_position.x + start_direction.x,
-          start_position.y + start_direction.y
+          start_position.y + start_direction.y,
         );
         return true;
       }
@@ -247,7 +245,7 @@ class Walker {
       this._split_position.y,
       this._cols,
       this._rows,
-      this._lines
+      this._lines,
     );
 
     walker.setSeed(this._xor128.random_int(1e16));

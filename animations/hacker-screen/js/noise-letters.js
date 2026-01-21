@@ -1,5 +1,4 @@
-import { XOR128 } from "./xor128.js";
-import { SimplexNoise } from "./engine.js";
+import { XOR128, SimplexNoise } from "./lib.js";
 import { Layer } from "./layer.js";
 
 class NoiseLetters extends Layer {
@@ -13,7 +12,6 @@ class NoiseLetters extends Layer {
     this._omega = omega;
     this._scl = scl;
 
-    // this._font = "Hack-Bold";
     this._xor128 = new XOR128(seed);
     this._noise = new SimplexNoise(this._xor128.random_int(1e16));
     this._noise_scl = 5;
@@ -38,10 +36,10 @@ class NoiseLetters extends Layer {
           x * this._noise_scl,
           y * this._noise_scl,
           nx,
-          ny
+          ny,
         );
         const character_i = Math.floor(
-          ((n + 1) * this.characters_map.length) / 2
+          ((n + 1) * this.characters_map.length) / 2,
         );
         const c = this.characters_map[character_i];
         ctx.fillText(c, x * this._letter_size, y * this._letter_size);

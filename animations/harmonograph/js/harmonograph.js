@@ -1,4 +1,4 @@
-import { Point } from "./engine.js";
+import { Point } from "./lib.js";
 
 class Harmonic {
   constructor(A, omega, phi, d) {
@@ -50,9 +50,9 @@ class Harmonograph {
               this._xor128,
               this._max_a,
               this._max_omega,
-              this._max_d
-            )
-          )
+              this._max_d,
+            ),
+          ),
       );
   }
 
@@ -62,7 +62,7 @@ class Harmonograph {
 
   _calculate(t) {
     const [px, py] = this._harmonics.map((hs) =>
-      hs.reduce((p, h) => p + h.calculate(t), 0)
+      hs.reduce((p, h) => p + h.calculate(t), 0),
     );
     return new Point(px, py);
   }

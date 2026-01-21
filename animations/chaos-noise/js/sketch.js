@@ -1,6 +1,5 @@
-import { Engine, SimplexNoise, Point, Color, XOR128 } from "./lib.js";
+import { Engine, PaletteFactory, Color, XOR128 } from "./lib.js";
 import { Pairing } from "./pairing.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
 import { Texture } from "./texture.js";
 
 class Sketch extends Engine {
@@ -9,6 +8,14 @@ class Sketch extends Engine {
     this._noise_scl = 0.0015;
     this._noise_rho = 0.5;
     this._bg = Color.fromMonochrome(240);
+    this._hex_palettes = [
+      ["#F0F0F0", "#F50A32", "#F5AF0A", "#0A697B", "#333333"],
+      ["#F0F0F0", "#D32F2F", "#009688", "#546E7A", "#263238"],
+      ["#F0F0F0", "#2E2E2E", "#45597F", "#417568", "#FFCF50", "#E63946"],
+      ["#0D518C", "#F2B807", "#F29F05", "#F2E2CE", "#F21B1B"],
+      ["#000000", "#F0F0F0", "#C50036", "#155EE4", "#FFC820"],
+      ["#BF2431", "#62CDD9", "#F2A516", "#F2E5D5", "#F23030"],
+    ];
 
     this._duration = 900;
     this._recording = false;
@@ -19,7 +26,9 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(this._seed);
 
     this._cols = this._xor128.random_int(17, 30);
-    this._palette = PaletteFactory.getRandomPalette(this._xor128, true);
+
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128, true);
 
     const seed = this._xor128.random_int(1e9);
     const pairing_size = this.width / this._cols;
@@ -33,7 +42,7 @@ class Sketch extends Engine {
         pairing_size,
         seed,
         this._noise_scl,
-        this._palette.copy().colors
+        this._palette.copy().colors,
       );
     });
 

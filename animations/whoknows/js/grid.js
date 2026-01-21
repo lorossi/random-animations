@@ -1,5 +1,4 @@
-import { Color, SimplexNoise } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Color, SimplexNoise, XOR128 } from "./lib.js";
 
 class Grid {
   constructor(cols, size, grid_options) {
@@ -27,7 +26,7 @@ class Grid {
         x * disruption_scl[0],
         y * disruption_scl[1],
 
-        1000
+        1000,
       );
 
       let color;

@@ -12,7 +12,7 @@ class Pattern {
     this._seed = seed;
 
     this._xor128 = new XOR128(seed);
-    this._noise = new SimplexNoise(this._xor128.random_int(2 ** 32));
+    this._noise = new SimplexNoise(this._xor128.random_int(1e9));
 
     this._probability = this._xor128.random(0.3, 0.7);
   }
@@ -50,14 +50,14 @@ class Pattern {
         const n1 = this._noise.noise(
           (((x + 0.5) * this._size) / this._n) * this._noise_scl,
           (((y + 0.5) * this._size) / this._n) * this._noise_scl,
-          1000
+          1000,
         );
         if ((n1 + 1) / 2 > this._probability) continue;
 
         const n2 = this._noise.noise(
           (((x + 0.5) * this._size) / this._n) * this._noise_scl,
           (((y + 0.5) * this._size) / this._n) * this._noise_scl,
-          2000
+          2000,
         );
         const a = ((n2 + 1) / 2) * 0.8 + 0.2;
 

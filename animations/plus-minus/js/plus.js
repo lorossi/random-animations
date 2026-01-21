@@ -1,5 +1,3 @@
-import { Color } from "./engine.js";
-
 class Plus {
   constructor(x, y, size, fill, direction = 1) {
     this._x = x;

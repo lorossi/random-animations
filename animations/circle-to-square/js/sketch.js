@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Shape } from "./shapes.js";
 
 class Sketch extends Engine {
@@ -34,12 +33,12 @@ class Sketch extends Engine {
         shape_size,
         this._shape_color,
         this._shape_scl,
-        d
+        d,
       );
     });
 
-    this._bg_color = this._xor128.pick(this._bg_palette);
-    document.body.style.backgroundColor = this._bg_color.rgb;
+    this._bg = this._xor128.pick(this._bg_palette);
+    document.body.style.backgroundColor = this._bg.rgb;
 
     this._rotation = (this._xor128.random_int(4) * Math.PI) / 2;
 
@@ -53,17 +52,9 @@ class Sketch extends Engine {
   draw() {
     const t = ((this.frameCount - this._frame_offset) / this._duration) % 1;
 
-    if (t == 0 && this.frameCount - this._frame_offset > 0 && this._recording) {
-      this._recording = false;
-      this.stopRecording();
-      console.log("%cRecording stopped. Saving...", "color:yellow");
-      this.saveRecording();
-      console.log("%cRecording saved", "color:green");
-    }
-
     this.ctx.save();
     this.ctx.clearRect(0, 0, this.width, this.height);
-    this.ctx.fillStyle = this._bg_color.rgba;
+    this.ctx.fillStyle = this._bg.rgba;
     this.ctx.fillRect(0, 0, this.width, this.height);
     this.ctx.translate(this.width / 2, this.height / 2);
     this.ctx.scale(this._scl, this._scl);
@@ -78,6 +69,14 @@ class Sketch extends Engine {
     this.ctx.restore();
 
     this.ctx.restore();
+
+    if (t == 0 && this.frameCount - this._frame_offset > 0 && this._recording) {
+      this._recording = false;
+      this.stopRecording();
+      console.log("%cRecording stopped. Saving...", "color:yellow");
+      this.saveRecording();
+      console.log("%cRecording saved", "color:green");
+    }
   }
 
   click() {

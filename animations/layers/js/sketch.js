@@ -1,7 +1,5 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, PaletteFactory, XOR128, Color } from "./lib.js";
 import { Layer } from "./layer.js";
-import { PaletteFactory } from "./palette-factory.js";
 
 class Sketch extends Engine {
   preload() {
@@ -10,12 +8,22 @@ class Sketch extends Engine {
     this._texture_scl = 2;
     this._duration = 900;
     this._recording = false;
+
+    this._hex_palettes = [
+      ["#1d3557", "#457b9d", "#a8dadc", "#e63946"],
+      ["#fcbf49", "#f77f00", "#d62828", "#003049"],
+      ["#ccc5b9", "#403d39", "#fffcf2", "#eb5e28"],
+      ["#006ba6", "#0496ff", "#d81159", "#8f2d56"],
+      ["#094074", "#3c6997", "#5adbff", "#fe9000"],
+      ["#0a2463", "#3e92cc", "#fffaff", "#d8315b"],
+    ];
   }
 
   setup() {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
-    this._palette = PaletteFactory.getRandomPalette(this._xor128);
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
     const layers_xor128 = new Array(this._palette.length)
       .fill()
       .map(() => new XOR128(this._xor128.random_int(1e16)));

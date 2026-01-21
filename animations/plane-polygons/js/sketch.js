@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, PaletteFactory, Color } from "./lib.js";
 import { Grid } from "./grid.js";
 
 class Sketch extends Engine {
@@ -10,15 +8,28 @@ class Sketch extends Engine {
 
     this._bg = Color.fromMonochrome(240);
     this._scl = 0.95;
+
+    this._hex_palettes = [
+      ["#00296b", "#003f88", "#00509d", "#fdc500", "#ffd500"],
+      ["#edae49", "#d1495b", "#00798c", "#30638e", "#003d5b"],
+      ["#390099", "#9e0059", "#ff0054", "#ff5400", "#ffbd00"],
+      ["#011627", "#fdfffc", "#2ec4b6", "#e71d36", "#ff9f1c"],
+      ["#233d4d", "#fe7f2d", "#fcca46", "#a1c181", "#619b8a"],
+      ["#000000", "#3F3F3F", "#7F7F7F", "#BFBFBF", "#FFFFFF"],
+    ];
   }
 
   setup() {
     this._seed = new Date().getTime();
     this._xor128 = new XOR128(this._seed);
-    this._palette = PaletteFactory.getRandomPalette(this._xor128, true);
+
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128, true);
 
     this._grid = new Grid(this.width, this.height, this._palette, this._xor128);
     this._grid.split();
+
+    document.body.style.background = this._bg.rgba;
 
     this._frame_offset = this.frameCount;
     if (this._recording) {

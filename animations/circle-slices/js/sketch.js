@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Circle } from "./circle.js";
 
 class Sketch extends Engine {
@@ -29,12 +27,12 @@ class Sketch extends Engine {
       this.width / 2,
       this._slices_num,
       this._slices_scl,
-      this._fg
+      this._fg,
     );
 
     this._noise_texture = this._createNoiseTexture(
       this._texture_oversize,
-      this._texture_scl
+      this._texture_scl,
     );
 
     document.body.style.backgroundColor = this._bg.hex;
@@ -92,9 +90,9 @@ class Sketch extends Engine {
   }
 
   _applyNoiseTexture(canvas) {
-    const wiggle = canvas.width - this.width;
-    const dx = -this._xor128.random_int(wiggle);
-    const dy = -this._xor128.random_int(wiggle);
+    const wiggle_room = canvas.width - this.width;
+    const dx = -this._xor128.random_int(wiggle_room);
+    const dy = -this._xor128.random_int(wiggle_room);
 
     this.ctx.save();
     this.ctx.globalCompositeOperation = "dodge";
