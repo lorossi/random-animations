@@ -1,5 +1,3 @@
-import { Color, Point } from "./engine.js";
-
 class Tile {
   constructor(x, y, size, fg, noise, scale = 0.9, noise_scl = 0.1) {
     this._x = x;
@@ -23,7 +21,7 @@ class Tile {
     ];
     const n = this._noise.noise(
       this._x * this._noise_scl,
-      this._y * this._noise_scl
+      this._y * this._noise_scl,
     );
     const index = Math.floor(((n + 1) / 2) * functions.length);
     return functions[index];

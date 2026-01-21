@@ -1,9 +1,5 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, PaletteFactory } from "./lib.js";
 import { Ribbon } from "./ribbon.js";
-import { PaletteFactory } from "./palette-factory.js";
-
-// https://pinterest.com/pin/27514247717114473/
 
 class Sketch extends Engine {
   preload() {
@@ -14,19 +10,29 @@ class Sketch extends Engine {
     this._line_width = 20;
     this._line_speed = 4;
     this._lines_num = 11;
+
+    this._hex_palettes = [
+      ["#0F0F0F", "#F0F0F0"],
+      ["#19719C", "#FFFFFF"],
+      ["#E68C3A", "#F4F2EF"],
+      ["#EAE2D8", "#197F7F"],
+      ["#EAE2D8", "#CC5F3A"],
+    ];
   }
 
   setup() {
-    const seed = Date.now();
+    const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
     this._initial_direction = [
       this._xor128.pick([-1, 1]) * this._line_speed,
       this._xor128.pick([-1, 1]) * this._line_speed,
     ];
     this._phi = this._xor128.random();
-    const palette = PaletteFactory.getRandomPalette(this._xor128);
-    this._fg_color = palette.getColor(0);
-    this._bg_color = palette.getColor(1);
+
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
+    this._fg_color = this._palette.getColor(0);
+    this._bg_color = this._palette.getColor(1);
 
     this._setPageColor(this._bg_color);
 
@@ -39,7 +45,7 @@ class Sketch extends Engine {
         this._points_num,
         this.width,
         initial_direction,
-        this._line_width
+        this._line_width,
       );
       const preload =
         ((r.period / this._lines_num) * i + this._phi * r.period) % r.period;
@@ -54,11 +60,9 @@ class Sketch extends Engine {
     }
   }
 
-  click() {
-    this.setup();
-  }
-
   draw() {
+    this.ctx.save();
+
     this.background(this._bg_color);
     this.scaleFromCenter(this._scl);
     this.ctx.save();
@@ -78,6 +82,10 @@ class Sketch extends Engine {
       this.saveRecording();
       console.log("%cRecording saved", "color:green");
     }
+  }
+
+  click() {
+    this.setup();
   }
 
   _hashInt(x) {

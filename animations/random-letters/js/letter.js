@@ -1,10 +1,12 @@
-import { Point } from "./engine.js";
+import { Point } from "./lib.js";
 
 class Symbol {
-  constructor(seed, cols) {
-    this.lines = [];
-    this.cols = cols;
-    this.seed = seed;
+  constructor(seed, cols, color) {
+    this._cols = cols;
+    this._seed = seed;
+    this._color = color;
+
+    this._lines = [];
 
     const bits = seed
       .toString(2)
@@ -12,38 +14,38 @@ class Symbol {
       .map((x) => parseInt(x));
 
     // horizontal
-    for (let y = 0; y < cols + 1; y++) {
-      for (let x = 0; x < cols; x++) {
-        const i = x + y * cols;
+    for (let y = 0; y < this._cols + 1; y++) {
+      for (let x = 0; x < this._cols; x++) {
+        const i = x + y * this._cols;
         if (!bits[i]) continue;
-        this.lines.push([new Point(x, y), new Point(x + 1, y)]);
+        this._lines.push([new Point(x, y), new Point(x + 1, y)]);
       }
     }
 
     // vertical
-    for (let x = 0; x < cols + 1; x++) {
-      for (let y = 0; y < cols; y++) {
-        const i = y + x * cols + (cols * cols + 1);
+    for (let x = 0; x < this._cols + 1; x++) {
+      for (let y = 0; y < this._cols; y++) {
+        const i = y + x * this._cols + (this._cols * this._cols + 1);
         if (!bits[i]) continue;
-        this.lines.push([new Point(x, y), new Point(x, y + 1)]);
+        this._lines.push([new Point(x, y), new Point(x, y + 1)]);
       }
     }
 
     // bottom-left to upper-right diagonal
-    for (let x = 0; x < cols; x++) {
-      for (let y = 0; y < cols; y++) {
-        const i = x + y * cols + 2 * (cols * cols + 1);
+    for (let x = 0; x < this._cols; x++) {
+      for (let y = 0; y < this._cols; y++) {
+        const i = x + y * this._cols + 2 * (this._cols * this._cols + 1);
         if (!bits[i]) continue;
-        this.lines.push([new Point(x, y + 1), new Point(x + 1, y)]);
+        this._lines.push([new Point(x, y + 1), new Point(x + 1, y)]);
       }
     }
 
     // top-left to bottom-right diagonal
-    for (let x = 0; x < cols; x++) {
-      for (let y = 0; y < cols; y++) {
-        const i = x + y * cols + 3 * cols * cols + 2;
+    for (let x = 0; x < this._cols; x++) {
+      for (let y = 0; y < this._cols; y++) {
+        const i = x + y * this._cols + 3 * this._cols * this._cols + 2;
         if (!bits[i]) continue;
-        this.lines.push([new Point(x, y), new Point(x + 1, y + 1)]);
+        this._lines.push([new Point(x, y), new Point(x + 1, y + 1)]);
       }
     }
   }
@@ -53,14 +55,14 @@ class Symbol {
   }
 
   get parameters() {
-    return 4 * this.cols * this.cols + 2;
+    return 4 * this._cols * this._cols + 2;
   }
 
   show(ctx) {
     ctx.save();
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = this._color.rgba;
 
-    this.lines.forEach((l) => {
+    this._lines.forEach((l) => {
       ctx.beginPath();
       ctx.moveTo(l[0].x, l[0].y);
       ctx.lineTo(l[1].x, l[1].y);
@@ -71,8 +73,8 @@ class Symbol {
 }
 
 class Letter extends Symbol {
-  constructor(x, y, size, scl, seed, cols = 3) {
-    super(seed, cols);
+  constructor(x, y, size, scl, seed, color, cols = 3) {
+    super(seed, color, cols);
 
     this._y = y;
     this._x = x;
@@ -82,20 +84,20 @@ class Letter extends Symbol {
 
   show(ctx) {
     ctx.save();
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = this._color.rgba;
     ctx.translate(this._x + this._size / 2, this._y + this._size / 2);
     ctx.scale(this._scl, this._scl);
     ctx.translate(-this._size / 2, -this._size / 2);
 
-    this.lines.forEach((l) => {
+    this._lines.forEach((l) => {
       ctx.beginPath();
       ctx.moveTo(
-        (l[0].x * this._size) / this.cols,
-        (l[0].y * this._size) / this.cols
+        (l[0].x * this._size) / this._cols,
+        (l[0].y * this._size) / this._cols,
       );
       ctx.lineTo(
-        (l[1].x * this._size) / this.cols,
-        (l[1].y * this._size) / this.cols
+        (l[1].x * this._size) / this._cols,
+        (l[1].y * this._size) / this._cols,
       );
       ctx.stroke();
     });

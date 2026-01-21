@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Color, PaletteFactory } from "./lib.js";
 import { Circle, Square } from "./shape.js";
 
 class Sketch extends Engine {
@@ -10,8 +9,12 @@ class Sketch extends Engine {
     this._max_r = 200;
     this._scl = 0.9;
 
-    this._background = "#FFFDEA";
-    this._palette = ["#ef476f", "#ffd166", "#118ab2", "#06d6a0"];
+    this.bg = Color.fromHEX("#FFFDEA");
+    this._hex_palettes = [
+      ["#EF476F", "#FFD166", "#06D6A0", "#118AB2", "#073B4C"],
+      ["#FF595E", "#FFCA3A", "#8AC926", "#1982C4", "#6A4C93"],
+      ["#EE6055", "#60D394", "#AAF683", "#FFD97D", "#FF9B85"],
+    ];
     this._duration = 900;
     this._recording = false;
   }
@@ -21,15 +24,10 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(seed);
     this._shapes = [];
 
-    this.background(this._background);
-
-    if (this._recording) {
-      this.startRecording();
-      console.log("%cRecording started", "color:green");
-    }
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
 
     let placed = true;
-
     while (placed) {
       placed = false;
       let tries = 0;
@@ -52,6 +50,14 @@ class Sketch extends Engine {
 
       if (!placed) console.log({ tries, shapes: this._shapes.length });
     }
+
+    this.background(this.bg);
+    document.body.style.background = this.bg.rgba;
+
+    if (this._recording) {
+      this.startRecording();
+      console.log("%cRecording started", "color:green");
+    }
   }
 
   draw() {
@@ -61,14 +67,13 @@ class Sketch extends Engine {
     }
 
     const ns = this._shapes.pop();
+    const c = this._palette.getRandomColor(this._xor128);
 
     this.ctx.save();
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scl, this._scl);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.scaleFromCenter(this._scl);
 
     this.ctx.save();
-    this.ctx.fillStyle = this._xor128.pick(this._palette);
+    this.ctx.fillStyle = c.rgba;
     ns.show(this.ctx);
     this.ctx.restore();
 

@@ -1,12 +1,11 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Cell } from "./cell.js";
 
 class Sketch extends Engine {
   preload() {
     this._fg = Color.fromHEX("#353535");
     this._bg = Color.fromHEX("#fcf8f3");
-    this._scl = 0.9;
+    this._scl = 0.95;
     this._texture_size = 4;
     this._cols = 6;
     this._reserved_cells = 2;
@@ -28,19 +27,22 @@ class Sketch extends Engine {
       cell.injectDependencies(this._xor128);
       return cell;
     });
+
+    this._font_loaded = false;
+    document.fonts.load("10pt Ronda").then(() => (this._font_loaded = true));
+
+    document.body.style.backgroundColor = this._bg.rgb;
   }
 
   draw() {
+    if (!this._font_loaded) return;
     this.noLoop();
 
     this._cells.forEach((c) => c.update(this.ctx));
 
-    this.background(this._bg.rgba);
     this.ctx.save();
-
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scl, this._scl);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.background(this._bg.rgba);
+    this.scaleFromCenter(this._scl);
 
     // reserve 2 cells for text
     // valid positions: first 2 cells, last 2 cells, first 2 cells of the last row, last 2 cells of the first row
@@ -82,12 +84,13 @@ class Sketch extends Engine {
     this.ctx.textAlign = left ? "left" : "right";
     this.ctx.textBaseline = top ? "bottom" : "top";
 
-    if (top)
+    if (top) {
       text
         .reverse()
         .forEach((t, i) => this.ctx.fillText(t, text_x, text_y - text_h * i));
-    else
+    } else {
       text.forEach((t, i) => this.ctx.fillText(t, text_x, text_y + text_h * i));
+    }
 
     this.ctx.restore();
 
@@ -116,7 +119,7 @@ class Sketch extends Engine {
 
   click() {
     this.setup();
-    this.draw();
+    this.loop();
   }
 }
 

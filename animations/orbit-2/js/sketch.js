@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./enlibgine.js";
 import { Frame } from "./frame.js";
 
 class Sketch extends Engine {
@@ -33,17 +32,20 @@ class Sketch extends Engine {
         this._noise_scl,
         this._particles_num,
         this._frame_scl,
-        this._steps_per_frame
+        this._steps_per_frame,
       );
       f.generateParticles();
       return f;
     });
 
-    this._background = Color.fromMonochrome(15);
-    this._foreground = Color.fromMonochrome(245, 0.15);
+    this._bg = Color.fromMonochrome(15);
+    this._fg = Color.fromMonochrome(245, 0.15);
 
-    this.background(this._background.rgb);
+    this.background(this._bg.rgb);
 
+    document.body.style.backgroundColor = this._bg.rgb;
+
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -51,14 +53,15 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = ((this.frameCount - this._frame_offset) / this._duration) % 1;
+    const delta_frames = this.frameCount - this._frame_offset;
+    const t = (delta_frames / this._duration) % 1;
 
     this.ctx.save();
     this.ctx.translate(this.width / 2, this.height / 2);
     this.ctx.scale(this._scl, this._scl);
     this.ctx.translate(-this.width / 2, -this.height / 2);
 
-    this.ctx.strokeStyle = this._foreground.rgba;
+    this.ctx.strokeStyle = this._fg.rgba;
 
     this._frames.forEach((f) => {
       f.move(t);
@@ -66,7 +69,7 @@ class Sketch extends Engine {
     });
     this.ctx.restore();
 
-    if (t == 0 && this.frameCount - this._frame_offset > 0) {
+    if (t == 0 && delta_frames > 0) {
       if (this._recording) {
         this._recording = false;
         this.stopRecording();
@@ -80,7 +83,6 @@ class Sketch extends Engine {
 
   click() {
     this.setup();
-    this._frame_offset = 0;
     this.loop();
     this.draw();
   }

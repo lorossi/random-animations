@@ -1,5 +1,3 @@
-import { Color } from "./engine.js";
-
 class Line {
   constructor(y, h, width) {
     this._y = y;
@@ -12,7 +10,7 @@ class Line {
     scramble_end,
     scrambled_slope,
     scrambled_y,
-    color
+    color,
   ) {
     this._scramble_start = scramble_start;
     this._scramble_end = scramble_end;
@@ -41,7 +39,7 @@ class Line {
       c1,
       this._scrambled_y,
       this._scramble_start + this._scrambled_slope,
-      this._scrambled_y
+      this._scrambled_y,
     );
 
     ctx.lineTo(this._scramble_end - this._scrambled_slope, this._scrambled_y);
@@ -53,7 +51,7 @@ class Line {
       c2,
       this._y,
       this._scramble_end,
-      this._y
+      this._y,
     );
 
     ctx.lineTo(this._end, this._y);

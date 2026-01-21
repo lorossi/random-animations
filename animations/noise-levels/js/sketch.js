@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 
 class Sketch extends Engine {
   preload() {
@@ -20,6 +19,11 @@ class Sketch extends Engine {
     this._random = new XOR128(seed);
     this._noise = new SimplexNoise(seed);
 
+    this._noise.setDetail(4, 0.75);
+
+    document.body.style.backgroundColor = this._background.rgb;
+
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -27,7 +31,9 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
+    const delta_frames = this.frameCount - this._frame_offset;
+    const t = (delta_frames / this._duration) % 1;
+
     const theta = t * 2 * Math.PI;
     const tx = (1 + Math.cos(theta)) * this._time_scl;
     const ty = (1 + Math.sin(theta)) * this._time_scl;
@@ -41,7 +47,7 @@ class Sketch extends Engine {
           x * this._noise_scl,
           y * this._noise_scl,
           tx,
-          ty
+          ty,
         );
         const nn = (n + 1) / 2;
         const level = this._inRange(nn);
@@ -49,8 +55,9 @@ class Sketch extends Engine {
         if (level == -1) continue;
 
         const ch = this._easeOutPoly(level / this._noise_levels) * 255;
+        const c = Color.fromMonochrome(ch);
         this.ctx.save();
-        this.ctx.fillStyle = Color.fromMonochrome(ch).rgb;
+        this.ctx.fillStyle = c.rgb;
         this.ctx.translate(x, y);
         this.ctx.fillRect(0, 0, this._texture_scl, this._texture_scl);
         this.ctx.restore();
@@ -59,7 +66,7 @@ class Sketch extends Engine {
 
     this.ctx.restore();
 
-    if (this.frameCount > 0 && t == 0 && this._recording) {
+    if (delta_frames == 0 && t == 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");

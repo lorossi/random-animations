@@ -8,8 +8,7 @@
 - [x] arcs
 - [x] ascii-noise
 - [x] automaton-pattern
-- [x] backtracking-maze
-- [x] backtracking-sudoku
+- [x] backtracking-mazes
 - [x] barcodes
 - [x] bauhaus-diagonals
 - [x] binary-grid
@@ -74,64 +73,64 @@
 - [x] inverted-squares-static
 - [x] irregular-grid
 - [x] irregular-grid-2
-- [ ] irregular-polygons
-- [ ] knight-spacing
-- [ ] layers
-- [ ] letters-cube
-- [ ] letters-cube-simple
-- [ ] menacing-clocks
-- [ ] noise-levels
-- [ ] noise-quadtree
-- [ ] nothing-smart-to-say
-- [ ] orbit
-- [ ] orbit-2
-- [ ] overlapping-circles
-- [ ] perfect-fit
-- [ ] periodic-points
-- [ ] periodic-ribbon
-- [ ] perspective-lines
-- [ ] plane-partition
-- [ ] plane-partition-2
-- [ ] plane-partition-regular
-- [ ] plane-polygons
-- [ ] plus-minus
-- [ ] poster
-- [ ] poster-10
-- [ ] poster-11
-- [ ] poster-2
-- [ ] poster-3
-- [ ] poster-4
-- [ ] poster-5
-- [ ] poster-6
-- [ ] poster-7
-- [ ] poster-8
-- [ ] poster-9
+- [x] irregular-polygons
+- [x] knight-spacing
+- [x] layers
+- [x] letters-cube
+- [x] letters-cube-simple
+- [x] menacing-clocks
+- [x] noise-levels
+- [x] noise-quadtree
+- [x] nothing-smart-to-say
+- [x] orbit
+- [x] orbit-2
+- [x] overlapping-circles
+- [x] perfect-fit
+- [x] periodic-points
+- [x] periodic-ribbon
+- [x] perspective-lines
+- [x] plane-partition
+- [x] plane-partition-2
+- [x] plane-partition-regular
+- [x] plane-polygons
+- [x] plus-minus
+- [x] poster
+- [x] poster-10
+- [x] poster-11
+- [x] poster-2
+- [x] poster-3
+- [x] poster-4
+- [x] poster-5
+- [x] poster-6
+- [x] poster-7
+- [x] poster-8
+- [x] poster-9
 - [x] prim
-- [ ] rain
-- [ ] random-letters
-- [ ] random-patterns
-- [ ] red-letters
-- [ ] repeated-movements
-- [ ] ribbons
-- [ ] rock-paper-scissors
-- [ ] rotating-numbers
-- [ ] rotations-deformations
-- [ ] simplex-grid
-- [ ] single-line
-- [ ] sparse-bookshelf
-- [ ] spinning-circles
-- [ ] spinning-particles
-- [ ] square-circle
-- [ ] squares-plane
-- [ ] stamps
-- [ ] stereographic-blobs
-- [ ] swapping-circles
-- [ ] technical-canvas
-- [ ] triangles
-- [ ] ugly-packing
-- [ ] uneven-grid
-- [ ] vertical-bars
-- [ ] vertical-lines
+- [x] rain
+- [x] random-letters
+- [x] random-patterns
+- [x] red-letters
+- [x] repeated-movements
+- [x] ribbons
+- [x] rock-paper-scissors
+- [x] rotating-numbers
+- [x] rotations-deformations
+- [x] simplex-grid
+- [x] single-line
+- [x] sparse-bookshelf
+- [x] spinning-circles
+- [x] spinning-particles
+- [x] square-circle
+- [x] squares-plane
+- [x] stamps
+- [x] stereographic-blobs
+- [x] swapping-circles
+- [x] technical-canvas
+- [x] triangles
+- [x] ugly-packing
+- [x] uneven-grid
+- [x] vertical-bars
+- [x] vertical-lines
 - [ ] vertical-lines-2
 - [ ] vertical-lines-3
 - [ ] vertical-sines

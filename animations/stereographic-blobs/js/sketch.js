@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Blob } from "./blob.js";
 
 class Sketch extends Engine {
@@ -36,11 +35,12 @@ class Sketch extends Engine {
           blob_size,
           this._fg_colors,
           this._noise,
-          this._xor128
+          this._xor128,
         );
       });
 
     this._texture = this._createNoiseTexture(this.width, this.height, 2);
+    document.body.style.background = this._bg_color.rgba;
 
     this._frame_started = this.frameCount;
     if (this._recording) {
@@ -54,7 +54,8 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = ((this.frameCount - this._frame_started) / this._duration) % 1;
+    const delta_frame = this.frameCount - this._frame_started;
+    const t = (delta_frame / this._duration) % 1;
 
     this.ctx.save();
     this.background(this._bg_color);
@@ -69,7 +70,7 @@ class Sketch extends Engine {
 
     this._applyNoiseTexture(this._texture);
 
-    if (t == 0 && this.frameCount > 0 && this._recording) {
+    if (t == 0 && delta_frame > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");

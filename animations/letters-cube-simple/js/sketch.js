@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Cell } from "./cell.js";
 
 class Sketch extends Engine {
@@ -36,12 +35,13 @@ class Sketch extends Engine {
       letter_scl,
       this._cubes_num,
       max_length,
-      this._xor128
+      this._xor128,
     );
     this._cell.setColor(this._letter_fg, this._letter_bg);
 
     this._texture = this._createTexture();
 
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -49,7 +49,8 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
+    const delta_frames = this.frameCount - this._frame_offset;
+    const t = (delta_frames / this._duration) % 1;
 
     this.ctx.save();
     this.background(this._bg);
@@ -69,18 +70,18 @@ class Sketch extends Engine {
     // paste the texture with a random offset
     const dx_offset = this._xor128.random_int(
       0,
-      this._texture_size - this.width
+      this._texture_size - this.width,
     );
     const dy_offset = this._xor128.random_int(
       0,
-      this._texture_size - this.height
+      this._texture_size - this.height,
     );
 
     this.ctx.drawImage(this._texture, -dx_offset, -dy_offset);
 
     this.ctx.restore();
 
-    if (t >= 1 && this._recording) {
+    if (t == 0 && delta_frames > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");

@@ -1,11 +1,15 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, PaletteFactory, XOR128 } from "./lib.js";
 import { Tile } from "./tile.js";
 
 class Sketch extends Engine {
   preload() {
-    this._scale = 1;
+    this._scale = 0.95;
+    this._hex_palettes = [
+      ["#DCDCDC", "#0F0F0F"],
+      ["#EEE7D7", "#27221F"],
+      ["#F1FAEE", "#1D3557"],
+      ["#EDF2F4", "#2B2D42"],
+    ];
   }
 
   setup() {
@@ -14,9 +18,9 @@ class Sketch extends Engine {
 
     this._cols = this._xor128.pick([8, 10, 20, 25]);
     this._tile_size = Math.floor(this.width / this._cols);
-    this._palette = PaletteFactory.getRandomPalette(this._xor128, true);
 
-    document.body.style.background = this._palette.getColor(0).toString();
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128, true);
 
     this._tiles = new Array(this._cols * this._cols).fill(0).map((_, i) => {
       const x = i % this._cols;
@@ -26,16 +30,19 @@ class Sketch extends Engine {
         y * this._tile_size,
         this._tile_size,
         this._palette,
-        this._xor128
+        this._xor128,
       );
     });
+
+    this._bg = this._palette.getRandomColor(this._xor128);
+    document.body.style.background = this._bg.rgb;
   }
 
   draw() {
     this.noLoop();
 
     this.ctx.save();
-    this.background("#ffffff");
+    this.background(this._bg);
     this.scaleFromCenter(this._scale);
 
     this._tiles.forEach((t) => t.draw(this.ctx));

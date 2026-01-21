@@ -1,8 +1,6 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, PaletteFactory, Color } from "./lib.js";
 import { Band } from "./band.js";
 import { Circle } from "./circle.js";
-import { PaletteFactory } from "./palette_factory.js";
 
 class Sketch extends Engine {
   preload() {
@@ -12,12 +10,25 @@ class Sketch extends Engine {
 
     this._duration = 900;
     this._recording = false;
+
+    this._hex_palette = [
+      ["#090349", "#072879", "#740846", "#A1002A", "#F01501"],
+      ["#2a416a", "#305955", "#258786", "#ca7558", "#9ec2b6"],
+      ["#01213a", "#01411f", "#005d55", "#08afa8", "#8aed07"],
+      ["#041e2b", "#023f51", "#db3600", "#00829a", "#0cb1c7"],
+      ["#041421", "#042630", "#4c7273", "#86b9b0", "#d0d6d6"],
+      ["#23383b", "#246068", "#3aa1aa", "#e29000", "#fadb67"],
+      ["#0e3308", "#023e48", "#1b666b", "#a64510", "#ffa948"],
+      ["#0d2c2f", "#01555f", "#ce505c", "#f0839a", "#ffe4ed"],
+    ];
   }
 
   setup() {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
-    this._palette = PaletteFactory.getRandomPalette(this._xor128);
+
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palette);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
 
     const bands_num = this._xor128.random_int(5, 7);
     const bands_scl = this.width / bands_num;
@@ -34,10 +45,13 @@ class Sketch extends Engine {
       this.width / 2,
       this.height / 2,
       circle_r,
-      bands_scl / 2
+      bands_scl / 2,
     );
     this._circle.setPalette(this._palette.colors);
     this._circle.initDependencies(this._xor128);
+
+    this._bg = this._palette.getRandomColor(this._xor128);
+    document.body.style.backgroundColor = this._bg.rgb;
 
     if (this._recording) {
       this.startRecording();

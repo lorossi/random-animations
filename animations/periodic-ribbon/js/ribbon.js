@@ -1,4 +1,4 @@
-import { Point } from "./engine.js";
+import { Point } from "./lib.js";
 
 class Ribbon {
   constructor(x, y, points_num, container_size, initial_direction, max_width) {

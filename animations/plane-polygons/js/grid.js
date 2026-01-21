@@ -1,5 +1,3 @@
-import { Color } from "./engine.js";
-
 class Line {
   constructor(theta, rho, speed) {
     this._theta = theta;
@@ -60,7 +58,7 @@ class Rect {
 
     const rho = Math.hypot(this._w, this._h) * Math.SQRT2;
     this._lines = thetas.map(
-      (theta, i) => new Line(theta, rho, directions[i] * i)
+      (theta, i) => new Line(theta, rho, directions[i] * i),
     );
   }
 
@@ -103,7 +101,7 @@ class Rect {
     // translate to center
     ctx.translate(
       this._x + this._w / 2 + this._center_x,
-      this._y + this._h / 2 + this._center_y
+      this._y + this._h / 2 + this._center_y,
     );
     ctx.rotate(this._gamma);
 
@@ -154,7 +152,7 @@ class Rect {
       h1,
       this._depth + 1,
       this._palette,
-      this._xor128
+      this._xor128,
     );
     const r2 = new Rect(
       this._x,
@@ -163,7 +161,7 @@ class Rect {
       h2,
       this._depth + 1,
       this._palette,
-      this._xor128
+      this._xor128,
     );
 
     this._children.push(r1);
@@ -182,7 +180,7 @@ class Rect {
       this._h,
       this._depth + 1,
       this._palette,
-      this._xor128
+      this._xor128,
     );
     const r2 = new Rect(
       this._x + w1,
@@ -191,7 +189,7 @@ class Rect {
       this._h,
       this._depth + 1,
       this._palette,
-      this._xor128
+      this._xor128,
     );
 
     this._children.push(r1);

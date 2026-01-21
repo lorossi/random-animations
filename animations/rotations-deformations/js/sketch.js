@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Blob } from "./blob.js";
 
 class Sketch extends Engine {
@@ -34,7 +32,7 @@ class Sketch extends Engine {
         this._speed,
         seed,
         this.width / 2,
-        this._fg
+        this._fg,
       );
       b.setNoiseScale(this._noise_scl);
       return b;

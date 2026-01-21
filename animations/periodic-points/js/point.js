@@ -1,4 +1,4 @@
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class PeriodicPoint {
   constructor(x, y, r, n, duration, xor128) {
@@ -26,7 +26,7 @@ class PeriodicPoint {
       const t = (i / this._duration) * Math.PI * 2;
       const s = harmonics.reduce(
         (acc, h) => acc * h[2] * Math.sin(h[0] * t + h[1]),
-        1
+        1,
       );
 
       return this._easeOut(Math.abs(s));
@@ -35,7 +35,7 @@ class PeriodicPoint {
     const rt_min = Math.min(...this._rt);
     const rt_max = Math.max(...this._rt);
     this._rt = this._rt.map((rt) =>
-      this._rescale(rt, rt_min, rt_max, 0, this._r)
+      this._rescale(rt, rt_min, rt_max, 0, this._r),
     );
   }
 

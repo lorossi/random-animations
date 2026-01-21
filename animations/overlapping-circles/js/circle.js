@@ -1,4 +1,4 @@
-import { Point } from "./engine.js";
+import { Point } from "./lib.js";
 
 class Circle {
   constructor(from, to, r, lines_num, color) {

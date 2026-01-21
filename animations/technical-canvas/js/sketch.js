@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Row } from "./row.js";
 class Sketch extends Engine {
   preload() {
@@ -18,12 +16,15 @@ class Sketch extends Engine {
     this._oscillator = this._audio_context.createOscillator();
     this._oscillator.type = "sine";
     this._oscillator.connect(this._audio_context.destination);
+
+    this._duration = 600;
+    this._recording = false;
   }
 
   setup() {
     this._seed = new Date().getTime();
     this._xor128 = new XOR128(this._seed);
-    this._simplex = new SimplexNoise(this._xor128);
+    this._simplex = new SimplexNoise(this._xor128.random_int(1e9));
 
     this._generateRows();
     this._last_refresh = this.frameCount;
@@ -33,13 +34,32 @@ class Sketch extends Engine {
       this._texture_oversize,
     );
 
-    document.body.style.backgroundColor = this._bg.darken(0.03).rgb;
+    document.body.style.backgroundColor = this._bg.rgb;
+    this._font_loaded = false;
+    document.fonts
+      .load("bold 90px WarText")
+      .then(() => (this._font_loaded = true));
+
+    this._frame_offset = this.frameCount;
+    this._last_refresh = this.frameCount;
+
+    if (this._recording) {
+      this.startRecording();
+      console.log("%cRecording started", "color:green");
+    }
   }
 
   draw() {
-    if (this.frameCount - this._last_refresh > this._refresh) {
-      this._generateRows();
+    if (!this._font_loaded) {
+      this._frame_offset = this.frameCount;
+      this._last_refresh = this.frameCount;
+      return;
+    }
 
+    const frame_delta = this.frameCount - this._frame_offset;
+
+    if (this.frameCount > this._last_refresh + this._refresh) {
+      this._generateRows();
       const frequency = this._xor128.random_int(600, 1200);
       this._beep(frequency);
       this._last_refresh = this.frameCount;
@@ -80,6 +100,14 @@ class Sketch extends Engine {
     );
 
     this.ctx.restore();
+
+    if (frame_delta > this._duration && this._recording) {
+      this._recording = false;
+      this.stopRecording();
+      console.log("%cRecording stopped. Saving...", "color:yellow");
+      this.saveRecording();
+      console.log("%cRecording saved", "color:green");
+    }
   }
 
   click() {

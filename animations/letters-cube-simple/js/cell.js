@@ -1,4 +1,4 @@
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Cube {
   constructor(y, scl, max_length, xor128) {
@@ -30,9 +30,8 @@ class Cube {
     this._current_side = Math.floor(current_t * 4);
 
     const width_t = (current_t % 0.25) * 4;
-    const eased_t = this._sinEasing(width_t);
     this._current_width = Math.floor(
-      this._sinEasing(width_t) * this._sides[this._current_side].length
+      this._sinEasing(width_t) * this._sides[this._current_side].length,
     );
   }
 
@@ -108,8 +107,8 @@ class Cell {
             i * this._letter_scl,
             this._letter_scl * 1.2,
             this._max_length,
-            this._xor128
-          )
+            this._xor128,
+          ),
       );
   }
 

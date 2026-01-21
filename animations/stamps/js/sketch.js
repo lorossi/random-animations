@@ -1,8 +1,7 @@
-import { Engine, Color } from "./engine.js";
+import { Engine, Color, XOR128 } from "./lib.js";
 import { PaintingFactory } from "./painting-factory.js";
 import { Spinner } from "./spinner.js";
 import { Stamp } from "./stamp.js";
-import { XOR128 } from "./xor128.js";
 
 class Sketch extends Engine {
   preload() {
@@ -26,7 +25,7 @@ class Sketch extends Engine {
       this.width / 2,
       this.height / 2,
       Math.min(this.width, this.height) / 3,
-      this._fg
+      this._fg,
     );
     this._paintings.forEach((painting) => {
       painting.setXor128(this._xor128);
@@ -107,7 +106,7 @@ class Sketch extends Engine {
     this._paintings_loaded = false;
     this._paintings = PaintingFactory.loadAllPaintings(
       this._dropdown.value,
-      this._loadedCallback.bind(this)
+      this._loadedCallback.bind(this),
     );
   }
 

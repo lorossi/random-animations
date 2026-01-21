@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-
+import { Engine, XOR128, Color } from "./lib.js";
 class Sketch extends Engine {
   preload() {
     this._cols = 201; // must be odd

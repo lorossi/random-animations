@@ -6,8 +6,9 @@ class Square {
     this._duration = duration;
     this._xor128 = xor128;
 
-    this._lifetime = this._duration / 5;
+    this._lifetime = this._duration / 4;
     this._offset = this._xor128.random_int(this._lifetime);
+    this._updated = 0;
 
     this._generateXY();
   }
@@ -24,7 +25,10 @@ class Square {
 
   show(ctx) {
     this._updated++;
-    if (this._updated >= this._lifetime) this._generateXY();
+    if (this._updated >= this._lifetime) {
+      this._generateXY();
+      this._updated = 0;
+    }
 
     ctx.save();
     ctx.translate(this._x, this._y);

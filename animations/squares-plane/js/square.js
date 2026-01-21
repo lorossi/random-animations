@@ -1,4 +1,4 @@
-import { XOR128 } from "./xor128.js";
+import { XOR128 } from "./lib.js";
 
 class Square {
   constructor(x, y, size, steps, palette, seed) {
@@ -10,7 +10,7 @@ class Square {
     this._xor128 = new XOR128(seed);
 
     this._angles = this._xor128.shuffle(
-      new Array(4).fill(0).map((_, i) => (i * Math.PI) / 2)
+      new Array(4).fill(0).map((_, i) => (i * Math.PI) / 2),
     );
     this._offset = this._xor128.random(0, this._size / 2);
     this._direction = this._xor128.pick([-1, 1]);

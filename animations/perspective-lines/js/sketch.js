@@ -1,7 +1,5 @@
-import { Engine, SimplexNoise, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, Color, XOR128, PaletteFactory } from "./lib.js";
 import { Line } from "./line.js";
-import { PaletteFactory } from "./palette.js";
 
 class Sketch extends Engine {
   preload() {
@@ -14,18 +12,53 @@ class Sketch extends Engine {
     this._scrambled_width = 2 / 3;
     this._scrambled_height = 0.9;
     this._scrambled_slope = 2 / 3;
-    this._background_color = Color.fromMonochrome(15);
+    this._bg = Color.fromMonochrome(15);
     this._time_scl = 3;
     this._noise_scl = 0.05;
+
+    this._rgb_palettes = [
+      [
+        [38, 70, 83],
+        [42, 157, 143],
+        [233, 196, 106],
+        [244, 162, 97],
+        [231, 111, 81],
+      ],
+      [
+        [255, 190, 11],
+        [251, 86, 7],
+        [255, 0, 110],
+        [131, 56, 236],
+        [58, 134, 255],
+      ],
+      [
+        [255, 89, 94],
+        [255, 202, 58],
+        [138, 201, 38],
+        [25, 130, 196],
+        [106, 76, 147],
+      ],
+      [
+        [237, 174, 73],
+        [209, 73, 91],
+        [0, 121, 140],
+        [48, 99, 142],
+        [0, 61, 91],
+      ],
+    ];
   }
 
   setup() {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
     this._noise = new SimplexNoise(this._xor128.random_int(1e9));
-    this._palette = PaletteFactory.getRandomPalette(this._xor128).colors;
-    document.body.style.background = this._background_color.hex;
 
+    this._palette_factory = PaletteFactory.fromRGBArray(this._rgb_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
+
+    document.body.style.background = this._bg.hex;
+
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -33,20 +66,21 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const t = ((this.frameCount - this._frame_offset) / this._duration) % 1;
+    const delta_frames = this.frameCount - this._frame_offset;
+    const t = (delta_frames / this._duration) % 1;
     const a = t * Math.PI * 2;
     const nx = (1 + Math.cos(a)) * this._time_scl;
     const ny = (1 + Math.sin(a)) * this._time_scl;
 
     this.ctx.save();
-    this.background(this._background_color.rgb);
+    this.background(this._bg);
 
     this._generateLines(nx, ny);
     this._lines.forEach((l) => l.show(this.ctx));
 
     this.ctx.restore();
 
-    if (t == 0 && this.frameCount > 0 && this._recording) {
+    if (t == 0 && delta_frames > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");
@@ -86,14 +120,7 @@ class Sketch extends Engine {
 
       // color
       const p = i / this._lines_num;
-      const start_color_index = Math.floor(p * (this._palette.length - 1));
-      const end_color_index = start_color_index + 1;
-
-      const color = this._palette[start_color_index].mix(
-        this._palette[end_color_index],
-        p * this._palette.length - start_color_index,
-      );
-
+      const color = this._palette.getSmoothColor(p);
       color.a = 0.7;
 
       const l = new Line(y, h, this.width);

@@ -1,5 +1,4 @@
-import { Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { XOR128 } from "./lib.js";
 
 class Cell {
   constructor(x, y, size, max_depth, split_chance, xor128, palette, level = 0) {
@@ -29,7 +28,7 @@ class Cell {
     return this._children
       .map((child) => child.getBiggestCell())
       .reduce((biggest, current) =>
-        current.size > biggest.size ? current : biggest
+        current.size > biggest.size ? current : biggest,
       );
   }
 
@@ -82,7 +81,7 @@ class Cell {
     ctx.save();
     ctx.translate(
       this._x + cell_size * (cell_x + 0.5),
-      this._y + cell_size * (cell_y + 0.5)
+      this._y + cell_size * (cell_y + 0.5),
     );
     ctx.rotate(rotation);
     ctx.textAlign = "center";
@@ -116,8 +115,8 @@ class Cell {
           this._split_chance,
           this._xor128,
           this._palette,
-          this._level + 1
-        )
+          this._level + 1,
+        ),
     );
 
     this._children.forEach((child) => child.split());
@@ -148,7 +147,7 @@ class Grid {
       max_depth,
       split_chance,
       this._xor128,
-      this._palette
+      this._palette,
     );
   }
 

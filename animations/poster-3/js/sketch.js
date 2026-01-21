@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Letter } from "./cell.js";
 
 class Sketch extends Engine {
@@ -25,10 +24,7 @@ class Sketch extends Engine {
       this._letters = new_letters;
     }
 
-    if (this._recording) {
-      this.startRecording();
-      console.log("%cRecording started", "color:green");
-    }
+    document.body.style.backgroundColor = this._bg.rgb;
   }
 
   draw() {

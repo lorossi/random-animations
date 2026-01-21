@@ -1,5 +1,3 @@
-import { Color } from "./engine.js";
-
 class Square {
   constructor(x, y, scl) {
     this._x = x;
@@ -77,7 +75,7 @@ class Square {
       this._scl / 2,
       this._scl,
       Math.PI / 2,
-      (Math.PI / 2) * 3
+      (Math.PI / 2) * 3,
     );
     ctx.fill();
   }

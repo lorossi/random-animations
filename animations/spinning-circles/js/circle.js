@@ -1,4 +1,4 @@
-import { XOR128 } from "./xor128.js";
+import { XOR128 } from "./lib.js";
 
 class Circle {
   constructor(x, y, r, seed, color) {
@@ -18,7 +18,7 @@ class Circle {
     this._line_angle = Math.PI / this._lines_num;
     this._omega = this._xor128.random(
       this._lines_num / 20,
-      this._lines_num / 10
+      this._lines_num / 10,
     );
   }
 

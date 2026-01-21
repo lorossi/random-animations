@@ -1,5 +1,5 @@
 import { Shape } from "./shape.js";
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Blob {
   constructor(x, y, scl, time_scl, size, fill_colors, noise, rng) {
@@ -31,8 +31,8 @@ class Blob {
             shuffled_colors[i % 2],
             point_fill,
             noise,
-            rng
-          )
+            rng,
+          ),
       );
   }
 

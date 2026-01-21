@@ -1,22 +1,31 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, PaletteFactory } from "./lib.js";
 import { Pacman } from "./pacman.js";
 
 class Sketch extends Engine {
   preload() {
     this._duration = 180;
     this._recording = false;
+
+    this._hex_palettes = [
+      ["#EDF2F4", "#2B2D42"],
+      ["#0F0F0F", "#F2F2F2"],
+      ["#0D1321", "#F0EBD8"],
+      ["#FFFCF2", "#252422"],
+      ["#101012", "#28EBCF"],
+    ];
   }
 
   setup() {
     this._seed = new Date().getTime();
     this._xor128 = new XOR128(this._seed);
-    this._palette = PaletteFactory.getRandomPalette(this._xor128);
-    this._scale_direction = [
-      this._xor128.random_bool() ? 1 : -1,
-      this._xor128.random_bool() ? 1 : -1,
-    ];
+
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
+
+    this._scale_direction = new Array(2)
+      .fill(0)
+      .map(() => this._xor128.pick([-1, 1]));
+
     this._cols = this._xor128.random_int(4, 16);
 
     const pacman_scl = this.width / this._cols;
@@ -41,7 +50,7 @@ class Sketch extends Engine {
       return new Pacman(px, py, r, direction, phi, color);
     });
 
-    document.body.style.backgroundColor = this._palette.getColor(0).hex;
+    document.body.style.backgroundColor = this._palette.getColor(0).rgb;
 
     this._frame_offset = this.frameCount;
     if (this._recording) {

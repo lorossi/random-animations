@@ -1,4 +1,4 @@
-import { Color, Point } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Tile {
   constructor(x, y, size, noise, scale = 0.9, noise_scl = 0.1, wrong = false) {
@@ -24,7 +24,7 @@ class Tile {
     const n = this._noise.noise(
       this._x * this._noise_scl,
       this._y * this._noise_scl,
-      1000
+      1000,
     );
     const index = Math.floor(((n + 1) / 2) * functions.length);
     return functions[index];
@@ -36,7 +36,7 @@ class Tile {
     const n = this._noise.noise(
       this._x * this._noise_scl,
       this._y * this._noise_scl,
-      2000
+      2000,
     );
     const index = Math.floor(((n + 1) / 2) * colors.length);
     return Color.fromHEX(colors[index]);
@@ -86,7 +86,7 @@ class Tile {
     var n = this._noise.noise(
       this._x * this._noise_scl,
       this._y * this._noise_scl,
-      3000
+      3000,
     );
     var theta = (n * Math.PI) / 32;
 

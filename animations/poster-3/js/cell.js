@@ -1,4 +1,4 @@
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Letter {
   constructor(x, y, size, xor128, level = 1) {
@@ -257,7 +257,13 @@ class Letter {
       const y = Math.floor(i / cols) * scl;
 
       cells.push(
-        new Letter(this._x + x, this._y + y, scl, this._xor128, this._level + 1)
+        new Letter(
+          this._x + x,
+          this._y + y,
+          scl,
+          this._xor128,
+          this._level + 1,
+        ),
       );
     }
 

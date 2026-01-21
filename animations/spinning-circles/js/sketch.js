@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, PaletteFactory } from "./lib.js";
 import { Circle } from "./circle.js";
 import { Text } from "./text.js";
 
@@ -12,14 +10,17 @@ class Sketch extends Engine {
     this._cols = 3;
     this._circle_chance = 0.35;
     this._scl = 0.9;
+
+    this._hex_palettes = [["#0F0F0F", "#F0F0F0"]];
   }
 
   setup() {
     const seed = new Date().getTime();
     this._xor128 = new XOR128(seed);
 
-    const palette = PaletteFactory.getRandomPalette(this._xor128);
-    [this._bg, this._fg] = palette.colors;
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128);
+    [this._bg, this._fg] = this._palette.colors;
 
     const col_scl = this.width / this._cols;
     this._circles = new Array(this._cols ** 2)
@@ -41,7 +42,7 @@ class Sketch extends Engine {
       120,
       this.width,
       this._xor128.random_int(1e6),
-      this._fg
+      this._fg,
     );
 
     this._audio_context = new AudioContext();
@@ -99,7 +100,7 @@ class Sketch extends Engine {
   async _beep(duration = 250) {
     this._oscillator.frequency.setValueAtTime(
       800,
-      this._audio_context.currentTime
+      this._audio_context.currentTime,
     );
     this._oscillator.start();
     await this._sleep(duration);

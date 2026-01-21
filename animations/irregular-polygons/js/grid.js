@@ -1,5 +1,5 @@
 import { Cell } from "./cell.js";
-import { XOR128 } from "./xor128.js";
+import { XOR128 } from "./lib.js";
 
 class Grid {
   constructor(size, palette, cols, cell_scl, seed) {

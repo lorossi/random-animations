@@ -1,5 +1,4 @@
-import { SimplexNoise } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { SimplexNoise, XOR128 } from "./lib.js";
 
 class Blob {
   constructor(x, y, size, speed, seed, canvas_width, color) {
@@ -29,7 +28,7 @@ class Blob {
     const n1 = this._noise.noise(
       this._x * this._noise_scl,
       this._y * this._noise_scl,
-      1000
+      1000,
     );
     this._x += ((n1 + 1) / 2) * this._speed;
 
@@ -37,7 +36,7 @@ class Blob {
     const n2 = this._noise.noise(
       this._x * this._noise_scl,
       this._y * this._noise_scl,
-      2000
+      2000,
     );
     this._width = this._size * ((n2 + 1) / 2);
 
@@ -45,7 +44,7 @@ class Blob {
     const n3 = this._noise.noise(
       this._x * this._noise_scl,
       this._y * this._noise_scl,
-      3000
+      3000,
     );
     this._height = this._size * ((n3 + 1) / 2);
   }

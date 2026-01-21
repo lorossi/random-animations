@@ -1,4 +1,4 @@
-import { Color, Point } from "./engine.js";
+import { Color, Point } from "./lib.js";
 
 class Tile {
   constructor(x, y, size, xor128, scale = 0.9, empty_probability = 0.1) {
@@ -46,7 +46,7 @@ class Tile {
         -this._size / 2 + line_scl * 2 * i,
         -this._size / 2,
         line_scl,
-        this._size
+        this._size,
       );
     }
     ctx.restore();
@@ -62,7 +62,7 @@ class Tile {
           -this._size / 2 + grid_scl * i,
           -this._size / 2 + grid_scl * j,
           grid_scl,
-          grid_scl
+          grid_scl,
         );
       }
     }

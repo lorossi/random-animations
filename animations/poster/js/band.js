@@ -1,5 +1,3 @@
-import { Color } from "./engine.js";
-
 class Band {
   constructor(x, width, height) {
     this._x = x;
@@ -26,7 +24,7 @@ class Band {
     const heights_sum = this._heights.reduce((a, b) => a + b, 0);
     this._heights = this._heights.map((h) => (h / heights_sum) * this._height);
     this._cumulative_heights = this._heights.map((_, i) =>
-      i == 0 ? 0 : this._heights.slice(0, i).reduce((a, b) => a + b, 0)
+      i == 0 ? 0 : this._heights.slice(0, i).reduce((a, b) => a + b, 0),
     );
     this._colors = this._xor128.shuffle(this._palette).slice(0, divisions);
     this._rotated = this._xor128.random_bool();

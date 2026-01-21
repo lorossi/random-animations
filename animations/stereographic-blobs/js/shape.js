@@ -1,4 +1,4 @@
-import { Point } from "./engine.js";
+import { Point } from "./lib.js";
 
 class Shape {
   constructor(size, time_scl, fill, point_fill, noise, rng) {
@@ -55,7 +55,7 @@ class Shape {
       this._points[2].y * this._size,
       2,
       0,
-      Math.PI * 2
+      Math.PI * 2,
     );
     ctx.fill();
 

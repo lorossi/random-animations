@@ -1,4 +1,4 @@
-import { XOR128 } from "./xor128.js";
+import { XOR128 } from "./lib.js";
 
 class Text {
   constructor(size, container_size, seed, color) {
@@ -15,11 +15,11 @@ class Text {
     const text_metrics = this._computeTextMetrics();
     this._x = this._xor128.random(
       text_metrics.width / 2,
-      this._container_size - text_metrics.width / 2
+      this._container_size - text_metrics.width / 2,
     );
     this._y = this._xor128.random(
       text_metrics.height / 2,
-      this._container_size - text_metrics.height / 2
+      this._container_size - text_metrics.height / 2,
     );
     this._rotation = this._xor128.random_interval(0, 0.05) * Math.PI;
   }

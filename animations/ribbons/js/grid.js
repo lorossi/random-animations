@@ -1,7 +1,5 @@
-import { Color } from "./engine.js";
+import { Color, XOR128, Palette } from "./lib.js";
 import { Walker } from "./walker.js";
-import { XOR128 } from "./xor128.js";
-import { Palette } from "./palette-factory.js";
 
 class Grid {
   constructor(cols, size) {
@@ -52,7 +50,7 @@ class Grid {
       y,
       this._cols,
       this._cols,
-      this._walkers_line_num
+      this._walkers_line_num,
     );
 
     walker.setSeed(this._seed);

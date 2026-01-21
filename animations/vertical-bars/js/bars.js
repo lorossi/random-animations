@@ -1,10 +1,10 @@
 class Bar {
-  constructor(x, width, height, seed) {
+  constructor(x, width, height, seed, palette) {
     this._x = x;
     this._max_height = height;
     this._width = width;
     this._seed = seed;
-    this._palette = ["#264653", "#2a9d8f", "#e9c46a", "#f4a261", "#e76f51"];
+    this._palette = palette;
     this._heights = Array(this._palette.length)
       .fill(0)
       .map((_) => 0);
@@ -32,12 +32,12 @@ class Bar {
   show(ctx) {
     ctx.save();
     ctx.translate(this._x, 0);
-    this._palette.forEach((c, i) => {
+    this._palette.colors.forEach((c, i) => {
       const dy = i == 0 ? 0 : this._heights[i - 1];
       const height = this._heights[i];
 
       ctx.translate(0, dy);
-      ctx.fillStyle = c;
+      ctx.fillStyle = c.rgba;
       ctx.fillRect(0, 0, this._width, height);
     });
     ctx.restore();
@@ -56,3 +56,5 @@ class Bar {
     this._generateHeights();
   }
 }
+
+export { Bar };

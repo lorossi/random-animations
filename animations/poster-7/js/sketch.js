@@ -1,11 +1,10 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, XOR128, Point, Color } from "./lib.js";
 import { Tile } from "./tile.js";
 
 class Sketch extends Engine {
   preload() {
     this._bg = Color.fromMonochrome(15);
-    this._scale = 0.9;
+    this._scl = 0.9;
     this._empty_probability = 0.3;
     this._tile_scale = 0.9;
   }
@@ -29,9 +28,11 @@ class Sketch extends Engine {
           tile_size,
           this._xor128,
           this._tile_scale,
-          this._empty_probability
+          this._empty_probability,
         );
       });
+
+    document.body.style.background = this._bg.rgb;
   }
 
   draw() {
@@ -39,9 +40,7 @@ class Sketch extends Engine {
 
     this.ctx.save();
     this.background(this._bg);
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scale, this._scale);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.scaleFromCenter(this._scl);
 
     this._tiles.forEach((t) => t.draw(this.ctx));
 

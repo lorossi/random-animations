@@ -1,6 +1,3 @@
-import { Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-
 class Stamp {
   constructor(x, y, size, scl, xor_128) {
     this._x = x;
@@ -26,7 +23,7 @@ class Stamp {
       (-this._size / 2) * this._scl,
       (-this._size / 2) * this._scl,
       this._size * this._scl,
-      this._size * this._scl
+      this._size * this._scl,
     );
     ctx.clip();
 

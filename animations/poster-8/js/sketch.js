@@ -1,5 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Tile } from "./tile.js";
 
 class Sketch extends Engine {
@@ -38,23 +37,26 @@ class Sketch extends Engine {
           this._noise_scl,
         );
       });
+
+    this._font_loaded = false;
+    document.fonts.load("10pt Lato").then(() => (this._font_loaded = true));
+
+    document.body.style.background = this._bg.rgb;
   }
 
   draw() {
-    this.noLoop();
+    if (!this._font_loaded) return;
 
     this.ctx.save();
     this.background(this._bg);
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scale, this._scale);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.scaleFromCenter(this._scale);
 
     this._tiles.forEach((t) => t.draw(this.ctx));
 
     // write title
 
     this.ctx.save();
-    this.ctx.font = `bold ${this._tile_size}px Lato`;
+    this.ctx.font = `${this._tile_size}px Lato`;
 
     // top text
     this.ctx.textAlign = "left";
@@ -95,11 +97,13 @@ class Sketch extends Engine {
     this.ctx.restore();
 
     this.ctx.restore();
+
+    this.noLoop();
   }
 
   click() {
     this.setup();
-    this.draw();
+    this.loop();
   }
 }
 

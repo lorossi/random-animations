@@ -1,4 +1,4 @@
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Triangle {
   constructor(x, y, scl, y_percent) {
@@ -51,7 +51,7 @@ class Triangle {
       this._x * this._noise_scl,
       this._y * this._noise_scl,
       nx + 1000,
-      ny
+      ny,
     );
 
     return (n + 1) / 2;

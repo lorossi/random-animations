@@ -1,14 +1,24 @@
-import { Point } from "./engine.js";
+import { Point } from "./lib.js";
 
 class Line {
-  constructor(x, scl, size, turn_p, straighten_p, start_percent, xor128) {
+  constructor(
+    x,
+    scl,
+    size,
+    turn_p,
+    straighten_p,
+    start_percent,
+    color,
+    xor128,
+  ) {
     this._x = x;
     this._scl = scl;
     this._size = size;
-    this._xor128 = xor128;
     this._turn_p = turn_p;
     this._straighten_p = straighten_p;
     this._start_percent = start_percent;
+    this._color = color;
+    this._xor128 = xor128;
 
     this._nodes = [];
   }
@@ -46,14 +56,14 @@ class Line {
 
   draw(ctx, t) {
     ctx.save();
-    ctx.strokeStyle = "rgb(245, 245, 245)";
+    ctx.strokeStyle = this._color.rgba;
     ctx.lineWidth = 2;
 
     ctx.beginPath();
 
     const end_i = Math.min(
       this._nodes.length,
-      Math.floor(this._nodes.length * t)
+      Math.floor(this._nodes.length * t),
     );
 
     for (let i = 0; i < end_i; i++) {

@@ -1,10 +1,11 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Rectangle } from "./rectangle.js";
 
 class Sketch extends Engine {
   preload() {
-    this._background_color = Color.fromMonochrome(15);
+    this._bg = Color.fromMonochrome(15);
+    this._fg = Color.fromMonochrome(245);
+
     this._splits_per_frame = 5;
     this._scl = 0.95;
     this._split_probability = 0.75;
@@ -24,8 +25,9 @@ class Sketch extends Engine {
         0,
         this.width,
         this._split_probability,
+        this._fg,
         this._xor128,
-        this._noise
+        this._noise,
       ),
     ];
     this._ended = false;
@@ -47,11 +49,8 @@ class Sketch extends Engine {
 
     let next_rects = [];
     this.ctx.save();
-    this.background(this._background_color.rgb);
-
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scl, this._scl);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.background(this._bg.rgb);
+    this.scaleFromCenter(this._scl);
 
     this._rects.forEach((r, i) => {
       r.show(this.ctx);

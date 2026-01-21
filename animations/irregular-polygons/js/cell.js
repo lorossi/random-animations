@@ -1,5 +1,4 @@
-import { XOR128 } from "./xor128.js";
-import { SimplexNoise } from "./engine.js";
+import { XOR128, SimplexNoise } from "./lib.js";
 
 class Cell {
   constructor(size, palette, seed) {
