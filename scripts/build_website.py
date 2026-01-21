@@ -7,40 +7,19 @@ import shutil
 import warnings
 
 from jinja2 import Environment, FileSystemLoader
-from load_animations import AnimationsLoader
+from load_animations import Animation, AnimationsLoader
 from PIL import Image
 
 
-def build_index(randomize: bool = False) -> None:
-    """Create the index.html file from the template."""
-    env = Environment(loader=FileSystemLoader("homepage/"))
-    template = env.get_template("index_template.html")
+def png_to_webp(animation: Animation) -> str:
+    """Convert a PNG image to WEBP format and return the new path."""
+    if animation.preview is None:
+        raise ValueError("Animation does not have a preview image.")
 
-    html = ""
-    default_preview = "./assets/placeholder.png"
+    if not animation.preview.endswith(".png"):
+        raise ValueError("Preview image is not a PNG file.")
 
-    animations = sorted(AnimationsLoader.load_animations())
-    if randomize:
-        random.shuffle(animations)
-
-    output = []
-
-    for animation in animations:
-        preview = animation.preview if animation.preview else default_preview
-        delay = random.uniform(0.1, 1)
-        output.append(
-            {
-                "folder": animation.folder,
-                "preview": preview,
-                "title": animation.title,
-                "delay": delay,
-            }
-        )
-
-    html = template.render(animations=output)
-    with open("homepage/index.html", "w", encoding="utf-8") as f:
-        f.write(html)
-    print("Created index.html file")
+    return animation.preview.replace(".png", ".webp")
 
 
 def build_structure(destination: str) -> None:
@@ -60,28 +39,67 @@ def build_animations(destination: str) -> None:
         if animation.preview is None:
             continue
 
-        img = Image.open(animation.preview)
+        # copy the folder to the destination
+        dest_folder = f"{destination}/animations/{animation.folder}"
         shutil.copytree(
             f"animations/{animation.folder}",
-            f"{destination}/animations/{animation.folder}",
+            dest_folder,
             dirs_exist_ok=True,
         )
+
+        # Load the image
+        img = Image.open(animation.preview)
+        # Check if the image is square
         if abs(1 - (img.height / img.width)) > 0.1:
             warnings.warn(
                 f"Preview image for animation '{animation.folder}' "
                 "is not approximately square.",
             )
 
-        img = img.resize((500, int(500 * img.height / img.width)))
-        dest_folder = f"{destination}/animations/{animation.folder}"
+        # resize the image to have a width of 500 pixels
+        img = img.resize((500, 500))
 
+        # rename the image as wepb
         old_name = os.path.basename(animation.preview)
         new_name = old_name.replace(".png", ".webp")
-
+        # save the image as webp and remove the png
         img.save(f"{dest_folder}/{new_name}", "WEBP")
         os.remove(f"{dest_folder}/{old_name}")
 
     print(f"Copied preview images to {destination}/animations/")
+
+
+def build_index(randomize: bool = False) -> None:
+    """Create the index.html file from the template."""
+    env = Environment(loader=FileSystemLoader("homepage/"))
+    template = env.get_template("index_template.html")
+
+    html = ""
+    default_preview = "./assets/placeholder.png"
+
+    animations = sorted(AnimationsLoader.load_animations())
+    if randomize:
+        random.shuffle(animations)
+
+    output = []
+
+    for animation in animations:
+        # replace the preview with webp version
+        preview = png_to_webp(animation) or default_preview
+        delay = random.uniform(0.1, 1)
+        output.append(
+            {
+                "folder": animation.folder,
+                "preview": preview,
+                "title": animation.title,
+                "delay": delay,
+            }
+        )
+
+    html = template.render(animations=output)
+    with open("homepage/index.html", "w", encoding="utf-8") as f:
+        f.write(html)
+    print("Created index.html file")
 
 
 def build_website(
@@ -93,9 +111,9 @@ def build_website(
     if seed is not None:
         random.seed(seed)
 
-    build_index(randomize=randomize)
     build_structure(destination)
     build_animations(destination)
+    build_index(randomize=randomize)
 
 
 def main() -> None:
