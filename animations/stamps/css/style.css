@@ -11,46 +11,15 @@
 }
 
 body {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  font-size: var(--text-size);
-}
-
-a {
-  user-select: none;
-  color: var(--text-color);
-}
-
-a:visited,
-a:active {
-  color: var(--visited-link-color);
-}
-
-.controls {
-  position: absolute;
-  width: 100vw;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.controls div {
-  margin-left: 1rem;
-  font-size: var(--text-size);
-}
-
-.controls select {
-  padding: 0.2rem;
+  background-color: rgb(240, 240, 240);
 }
 
 .container {
   width: 100vw;
-  height: 90vh;
+  height: 100vh;
 
   display: flex;
   justify-content: center;
-  flex-direction: column;
   align-items: center;
 }
 
@@ -62,29 +31,9 @@ a:active {
   touch-action: none;
 }
 
-.footer {
-  position: absolute;
-  width: 100vw;
-  bottom: 0;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer * {
-  padding: 1rem;
-  font-size: var(--text-size);
-}
-
 @media only screen and (max-width: 600px) {
   #sketch {
     height: 90vw;
     width: 90vw;
-  }
-
-  .footer {
-    justify-content: space-around;
   }
 }
