@@ -56,8 +56,10 @@ def build_structure(destination: str) -> None:
 def build_animations(destination: str) -> None:
     """Copy animations and their preview images to the destination folder."""
     for animation in AnimationsLoader.load_animations():
+        print(f"Processing animation: {animation.folder}")
         if animation.preview is None:
             continue
+
         img = Image.open(animation.preview)
         shutil.copytree(
             f"animations/{animation.folder}",
@@ -72,8 +74,12 @@ def build_animations(destination: str) -> None:
 
         img = img.resize((500, int(500 * img.height / img.width)))
         dest_folder = f"{destination}/animations/{animation.folder}"
-        os.makedirs(dest_folder, exist_ok=True)
-        img.save(f"{dest_folder}/{os.path.basename(animation.preview)}")
+
+        old_name = os.path.basename(animation.preview)
+        new_name = old_name.replace(".png", ".webp")
+
+        img.save(f"{dest_folder}/{new_name}", "WEBP")
+        os.remove(f"{dest_folder}/{old_name}")
 
     print(f"Copied preview images to {destination}/animations/")
 
