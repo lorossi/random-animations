@@ -5,9 +5,8 @@ on:
       - main
     paths:
       - "animations/**"
-      - "css/**"
       - "scripts/**"
-      - "index_template.html"
+      - "homepage/**"
       - ".github/workflows/**"
   workflow_dispatch:
 
@@ -38,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r ./scripts/requirements.txt
 
-      - name: Create index
+      - name: Build website
         run: python3 ./scripts/build_website.py --destination ${{ env.SITE_DIR }} --randomize
 
       - name: Upload static files as artifact
