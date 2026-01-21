@@ -65,7 +65,7 @@ class Animation:
         else:
             preview = previews[0]
 
-        folder = os.path.basename(os.path.normpath(folder))
+        folder = os.path.sep.join(folder.split(os.path.sep)[-2:])
         return Animation(title, description, folder, preview)
 
     def validate_title(self) -> bool:

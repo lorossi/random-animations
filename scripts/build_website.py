@@ -40,9 +40,9 @@ def build_animations(destination: str) -> None:
             continue
 
         # copy the folder to the destination
-        dest_folder = f"{destination}/animations/{animation.folder}"
+        dest_folder = os.path.join(destination, animation.folder)
         shutil.copytree(
-            f"animations/{animation.folder}",
+            animation.folder,
             dest_folder,
             dirs_exist_ok=True,
         )
