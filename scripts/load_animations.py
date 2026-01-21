@@ -14,7 +14,7 @@ class Animation:
 
     title: str
     description: str
-    folder: str
+    path: str
     preview: str | None
 
     def __init__(
@@ -27,7 +27,7 @@ class Animation:
         """Initialize the Animation object."""
         self.title = title
         self.description = description
-        self.folder = folder
+        self.path = folder
         self.preview = preview
 
     @staticmethod
@@ -81,6 +81,11 @@ class Animation:
     def validate_previews(self) -> bool:
         """Check if there is at least one preview image."""
         return self.preview is not None
+
+    @property
+    def folder(self) -> str:
+        """Get the folder name of the animation."""
+        return self.path.split(os.path.sep)[-1]
 
     def __lt__(self, other: Animation) -> bool:
         """Less than comparison based on folder name."""

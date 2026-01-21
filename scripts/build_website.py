@@ -40,9 +40,9 @@ def build_animations(destination: str) -> None:
             continue
 
         # copy the folder to the destination
-        dest_folder = os.path.join(destination, animation.folder)
+        dest_folder = os.path.join(destination, animation.path)
         shutil.copytree(
-            animation.folder,
+            animation.path,
             dest_folder,
             dirs_exist_ok=True,
         )
@@ -52,7 +52,7 @@ def build_animations(destination: str) -> None:
         # Check if the image is square
         if abs(1 - (img.height / img.width)) > 0.1:
             warnings.warn(
-                f"Preview image for animation '{animation.folder}' "
+                f"Preview image for animation '{animation.title}' "
                 "is not approximately square.",
             )
 
@@ -89,7 +89,7 @@ def build_index(destination: str, randomize: bool = False) -> None:
         delay = random.uniform(0.1, 1)
         output.append(
             {
-                "folder": animation.folder,
+                "path": animation.path,
                 "preview": preview,
                 "title": animation.title,
                 "delay": delay,
