@@ -29,6 +29,7 @@ class Sketch extends Engine {
     });
 
     this.background(this._bg);
+    document.body.style.backgroundColor = this._bg.rgba;
 
     this._frame_offset = this.frameCount;
     if (this._recording) {
@@ -42,10 +43,7 @@ class Sketch extends Engine {
     const t = (delta_frame / this._duration) % 1;
 
     this.ctx.save();
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scl, this._scl);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
-
+    this.scaleFromCenter(this._scl);
     this.ctx.strokeStyle = this._fg_color.rgba;
 
     this._circles.forEach((circle) => {
