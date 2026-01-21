@@ -69,7 +69,7 @@ def build_animations(destination: str) -> None:
     print(f"Copied preview images to {destination}/animations/")
 
 
-def build_index(randomize: bool = False) -> None:
+def build_index(destination: str, randomize: bool = False) -> None:
     """Create the index.html file from the template."""
     env = Environment(loader=FileSystemLoader("homepage/"))
     template = env.get_template("index_template.html")
@@ -97,7 +97,7 @@ def build_index(randomize: bool = False) -> None:
         )
 
     html = template.render(animations=output)
-    with open("homepage/index.html", "w", encoding="utf-8") as f:
+    with open(f"{destination}/index.html", "w", encoding="utf-8") as f:
         f.write(html)
     print("Created index.html file")
 
@@ -111,9 +111,9 @@ def build_website(
     if seed is not None:
         random.seed(seed)
 
-    build_structure(destination)
-    build_animations(destination)
-    build_index(randomize=randomize)
+    build_structure(destination=destination)
+    build_animations(destination=destination)
+    build_index(destination=destination, randomize=randomize)
 
 
 def main() -> None:
