@@ -50,9 +50,6 @@ class Folder:
     @property
     def uses_favicon(self) -> bool:
         """Check if the index.html file references favicon.ico."""
-        if not self.has_favicon:
-            return False
-
         full_path = os.path.join(self.path, "index.html")
         with open(full_path, "r", encoding="utf-8") as f:
             content = f.read()
@@ -92,8 +89,7 @@ def main() -> None:
             print(
                 f"Folder '{folder.name}' has embedded font files but does not use them:"
             )
-
-        if not folder.fonts and folder.uses_fonts:
+        elif not folder.fonts and folder.uses_fonts:
             issue_found = True
             print(f"Folder '{folder.name}' uses fonts but has no embedded font files.")
 
@@ -112,6 +108,9 @@ def main() -> None:
         if folder.has_favicon and not folder.uses_favicon:
             issue_found = True
             print(f"Folder '{folder.name}' has favicon.ico but does not use it.")
+        elif not folder.has_favicon and folder.uses_favicon:
+            issue_found = True
+            print(f"Folder '{folder.name}' uses favicon.ico but it is missing.")
 
     if issue_found:
         exit(1)
