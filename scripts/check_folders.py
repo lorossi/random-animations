@@ -116,6 +116,8 @@ def main() -> None:
     if issue_found:
         exit(1)
 
+    print("All folders are correctly set up.")
+
 
 if __name__ == "__main__":
     main()
