@@ -33,6 +33,8 @@ class Sketch extends Engine {
     }
 
     this._correctCanvasSize(1000);
+
+    document.body.style.background = this._bg.rgba;
   }
 
   draw() {

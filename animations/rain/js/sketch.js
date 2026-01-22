@@ -52,6 +52,9 @@ class Sketch extends Engine {
         return u;
       });
 
+    document.body.style.background = this._bg.rgba;
+
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -59,7 +62,8 @@ class Sketch extends Engine {
   }
 
   draw(dt) {
-    const t = (this.frameCount / this._duration) % 1;
+    const delta_frames = this.frameCount - this._frame_offset;
+    const t = (delta_frames / this._duration) % 1;
 
     if (this._clicked && this._drops.length < this._max_drops) {
       for (let i = 0; i < this._drops_per_frame; i++) {
@@ -96,7 +100,7 @@ class Sketch extends Engine {
     // write drops count and fps
     if (this._show_fps) this._showFps();
 
-    if (t == 0 && this.frameCount > 0 && this._recording) {
+    if (t == 0 && delta_frames > 0 && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");
