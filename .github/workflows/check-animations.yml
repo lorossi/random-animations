@@ -26,6 +26,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r ./scripts/requirements.txt
 
-
       - name: Run animation checks
         run: python3 ./scripts/check_animations.py
+
+      - name: Run folder checks
+        run: python3 ./scripts/check_folders.py
