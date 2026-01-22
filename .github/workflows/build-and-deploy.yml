@@ -38,7 +38,7 @@ jobs:
         run: pip install -r ./scripts/requirements.txt
 
       - name: Build website
-        run: python3 ./scripts/build_website.py --destination ${{ env.SITE_DIR }} --randomize
+        run: python3 ./scripts/build_website.py --destination ${{ env.SITE_DIR }} --randomize --seed 875492
 
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
