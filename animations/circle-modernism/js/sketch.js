@@ -14,6 +14,8 @@ class Sketch extends Engine {
     this._scl = 0.95;
     this._texture_scl = 2;
 
+    this._font = "HelveticaNeue";
+
     this._duration = 900;
     this._recording = false;
   }
@@ -31,8 +33,13 @@ class Sketch extends Engine {
 
     this._texture = this._createTexture();
 
+    this._font_loaded = false;
+    document.fonts
+      .load(`12px ${this._font}`)
+      .then(() => (this._font_loaded = true));
+
     document.body.style.backgroundColor = this._bg.rgba;
-    this._frame_started = this.frameCount;
+    this._frame_offset = this.frameCount;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -40,7 +47,12 @@ class Sketch extends Engine {
   }
 
   draw() {
-    const delta_frame = this.frameCount - this._frame_started;
+    if (!this._font_loaded) {
+      this._frame_offset = this.frameCount;
+      return;
+    }
+
+    const delta_frame = this.frameCount - this._frame_offset;
     const t = (delta_frame / this._duration) % 1;
 
     this.ctx.save();

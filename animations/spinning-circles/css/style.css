@@ -1,11 +1,6 @@
 @font-face {
-  font-family: Roboto;
-  src: url(fonts/Roboto-Light.ttf);
-}
-
-@font-face {
   font-family: Hack;
-  src: url(fonts/hack-bold.woff2);
+  src: url(fonts/Hack-Bold.ttf);
 }
 
 * {

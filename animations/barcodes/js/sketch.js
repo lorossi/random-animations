@@ -56,10 +56,7 @@ class Sketch extends Engine {
     this._font_loaded = false;
 
     document.body.style.background = this._bg.hex;
-    document.fonts.load("16px Hack").then(() => {
-      this._font_loaded = true;
-      this.draw();
-    });
+    document.fonts.load("16px Hack").then(() => (this._font_loaded = true));
   }
 
   draw() {
