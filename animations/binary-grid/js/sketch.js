@@ -1,13 +1,4 @@
-import {
-  Color,
-  Engine,
-  GradientPalette,
-  Palette,
-  PaletteFactory,
-  Point,
-  SimplexNoise,
-  XOR128,
-} from "./lib.js";
+import { Engine, PaletteFactory, XOR128 } from "./lib.js";
 
 import { Grid } from "./grid.js";
 
@@ -39,7 +30,7 @@ class Sketch extends Engine {
       this.width,
       this._cell_scl,
       this._palette,
-      this._xor128
+      this._xor128,
     );
 
     this._bg = this._xor128.pick([

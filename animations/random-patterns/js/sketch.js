@@ -33,6 +33,8 @@ class Sketch extends Engine {
         circle_seed,
       );
     });
+
+    document.body.style.backgroundColor = this._bg.rgb;
   }
 
   draw() {

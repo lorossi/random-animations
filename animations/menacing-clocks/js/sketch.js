@@ -1,6 +1,4 @@
-import { Engine, SimplexNoise, Point, Color } from "./engine.js";
-import { XOR128 } from "./xor128.js";
-import { Palette, PaletteFactory } from "./palette-factory.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Clock } from "./clock.js";
 import { MenacingText } from "./menacing_text.js";
 
@@ -131,7 +129,7 @@ class Sketch extends Engine {
       this._fg,
       this._bg,
       this._text_duration,
-      allow_repeat
+      allow_repeat,
     );
   }
 
@@ -139,7 +137,7 @@ class Sketch extends Engine {
     return this._newText(
       this.width / 2,
       this.height / 2,
-      true /* allow repeat */
+      true /* allow repeat */,
     );
   }
 

@@ -1,4 +1,4 @@
-import { SimplexNoise } from "./engine.js";
+import { SimplexNoise } from "./lib.js";
 
 class NoiseDetails {
   constructor(seed, delta_seed_x, delta_seed_y, scale) {
@@ -32,7 +32,7 @@ class Circle {
     return this._noise.noise(
       x * this._noise_details.scale + this._noise_details.delta_seed_x,
       y * this._noise_details.scale + this._noise_details.delta_seed_y,
-      layer
+      layer,
     );
   }
 

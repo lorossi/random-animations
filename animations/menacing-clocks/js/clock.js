@@ -1,4 +1,4 @@
-import { Color } from "./engine.js";
+import { Color } from "./lib.js";
 
 class Clock {
   constructor(x, y, radius, scl) {
@@ -66,7 +66,7 @@ class Clock {
       font_size,
       speed,
       duration,
-      this._fg
+      this._fg,
     );
     this._clock_captions.push(caption);
   }

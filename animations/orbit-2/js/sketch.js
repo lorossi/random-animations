@@ -1,4 +1,4 @@
-import { Engine, SimplexNoise, XOR128, Color } from "./enlibgine.js";
+import { Engine, SimplexNoise, XOR128, Color } from "./lib.js";
 import { Frame } from "./frame.js";
 
 class Sketch extends Engine {
