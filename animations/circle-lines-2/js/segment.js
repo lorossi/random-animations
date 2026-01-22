@@ -35,7 +35,7 @@ class Segment {
     const n = this._noise.noise(
       this._x * this._noise_scl,
       this._y * this._noise_scl,
-      this._seed
+      this._seed,
     );
     const i = Math.floor(((n + 1) / 2) * this._palette.length);
     this._color = this._palette[i];

@@ -50,10 +50,7 @@ class Sketch extends Engine {
 
   draw() {
     this._ctx.save();
-    this._ctx.globalCompositeOperation = "multiply";
-    this._ctx.translate(this.width / 2, this.height / 2);
-    this._ctx.scale(this._scl, this._scl);
-    this._ctx.translate(-this.width / 2, -this.height / 2);
+    this.scaleFromCenter(this._scl);
 
     this._circles.forEach((circle) => {
       circle.update();
