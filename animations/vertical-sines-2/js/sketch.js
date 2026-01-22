@@ -15,7 +15,8 @@ class Sketch extends Engine {
 
     this._bg = new Color(246, 238, 227);
     this._max_sines_ch = 25;
-    this._lines = "WHAT DOES ANYTHING EVEN MEAN TO YOU?".split(" ");
+    this._lines = "WHAT DOES ANYTHING EVEN MEAN TO YOU".split(" ");
+    this._font = "Recoleta";
 
     this._duration = 300;
     this._recording = false;
@@ -60,7 +61,9 @@ class Sketch extends Engine {
     document.body.style.background = this._bg.rgba;
 
     this._font_loaded = false;
-    document.fonts.load("16px Recoleta").then(() => (this._font_loaded = true));
+    document.fonts
+      .load(`16px ${this._font}`)
+      .then(() => (this._font_loaded = true));
 
     this._frame_offset = this.frameCount;
     if (this._recording) {

@@ -1,13 +1,13 @@
 import { Color } from "./lib.js";
 
 class Sine {
-  constructor(x, y, width, height) {
+  constructor(x, y, width, height, font) {
     this._x = x;
     this._y = y;
     this._width = width;
     this._height = height;
+    this._font = font;
     this._text_fill = Color.fromMonochrome(64);
-
     this._line_scl = 1;
   }
 
@@ -32,7 +32,7 @@ class Sine {
 
     // calculate the length of the text
     const ctx = document.createElement("canvas").getContext("2d");
-    ctx.font = `${this._width}px Recoleta`;
+    ctx.font = `${this._width}px ${this._font}`;
     const ex = ctx.measureText("x").width;
     this._text_width = ctx.measureText(this._text).width + ex / 8;
 
