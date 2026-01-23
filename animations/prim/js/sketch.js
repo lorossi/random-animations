@@ -5,17 +5,17 @@ class Sketch extends Engine {
     this._recording = false;
 
     this._seed = null;
-    this._num = 250;
-    this._r = 2;
-    this._scl = 0.9;
+    this._num = 500;
+    this._r = 4;
+    this._line_w = 3;
+    this._scl = 0.95;
 
     this._bg = Color.fromMonochrome(15);
     this._fg = Color.fromMonochrome(245);
   }
 
   setup() {
-    if (this._seed == null) this._seed = Date.now();
-
+    this._seed = new Date().getTime();
     this._random = new XOR128(this._seed);
 
     this._points = Array(this._num)
@@ -30,9 +30,10 @@ class Sketch extends Engine {
         return new Point(x, y);
       });
 
-    this._tree = prim(this._points, this.width, this.height);
+    this._tree = prim(this._points, this._random);
     this._edges = [];
     this.ctx.fillStyle = this._fg.rgba;
+    this.ctx.lineWidth = this._line_w;
 
     document.body.style.backgroundColor = this._bg.rgba;
 
@@ -44,21 +45,7 @@ class Sketch extends Engine {
 
   draw() {
     const e = this._tree.next();
-    this._edges.push(e);
-    if (!e.done) {
-      const u = e.value.u;
-      const v = e.value.v;
-
-      this.ctx.save();
-      this.ctx.strokeStyle = this._fg.rgba;
-      this.ctx.beginPath();
-      this.ctx.moveTo(u.x, u.y);
-      this.ctx.lineTo(v.x, v.y);
-      this.ctx.stroke();
-      this.ctx.restore();
-    } else {
-      this.noLoop();
-    }
+    if (!e.done) this._edges.push(e);
 
     this.ctx.save();
     this.background(this._bg);
@@ -70,7 +57,8 @@ class Sketch extends Engine {
     });
 
     this._edges.forEach((edge) => {
-      if (edge.done) return;
+      if (!edge.value) return;
+
       const u = edge.value.u;
       const v = edge.value.v;
 
@@ -95,19 +83,14 @@ class Sketch extends Engine {
 
   click() {
     this.setup();
-    this.loop();
   }
 }
 
-const prim = function* (points, width, height) {
+const prim = function* (points, random) {
   let S = new Set();
   let T = new Set();
 
-  const manhattan = (u) =>
-    Math.abs(u.x - width / 2) + Math.abs(u.y - height / 2);
-  const first = points.reduce((a, b) => {
-    return manhattan(a) < manhattan(b) ? a : b;
-  });
+  const first = random.pick(points);
 
   const p = [...points];
   p.splice(p.indexOf(first), 1);
@@ -116,10 +99,11 @@ const prim = function* (points, width, height) {
   const N = new Set(p);
   const n = points.length;
 
-  while (T.size < n - 2) {
+  while (T.size < n - 1) {
     const [u, v, d] = closest(S, N);
     const n = { u: u.copy(), v: v.copy(), d: d };
     S.add(v.copy());
+    N.delete(v);
     T.add(n);
     yield n;
   }
@@ -128,19 +112,15 @@ const prim = function* (points, width, height) {
 };
 
 const closest = (S, N) => {
-  const difference = (A, B) => {
-    return [...A].filter((u) => [...B].every((v) => !u.equals(v)));
-  };
-
   let found = [];
   let min_dist = Infinity;
 
   S.forEach((u) => {
-    difference(N, S).forEach((v) => {
+    N.forEach((v) => {
       const d = u.distance(v);
       if (d < min_dist) {
         min_dist = d;
-        found = [u.copy(), v.copy(), d];
+        found = [u, v, d];
       }
     });
   });

@@ -28,6 +28,7 @@ class Sketch extends Engine {
       return cell;
     });
 
+    this.background(this._bg);
     this._font_loaded = false;
     document.fonts.load("10pt Ronda").then(() => (this._font_loaded = true));
 

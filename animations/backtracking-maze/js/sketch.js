@@ -44,13 +44,14 @@ class Sketch extends Engine {
 
     this._correctCanvasSize(1000);
 
+    document.body.style.backgroundColor = this._bg_color.hex;
     if (this._recording) this.startRecording();
   }
 
   draw() {
     // draw grid
     this.ctx.save();
-    this.background(this._bg_color.rgb);
+    this.background(this._bg_color);
     this._drawMaze();
     this.ctx.restore();
 

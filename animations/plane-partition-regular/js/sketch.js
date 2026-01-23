@@ -32,6 +32,7 @@ class Sketch extends Engine {
     ];
     this._ended = false;
 
+    document.body.style.backgroundColor = this._bg.rgba;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");

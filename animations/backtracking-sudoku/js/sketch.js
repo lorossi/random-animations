@@ -6,10 +6,12 @@ class Sketch extends Engine {
     this._scl = 0.9;
     this._bg = Color.fromMonochrome(245);
     this._text_color = Color.fromMonochrome(30);
-    this._solution_color = Color.fromRGB(139, 0, 0);
-    this._solution_bg = Color.fromRGB(255, 0, 0, 0.25);
+    this._tentative_color = Color.fromRGB(139, 0, 0);
+    this._tentative_background = Color.fromRGB(255, 0, 0, 0.25);
+    this._solution_background = Color.fromRGB(0, 128, 0, 0.25);
+    this._font = "RobotoMono";
 
-    this._instant_solve = false;
+    this._instant_solve = false; // set to true to instantly solve the sudoku without animation
   }
 
   setup() {
@@ -17,19 +19,25 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(this._seed);
 
     this._sudoku = SudokuLoader.loadSudoku(this._xor128);
+    this._original_sudoku = this._sudoku.map((row) => row.slice());
     this._solved = false;
     this._tries = 0;
     this._stack = [];
+
+    this._font_loaded = false;
+    document.fonts
+      .load(`12px ${this._font}`)
+      .then(() => (this._font_loaded = true));
   }
 
   draw() {
+    if (!this._font_loaded) return;
+
     this.ctx.save();
     this.background(this._bg);
 
     this.ctx.save();
-    this.ctx.translate(this.width / 2, this.height / 2);
-    this.ctx.scale(this._scl, this._scl);
-    this.ctx.translate(-this.width / 2, -this.height / 2);
+    this.scaleFromCenter(this._scl);
     this._drawSudoku();
     this.ctx.restore();
 
@@ -110,14 +118,20 @@ class Sketch extends Engine {
           !this._solved && this._stack.some(([sx, sy]) => sx == x && sy == y);
         // if the number is in the stack, color it differently
         if (in_stack) {
-          this.ctx.fillStyle = this._solution_color.rgba;
-        } else this.ctx.fillStyle = this._text_color.rgba;
+          this.ctx.fillStyle = this._tentative_color.rgba;
+        } else {
+          this.ctx.fillStyle = this._text_color.rgba;
+        }
 
-        this.ctx.fillText(n, (x + 0.5) * box_scl, (y + 0.5) * box_scl);
+        this.ctx.fillText(n, (x + 0.5) * box_scl, (y + 0.525) * box_scl);
 
-        // if the number is in the stack, color the cell differently
-        if (in_stack) {
-          this.ctx.fillStyle = this._solution_bg.rgba;
+        // if the number is in the stack, or the sudoku is solved and the cell is part of the missing numbers,
+        // color the cell differently
+        if (this._solved && this._original_sudoku[y][x] == 0) {
+          this.ctx.fillStyle = this._solution_background.rgba;
+          this.ctx.fillRect(x * box_scl, y * box_scl, box_scl, box_scl);
+        } else if (in_stack) {
+          this.ctx.fillStyle = this._tentative_background.rgba;
           this.ctx.fillRect(x * box_scl, y * box_scl, box_scl, box_scl);
         }
       }
