@@ -1,10 +1,8 @@
-import { Engine, Color } from "./lib.js";
+import { Engine, Color, XOR128 } from "./lib.js";
 import { Sequence } from "./sequence.js";
 
 class Sketch extends Engine {
   preload() {
-    this._n = 15;
-    this._start_n = 5;
     this._r = 2;
     this._alpha = 0.25;
     this._scl = 0.95;
@@ -16,6 +14,12 @@ class Sketch extends Engine {
   }
 
   setup() {
+    this._seed = new Date().getTime();
+    this._xor128 = new XOR128(this._seed);
+
+    this._n = this._xor128.random_int(12, 36);
+    this._start_n = this._xor128.random_int(3, 6);
+
     this._sequences = new Array(this._n)
       .fill(0)
       .map(
