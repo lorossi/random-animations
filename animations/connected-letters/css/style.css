@@ -1,0 +1,39 @@
+@font-face {
+  font-family: Pixelify;
+  src: url(PixelifySans-Medium.ttf);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: Pixelify;
+}
+
+body {
+  background-color: rgb(240, 240, 240);
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#sketch {
+  height: 90vh;
+  width: 90vh;
+  aspect-ratio: 1;
+
+  touch-action: none;
+}
+
+@media only screen and (max-width: 600px) {
+  #sketch {
+    height: 90vw;
+    width: 90vw;
+  }
+}
