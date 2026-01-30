@@ -7,7 +7,7 @@ import shutil
 import warnings
 
 from jinja2 import Environment, FileSystemLoader
-from scripts.load_animations import Animation, AnimationsLoader
+from load_animations import Animation, AnimationsLoader
 from PIL import Image
 
 
