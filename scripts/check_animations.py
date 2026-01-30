@@ -1,6 +1,4 @@
-"""This script checks the animations for required files and valid metadata."""
-
-from __future__ import annotations
+"""This script checks for issues in the animation folders."""
 
 from sys import exit
 
@@ -9,35 +7,16 @@ from load_animations import AnimationsLoader
 
 def main() -> None:
     """Script entry point."""
-    all_valid = True
-    animations = AnimationsLoader.load_animations()
+    issue_found = False
+    folders = AnimationsLoader.load_animations()
+    for folder in folders:
+        if folder.check_issues():
+            issue_found = True
 
-    for animation in animations:
-        if not animation.validate_title():
-            print(
-                f"Animation '{animation.folder}' "
-                f"has an invalid title: '{animation.title}'",
-            )
-            all_valid = False
-
-        if not animation.validate_description():
-            print(
-                f"Animation '{animation.folder}' ",
-                f"has an invalid description: '{animation.description}'",
-            )
-            all_valid = False
-
-        if not animation.validate_previews():
-            print(
-                f"Animation '{animation.folder}' does not have any preview images.",
-            )
-            all_valid = False
-
-    if all_valid:
-        print("All animations are valid!")
-    else:
-        print("Some animations have invalid metadata.")
+    if issue_found:
         exit(1)
+
+    print("All folders are correctly set up.")
 
 
 if __name__ == "__main__":
