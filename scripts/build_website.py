@@ -7,17 +7,23 @@ import shutil
 import warnings
 
 from jinja2 import Environment, FileSystemLoader
-from load_animations import Animation, AnimationsLoader
+from scripts.load_animations import Animation, AnimationsLoader
 from PIL import Image
 
 
-def png_to_webp(animation: Animation) -> str:
+def png_to_webp(animation: Animation) -> str | None:
     """Convert a PNG image to WEBP format and return the new path."""
     if animation.preview is None:
-        raise ValueError("Animation does not have a preview image.")
+        warnings.warn(
+            f"Animation '{animation.title}' does not have a preview image.",
+        )
+        return None
 
     if not animation.preview.endswith(".png"):
-        raise ValueError("Preview image is not a PNG file.")
+        warnings.warn(
+            f"Preview image for animation '{animation.title}' is not a PNG.",
+        )
+        return None
 
     return animation.preview.replace(".png", ".webp")
 
@@ -35,7 +41,7 @@ def build_structure(destination: str) -> None:
 def build_animations(destination: str) -> None:
     """Copy animations and their preview images to the destination folder."""
     for animation in AnimationsLoader.load_animations():
-        print(f"Processing animation: {animation.folder}")
+        print(f"Processing animation: {animation.title}")
         if animation.preview is None:
             continue
 
@@ -77,7 +83,7 @@ def build_index(destination: str, randomize: bool = False) -> None:
     html = ""
     default_preview = "./assets/placeholder.png"
 
-    animations = sorted(AnimationsLoader.load_animations())
+    animations = list(AnimationsLoader.load_animations())
     if randomize:
         random.shuffle(animations)
 
