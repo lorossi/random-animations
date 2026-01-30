@@ -2,7 +2,7 @@
 
 from sys import exit
 
-from scripts.load_animations import AnimationsLoader
+from load_animations import AnimationsLoader
 
 
 def main() -> None:
