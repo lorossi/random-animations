@@ -1,4 +1,4 @@
-"""This script checks for folders with embedded font files and whether they use them."""
+"""This script checks for issues in the animation folders."""
 
 from sys import exit
 
