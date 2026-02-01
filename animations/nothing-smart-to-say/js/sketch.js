@@ -10,6 +10,7 @@ class Sketch extends Engine {
     this._black = Color.fromMonochrome(15);
 
     this._line = "NOTHING SMART TO SAY";
+    this._font = "Helvetica";
     this._duration = 120;
   }
 
@@ -23,11 +24,20 @@ class Sketch extends Engine {
     );
 
     document.body.style.backgroundColor = this._bg.rgb;
+    this._font_loaded = false;
+    document.fonts
+      .load(`12px ${this._font}`)
+      .then(() => (this._font_loaded = true));
 
     this._frame_offset = this.frameCount;
   }
 
   draw() {
+    if (!this._font_loaded) {
+      this._frame_offset = this.frameCount;
+      return;
+    }
+
     const delta_frames = this.frameCount - this._frame_offset;
     const t = (delta_frames / this._duration) % 1;
 
