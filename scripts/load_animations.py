@@ -18,30 +18,28 @@ class Animation:
         self.path = path
 
     @cached_property
-    def uses_fonts(self) -> bool:
-        """Check if the folder uses embedded font files in its animation code."""
-        full_path = os.path.join(self.path, "**", "*.js")
-        for animation_file in glob(full_path, recursive=True):
-            with open(animation_file, "r", encoding="utf-8") as f:
-                content = f.read()
-                if any(keyword in content for keyword in ["fillText", "strokeText"]):
-                    return True
-        return False
-
-    @cached_property
     def has_index(self) -> bool:
         """Check if the folder contains an index.html file."""
         index_path = os.path.join(self.path, "index.html")
         return os.path.isfile(index_path)
 
-    @cached_property
-    def has_style(self) -> bool:
+    @property
+    def has_js(self) -> bool:
+        """Check if the folder contains a js folder."""
+        return len(self.js_files) > 0
+
+    @property
+    def has_css(self) -> bool:
         """Check if the folder contains a css folder."""
-        css_path = os.path.join(self.path, "css")
-        return os.path.isdir(css_path)
+        return len(self.css_files) > 0
+
+    @property
+    def has_fonts(self) -> bool:
+        """Check if the folder contains any font files."""
+        return len(self.font_files) > 0
 
     @cached_property
-    def fonts(self) -> list[str]:
+    def font_files(self) -> list[str]:
         """Get a list of embedded font files in the folder."""
         font_extensions = ["*.ttf", "*.otf", "*.woff", "*.woff2"]
         font_files = []
@@ -49,7 +47,20 @@ class Animation:
             full_path = os.path.join(self.path, "**", font_ext)
             found_files = glob(full_path, recursive=True)
             font_files.extend(found_files)
+
         return font_files
+
+    @cached_property
+    def css_files(self) -> list[str]:
+        """Get a list of css files in the folder."""
+        full_path = os.path.join(self.path, "**", "*.css")
+        return glob(full_path, recursive=True)
+
+    @cached_property
+    def js_files(self) -> list[str]:
+        """Get a list of js files in the folder."""
+        full_path = os.path.join(self.path, "**", "*.js")
+        return glob(full_path, recursive=True)
 
     @cached_property
     def name(self) -> str:
@@ -62,6 +73,7 @@ class Animation:
         """Get the title of the animation in the folder."""
         if not self.has_index:
             return None
+
         index_path = os.path.join(self.path, "index.html")
         with open(index_path, "r", encoding="utf-8") as f:
             content = f.read()
@@ -75,6 +87,7 @@ class Animation:
         """Get the description of the animation in the folder."""
         if not self.has_index:
             return None
+
         index_path = os.path.join(self.path, "index.html")
         with open(index_path, "r", encoding="utf-8") as f:
             content = f.read()
@@ -90,11 +103,13 @@ class Animation:
     def preview(self) -> str | None:
         """Get the preview image of the animation in the folder."""
         previews = list(glob(os.path.join(self.path, "*.png")))
+
         if len(previews) == 0:
             warnings.warn(
                 f"Folder '{self.name}' does not have any preview images.",
             )
             return None
+
         if len(previews) > 1:
             previews.sort()
             warnings.warn(
@@ -103,31 +118,6 @@ class Animation:
             )
 
         return previews[0]
-
-    @cached_property
-    def style_uses_fonts(self) -> bool:
-        """Check if the css files reference any font files."""
-        if not self.has_style:
-            return False
-        if not self.fonts:
-            return False
-
-        css_path = os.path.join(self.path, "css", "**", "*.css")
-        for css_file in glob(css_path, recursive=True):
-            with open(css_file, "r", encoding="utf-8") as f:
-                content = f.read()
-                for font_file in self.fonts:
-                    font_name = os.path.basename(font_file)
-                    if font_name in content:
-                        return True
-
-        return False
-
-    @cached_property
-    def has_js(self) -> bool:
-        """Check if the folder contains a js folder."""
-        js_path = os.path.join(self.path, "js")
-        return os.path.isdir(js_path)
 
     @cached_property
     def has_favicon(self) -> bool:
@@ -146,40 +136,110 @@ class Animation:
 
         return False
 
-    def validate_index(self) -> bool:
+    def _css_font_map(
+        self,
+        css_path: str,
+    ) -> dict[str, str]:
+        """Return the font file path if found in the css file."""
+        with open(css_path, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        pattern = re.compile(
+            r"@font-face\s*\{[^}]*font-family:\s*([^;]+);[^}]*"
+            r"src:\s*url\(([^)]+)\);[^}]*\}",
+            re.IGNORECASE,
+        )
+        matches = pattern.findall(content)
+
+        font_map = {}
+        for match in matches:
+            font_family = match[0].strip()
+            font_path = match[1].strip()
+
+            css_folder = os.path.dirname(css_path)
+
+            full_relative_path = os.path.join(css_folder, font_path)
+            font_path = os.path.normpath(full_relative_path)
+
+            font_map[font_family] = font_path
+
+        return font_map
+
+    @cached_property
+    def css_fonts_map(self) -> dict[str, str]:
+        """Get a map of font file name (css) to font path."""
+        font_map = {}
+        for css_file in self.css_files:
+            font_map.update(self._css_font_map(css_file))
+
+        return font_map
+
+    @cached_property
+    def css_fonts(self) -> list[str]:
+        """Get a map of font file name (css) to font path."""
+        fonts = []
+        for css_file in self.css_files:
+            for font_path in self._css_font_map(css_file).values():
+                fonts.append(font_path)
+
+        return fonts
+
+    def validate_index(self) -> tuple[bool, str | None, str | None]:
         """Check if the index.html file has valid title and description."""
+        if not self.has_index:
+            return False, None, None
+
         clear_folder = self.name.strip().upper().replace("-", " ")
-        return clear_folder == self.title and clear_folder == self.description
+        valid = clear_folder == self.title and clear_folder == self.description
+
+        return valid, self.title, self.description
+
+    def validate_css_fonts(self) -> tuple[list[str], list[str]]:
+        """Check if all font files are referenced in the css files."""
+        unused_fonts = []
+        nonexisting_fonts = []
+        for font in self.font_files:
+            if font not in self.css_fonts:
+                unused_fonts.append(font)
+
+        for css_font in self.css_fonts:
+            if css_font not in self.font_files:
+                nonexisting_fonts.append(css_font)
+
+        return unused_fonts, nonexisting_fonts
+
+    def validate_js_fonts(self) -> list[str]:
+        """Check if all font files are referenced in the js files."""
+        used_fonts = {font: False for font in self.css_fonts_map.keys()}
+
+        for js_file in self.js_files:
+            with open(js_file, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            for font_family in used_fonts.keys():
+                if font_family in content:
+                    used_fonts[font_family] = True
+
+        return list(font for font, used in used_fonts.items() if not used)
 
     def check_issues(self) -> bool:
         """Check if the folder has any issues with fonts or structure."""
         issues_found = False
+
         if not self.has_index:
             print(f"Folder '{self.name}' is missing index.html file.")
             issues_found = True
-        if self.has_index and not self.validate_index():
-            issues_found = True
-            print(
-                f"Folder '{self.name}' has invalid title or description in index.html."
-            )
+        else:
+            valid, title, description = self.validate_index()
+            if not valid:
+                issues_found = True
+                print(
+                    f"Folder '{self.name}' has invalid title or description in index.html: "
+                    f"title='{title}', description='{description}'",
+                )
 
-        if self.fonts and not self.uses_fonts:
-            print(
-                f"Folder '{self.name}' has embedded font files but does not use them."
-            )
-            issues_found = True
-        if not self.fonts and self.uses_fonts:
-            print(f"Folder '{self.name}' uses fonts but has no embedded font files.")
-            issues_found = True
-
-        if not self.has_style:
+        if not self.has_css:
             print(f"Folder '{self.name}' is missing css folder.")
-            issues_found = True
-
-        if self.fonts and not self.style_uses_fonts:
-            print(
-                f"Folder '{self.name}' has embedded font files but css does not reference them."
-            )
             issues_found = True
 
         if not self.has_js:
@@ -197,6 +257,25 @@ class Animation:
         if not self.preview:
             print(f"Folder '{self.name}' is missing preview image.")
             issues_found = True
+
+        if self.has_fonts:
+            unused_fonts, nonexisting_fonts = self.validate_css_fonts()
+            for font in unused_fonts:
+                print(f"Folder '{self.name}' has unused font file: '{font}'")
+                issues_found = True
+            for css_font in nonexisting_fonts:
+                print(
+                    f"Folder '{self.name}' references non-existing font file in css: "
+                    f"'{css_font}'",
+                )
+                issues_found = True
+
+            js_unused_fonts = self.validate_js_fonts()
+            for font_family in js_unused_fonts:
+                print(
+                    f"Folder '{self.name}' has font '{font_family}' not used in js files.",
+                )
+                issues_found = True
 
         return issues_found
 
