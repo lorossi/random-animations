@@ -25,6 +25,8 @@ class Sketch extends Engine {
     this._palette_factory = PaletteFactory.fromHEXArray(this._hex_arrays);
     this._palette = this._palette_factory.getRandomPalette(this._xor128, false);
     this._delta_angle = Math.PI / this._xor128.random_int(8, 64);
+    this._rotation = this._xor128.random_int(4) * (Math.PI / 2);
+    this._scale = new Array(2).fill(0).map(() => this._xor128.pick([-1, 1]));
 
     this._n = this._min_n;
     this._sequences = new Array();
@@ -38,6 +40,11 @@ class Sketch extends Engine {
     const t = (delta_frame / this._duration) % 1;
 
     this.ctx.save();
+
+    this.ctx.translate(this.width / 2, this.height / 2);
+    this.ctx.scale(this._scale[0], this._scale[1]);
+    this.ctx.rotate(this._rotation);
+    this.ctx.translate(-this.width / 2, -this.height / 2);
 
     this.ctx.translate(this.width * 0.15, this.height);
 
