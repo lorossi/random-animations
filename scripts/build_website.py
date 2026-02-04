@@ -2,124 +2,130 @@
 
 import argparse
 import os
-import random
 import shutil
 import warnings
+from datetime import datetime
+from random import Random
 
 from jinja2 import Environment, FileSystemLoader
 from load_animations import Animation, AnimationsLoader
 from PIL import Image
 
 
-def png_to_webp(animation: Animation) -> str | None:
-    """Convert a PNG image to WEBP format and return the new path."""
-    if animation.preview is None:
-        warnings.warn(
-            f"Animation '{animation.title}' does not have a preview image.",
-        )
-        return None
+class WebsiteBuilder:
+    """Class to build the website."""
 
-    if not animation.preview.endswith(".png"):
-        warnings.warn(
-            f"Preview image for animation '{animation.title}' is not a PNG.",
-        )
-        return None
+    def __init__(self, destination: str, randomize: bool, seed: int | None) -> None:
+        """Initialize the WebsiteBuilder."""
+        self._destination = destination
+        self._randomize = randomize
 
-    return animation.preview.replace(".png", ".webp")
+        if seed is None:
+            seed = int(datetime.now().timestamp() * 1000)
 
+        self._seed = seed
+        self._random = Random(seed)
 
-def build_structure(destination: str) -> None:
-    """Create the website in the dest/ folder."""
-    if not os.path.exists(destination):
-        os.mkdir(destination)
-
-    shutil.copytree("homepage", f"{destination}/", dirs_exist_ok=True)
-    os.remove(f"{destination}/index_template.html")
-    print(f"Created website in {destination}/ folder")
-
-
-def build_animations(destination: str) -> None:
-    """Copy animations and their preview images to the destination folder."""
-    for animation in AnimationsLoader.load_animations():
-        print(f"Processing animation: {animation.title}")
+    def _png_to_webp(self, animation: Animation) -> str | None:
+        """Get the webp version of the preview image if it exists."""
         if animation.preview is None:
-            continue
+            return None
 
-        # copy the folder to the destination
-        dest_folder = os.path.join(destination, animation.path)
+        webp_preview = animation.preview.replace(".png", ".webp")
+        webp_path = os.path.join(
+            self._destination, animation.path, os.path.basename(webp_preview)
+        )
+        if os.path.isfile(webp_path):
+            return webp_path.replace(self._destination + "/", "")
+
+        return None
+
+    def build_structure(self) -> None:
+        """Create the website in the dest/ folder."""
+        if not os.path.exists(self._destination):
+            os.mkdir(self._destination)
+
         shutil.copytree(
-            animation.path,
-            dest_folder,
+            "homepage",
+            f"{self._destination}/",
             dirs_exist_ok=True,
         )
+        os.remove(f"{self._destination}/index_template.html")
+        print(f"Created website in {self._destination}/ folder")
 
-        # Load the image
-        img = Image.open(animation.preview)
-        # Check if the image is square
-        if abs(1 - (img.height / img.width)) > 0.1:
-            warnings.warn(
-                f"Preview image for animation '{animation.title}' "
-                "is not approximately square.",
+    def build_animations(self) -> None:
+        """Copy animations and their preview images to the destination folder."""
+        for animation in AnimationsLoader.load_animations():
+            print(f"Processing animation: {animation.title}")
+            if animation.preview is None:
+                continue
+
+            # copy the folder to the destination
+            dest_folder = os.path.join(self._destination, animation.path)
+            shutil.copytree(
+                animation.path,
+                dest_folder,
+                dirs_exist_ok=True,
             )
 
-        # resize the image to have a width of 500 pixels
-        img = img.resize((500, 500))
+            # Load the image
+            img = Image.open(animation.preview)
+            # Check if the image is square
+            if abs(1 - (img.height / img.width)) > 0.1:
+                warnings.warn(
+                    f"Preview image for animation '{animation.title}' "
+                    "is not approximately square.",
+                )
 
-        # rename the image as wepb
-        old_name = os.path.basename(animation.preview)
-        new_name = old_name.replace(".png", ".webp")
-        # save the image as webp and remove the png
-        img.save(f"{dest_folder}/{new_name}", "WEBP")
-        os.remove(f"{dest_folder}/{old_name}")
+            # resize the image to have a width of 500 pixels
+            img = img.resize((500, 500))
 
-    print(f"Copied preview images to {destination}/animations/")
+            # rename the image as wepb
+            old_name = os.path.basename(animation.preview)
+            new_name = old_name.replace(".png", ".webp")
+            # save the image as webp and remove the png
+            img.save(f"{dest_folder}/{new_name}", "WEBP")
+            os.remove(f"{dest_folder}/{old_name}")
 
+        print(f"Copied preview images to {self._destination}/animations/")
 
-def build_index(destination: str, randomize: bool = False) -> None:
-    """Create the index.html file from the template."""
-    env = Environment(loader=FileSystemLoader("homepage/"))
-    template = env.get_template("index_template.html")
+    def build_index(self) -> None:
+        """Create the index.html file from the template."""
+        env = Environment(loader=FileSystemLoader("homepage/"))
+        template = env.get_template("index_template.html")
 
-    html = ""
-    default_preview = "./assets/placeholder.png"
+        html = ""
+        default_preview = "./assets/placeholder.png"
 
-    animations = list(AnimationsLoader.load_animations())
-    if randomize:
-        random.shuffle(animations)
+        animations = list(AnimationsLoader.load_animations())
+        if self._randomize:
+            self._random.shuffle(animations)
 
-    output = []
+        output = []
 
-    for animation in animations:
-        # replace the preview with webp version
-        preview = png_to_webp(animation) or default_preview
-        delay = random.uniform(0.1, 1)
-        output.append(
-            {
-                "path": animation.path,
-                "preview": preview,
-                "title": animation.title,
-                "delay": delay,
-            }
-        )
+        for animation in animations:
+            # replace the preview with webp version
+            preview = self._png_to_webp(animation) or default_preview
+            delay = self._random.uniform(0.1, 1)
+            output.append(
+                {
+                    "path": animation.path,
+                    "preview": preview,
+                    "title": animation.title,
+                    "delay": delay,
+                }
+            )
 
-    html = template.render(animations=output)
-    with open(f"{destination}/index.html", "w", encoding="utf-8") as f:
-        f.write(html)
-    print("Created index.html file")
+        html = template.render(animations=output)
+        with open(f"{self._destination}/index.html", "w", encoding="utf-8") as f:
+            f.write(html)
+        print("Created index.html file")
 
-
-def build_website(
-    destination: str = "dist",
-    randomize: bool = False,
-    seed: int | None = None,
-) -> None:
-    """Build the complete website in the destination folder."""
-    if seed is not None:
-        random.seed(seed)
-
-    build_structure(destination=destination)
-    build_animations(destination=destination)
-    build_index(destination=destination, randomize=randomize)
+    def build(self) -> None:
+        """Build the complete website."""
+        self.build_structure()
+        self.build_animations()
+        self.build_index()
 
 
 def main() -> None:
@@ -146,7 +152,13 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    build_website(args.destination, args.randomize, args.seed)
+    builder = WebsiteBuilder(
+        destination=args.destination,
+        randomize=args.randomize,
+        seed=args.seed,
+    )
+
+    builder.build()
 
 
 if __name__ == "__main__":
