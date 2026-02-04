@@ -1,13 +1,7 @@
-@font-face {
-  font-family: Roboto;
-  src: url(Roboto-Light.ttf);
-}
-
 * {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  font-family: Roboto;
 }
 
 body {
