@@ -38,6 +38,11 @@ class Animation:
         """Check if the folder contains any font files."""
         return len(self.font_files) > 0
 
+    @property
+    def has_subfolders(self) -> bool:
+        """Check if the folder contains any subfolders."""
+        return len(self.subfolders) > 0
+
     @cached_property
     def font_files(self) -> list[str]:
         """Get a list of embedded font files in the folder."""
@@ -49,6 +54,12 @@ class Animation:
             font_files.extend(found_files)
 
         return font_files
+
+    @cached_property
+    def subfolders(self) -> list[str]:
+        """Get a list of subfolders in the folder."""
+        full_path = os.path.join(self.path, "*")
+        return [f for f in glob(full_path) if os.path.isdir(f)]
 
     @cached_property
     def css_files(self) -> list[str]:
@@ -184,15 +195,22 @@ class Animation:
 
         return fonts
 
-    def validate_index(self) -> tuple[bool, str | None, str | None]:
-        """Check if the index.html file has valid title and description."""
-        if not self.has_index:
-            return False, None, None
+    @property
+    def valid_title_description(self) -> str | None:
+        """Return the valid title and description."""
+        return self.name.strip().upper().replace("-", " ")
 
-        clear_folder = self.name.strip().upper().replace("-", " ")
-        valid = clear_folder == self.title and clear_folder == self.description
+    def validate_title(self) -> bool:
+        """Check if the title in index.html is valid."""
+        if self.title is None:
+            return False
+        return self.title.strip() == self.valid_title_description
 
-        return valid, self.title, self.description
+    def validate_description(self) -> bool:
+        """Check if the description in index.html is valid."""
+        if self.description is None:
+            return False
+        return self.description.strip() == self.valid_title_description
 
     def validate_css_fonts(self) -> tuple[list[str], list[str]]:
         """Check if all font files are referenced in the css files."""
@@ -230,13 +248,21 @@ class Animation:
             print(f"Folder '{self.name}' is missing index.html file.")
             issues_found = True
         else:
-            valid, title, description = self.validate_index()
-            if not valid:
-                issues_found = True
+            if not self.validate_title():
                 print(
-                    f"Folder '{self.name}' has invalid title or description in index.html: "
-                    f"title='{title}', description='{description}'",
+                    f"Folder '{self.name}' has invalid title. "
+                    f"Expected: '{self.valid_title_description}', "
+                    f"Found: '{self.title}'",
                 )
+                issues_found = True
+
+            if not self.validate_description():
+                print(
+                    f"Folder '{self.name}' has invalid description. "
+                    f"Expected: '{self.valid_title_description}', "
+                    f"Found: '{self.description}'",
+                )
+                issues_found = True
 
         if not self.has_css:
             print(f"Folder '{self.name}' is missing css folder.")
@@ -276,6 +302,14 @@ class Animation:
                     f"Folder '{self.name}' has font '{font_family}' not used in js files.",
                 )
                 issues_found = True
+
+        if self.has_subfolders:
+            for subfolder in self.subfolders:
+                if os.path.basename(subfolder) not in ["css", "js"]:
+                    print(
+                        f"Folder '{self.name}' has unexpected subfolder: '{subfolder}'"
+                    )
+                    issues_found = True
 
         return issues_found
 
