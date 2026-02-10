@@ -61,56 +61,6 @@ class Grid {
     return neighbors;
   }
 
-  _check_path_exists() {
-    const start_i = this._point_to_i(this._start);
-    const goal_i = this._point_to_i(this._goal);
-
-    // Check if start or goal are on walls
-    if (this._cost[start_i] === Infinity) {
-      console.error("Start is on a wall!");
-      return false;
-    }
-    if (this._cost[goal_i] === Infinity) {
-      console.error("Goal is on a wall!");
-      return false;
-    }
-
-    let stack = [start_i];
-    const visited = new Set();
-    const added_to_stack = new Set([start_i]); // Track what's been added to stack
-
-    while (stack.length > 0) {
-      const current_i = stack.pop();
-
-      if (visited.has(current_i)) continue;
-      visited.add(current_i);
-
-      if (current_i === goal_i) {
-        console.log("Path found!");
-        return true;
-      }
-
-      const neighbors = this._get_neighbors(current_i);
-      for (const neighbor_i of neighbors) {
-        if (this._cost[neighbor_i] === Infinity) continue;
-        if (added_to_stack.has(neighbor_i)) continue; // Don't add same node twice
-        stack.push(neighbor_i);
-        added_to_stack.add(neighbor_i);
-      }
-    }
-
-    // Find a visited node near the goal to debug
-    const visited_near_goal = [];
-    for (const v_i of visited) {
-      const p = this._i_to_point(v_i);
-      if (p.x > 45 && p.y > 45) {
-        visited_near_goal.push(p);
-      }
-    }
-
-    return false;
-  }
-
   step() {
     this._algorithm.step();
   }
@@ -151,6 +101,7 @@ class Grid {
 
     ctx.restore();
   }
+
   get ended() {
     return this._algorithm.ended;
   }
