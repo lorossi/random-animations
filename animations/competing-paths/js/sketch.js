@@ -1,19 +1,22 @@
-import { Color, Engine, Point, XOR128 } from "./lib.js";
+import { Color, Engine, Point, XOR128, PaletteFactory } from "./lib.js";
 import { Grid } from "./grid.js";
-import { AlgorithmFactory } from "./algorithm-factory.js";
-import { Maze } from "./maze.js";
+import { PathfindingAlgorithmFactory } from "./pathfinding-algorithm-factory.js";
+import { MazeAlgorithmFactory } from "./maze-algorithm-factory.js";
 
 class Sketch extends Engine {
   preload() {
-    this._slots = 101;
     this._grid_cols = 2;
-    this._min_room_size = 5;
+
+    this._hex_palettes = [
+      // bg, wall, visited, path
+      ["#EDF2F4", "#264653", "#F4A261", "#EF233C"],
+      ["#FDFFFC", "#011627", "#FF9F1C", "#E71D36"],
+      ["#E0FBFC", "#293241", "#98C1D9", "#EE6C4D"],
+      ["#f2e8cf", "#274c77", "#a7c957", "#386649"],
+      ["#f6fff8", "#05668d", "#02c39a", "#bc4749"],
+    ];
 
     this._bg = Color.fromHex("#edf2f4");
-    this._visited_color = Color.fromHex("#f4a261");
-    this._path_color = Color.fromHex("#ef233c");
-    this._wall_color = Color.fromHex("#264653");
-    this._goal_color = Color.fromHex("#ef233c");
 
     this._recording = false;
   }
@@ -21,6 +24,12 @@ class Sketch extends Engine {
   setup() {
     this._seed = new Date().getTime();
     this._xor128 = new XOR128(this._seed);
+
+    this._slots = this._xor128.random_int(80, 120);
+    if (this._slots % 2 === 0) this._slots += 1; // Ensure odd number of slots for maze generation
+
+    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette = this._palette_factory.getRandomPalette(this._xor128, false);
 
     this._rotation = this._xor128.random_int(0, 4) * (Math.PI / 2);
     this._scl = new Array(2).fill(0).map(() => this._xor128.pick([-1, 1]));
@@ -33,19 +42,26 @@ class Sketch extends Engine {
     this.canvas.height = new_size;
 
     this._start = new Point(1, 1);
-    this._goal = new Point(this._slots - 2, this._slots - 2);
+    this._goal = this._xor128.random_bool()
+      ? new Point(this._slots - 2, this._slots - 2)
+      : new Point(1, this._slots - 2);
+
     this._grid_size = this.width / this._grid_cols;
 
-    this._maze = new Maze(
+    const maze_algorithm_cls = MazeAlgorithmFactory.get_random_algorithm(
+      this._xor128,
+    );
+    this._maze = new maze_algorithm_cls(
       this._slots,
-      this._min_room_size,
-      this._xor128.random_int(1e16),
+      this._seed,
       this._start,
       this._goal,
     );
 
+    const [bg, wall, visited, path] = this._palette.colors;
+
     this._grids = new Array(this._grid_cols ** 2).fill(null).map((_, i) => {
-      const algorithm_cls = AlgorithmFactory.get_algorithm_i(i);
+      const algorithm_cls = PathfindingAlgorithmFactory.get_algorithm_i(i);
       const grid = new Grid(
         this._slots,
         this._grid_size,
@@ -55,15 +71,11 @@ class Sketch extends Engine {
         algorithm_cls,
         this._maze,
       );
-      grid.set_colors(
-        this._wall_color,
-        this._visited_color,
-        this._path_color,
-        this._goal_color,
-      );
+      grid.set_colors(wall, visited, path);
       return grid;
     });
 
+    this._bg = bg;
     document.body.style.backgroundColor = this._bg.rgba;
     this._frame_offset = this.frameCount;
     if (this._recording) {

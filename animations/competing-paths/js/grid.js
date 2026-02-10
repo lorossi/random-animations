@@ -26,11 +26,10 @@ class Grid {
     this._path_color = Color.fromCSS("orange");
   }
 
-  set_colors(wall, visited, path, goal) {
+  set_colors(wall, visited, path) {
     this._wall_color = wall;
     this._visited_color = visited;
     this._path_color = path;
-    this._goal_color = goal;
   }
 
   _point_to_i(point) {
@@ -149,12 +148,6 @@ class Grid {
       const y = point.y * slot_size;
       ctx.fillRect(x, y, slot_size, slot_size);
     }
-
-    // draw goal
-    ctx.fillStyle = this._goal_color.rgba;
-    const goal_x = this._goal.x * slot_size;
-    const goal_y = this._goal.y * slot_size;
-    ctx.fillRect(goal_x, goal_y, slot_size, slot_size);
 
     ctx.restore();
   }

@@ -9,7 +9,6 @@ class Sketch extends Engine {
   preload() {
     this._recording = false;
 
-    this._cols = 101;
     this._path_color = Color.fromHEX("#ffecd1");
     this._bg_color = Color.fromHEX("#001524");
 
@@ -24,7 +23,8 @@ class Sketch extends Engine {
   }
 
   setup() {
-    this._seed = Date.now();
+    this._seed = new Date().getTime();
+
     this._maze = [];
     this._visited = [];
     this._solution_visited = [];
@@ -36,6 +36,8 @@ class Sketch extends Engine {
     this._solution = []; // solution path
 
     this._xor128 = new XOR128(this._seed);
+    this._cols = this._xor128.random_int(80, 120);
+    if (this._cols % 2 === 0) this._cols++; // Ensure cols is odd for maze generation
 
     this._generation_first_step = true;
     this._solution_first_step = true;

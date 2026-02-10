@@ -1,6 +1,6 @@
 import { Point } from "./lib.js";
 
-class Algorithm {
+class PathFindingAlgorithm {
   constructor(slots, start, goal, cost) {
     this._slots = slots;
     this._start = start;
@@ -74,7 +74,7 @@ class Algorithm {
   }
 }
 
-class BFS extends Algorithm {
+class BFS extends PathFindingAlgorithm {
   _init() {
     this._queue = []; // poor man's priority queue
     const start_i = this._point_to_i(this._start);
@@ -134,7 +134,7 @@ class BFS extends Algorithm {
   }
 }
 
-class DFS extends Algorithm {
+class DFS extends PathFindingAlgorithm {
   _init() {
     this._stack = [];
     const start_i = this._point_to_i(this._start);
@@ -175,7 +175,7 @@ class DFS extends Algorithm {
   }
 }
 
-class Dijkstra extends Algorithm {
+class Dijkstra extends PathFindingAlgorithm {
   _init() {
     this._dist = new Array(this._slots ** 2).fill(Infinity);
 
@@ -201,10 +201,14 @@ class Dijkstra extends Algorithm {
     }
 
     // node in Q with lowest dist
-    const current_i = Array.from(this._Q).reduce((a, b) =>
-      this._dist[a] < this._dist[b] ? a : b,
-    );
-    this._current_i = current_i;
+    let current_i = null;
+    let current_dist = Infinity;
+    for (const i of this._Q) {
+      if (this._dist[i] < current_dist) {
+        current_dist = this._dist[i];
+        current_i = i;
+      }
+    }
 
     const current_point = this._i_to_point(current_i);
     if (current_point.equals(this._goal)) {
@@ -297,4 +301,7 @@ class AStar extends Dijkstra {
   }
 }
 
-export { Algorithm, BFS, DFS, AStar, Dijkstra };
+const PATHFINDING_ALGORITHMS = [BFS, DFS, Dijkstra, AStar];
+Object.freeze(PATHFINDING_ALGORITHMS);
+
+export { PathFindingAlgorithm, PATHFINDING_ALGORITHMS };
