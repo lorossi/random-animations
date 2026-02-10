@@ -10,8 +10,8 @@ class Particle {
   }
 
   update(t) {
-    this._t = t;
-    this._t_smooth = Math.cos(t * Math.PI - this._phi) ** 2;
+    this._t = t % 1;
+    this._t_smooth = Math.cos(this._t * Math.PI - this._phi) ** 2;
     this._a = this._t_smooth * Math.PI;
   }
 

@@ -1,4 +1,4 @@
-import { Engine, Color } from "./lib.js";
+import { Engine, XOR128, Color } from "./lib.js";
 import { Particle } from "./particle.js";
 
 class Sketch extends Engine {
@@ -6,17 +6,17 @@ class Sketch extends Engine {
     this._duration = 300;
     this._recording = false;
 
-    this._cols = 35;
     this._bg = Color.fromMonochrome(245);
     this._particle_color = Color.fromMonochrome(15);
     this._scl = 0.9;
   }
 
   setup() {
-    if (this._recording) {
-      this.startRecording();
-      console.log("%cRecording started", "color:green");
-    }
+    this._seed = new Date().getTime();
+    this._xor128 = new XOR128(this._seed);
+    this._cols = this._xor128.random_int(30, 60);
+    if (this._cols % 2 === 1) this._cols += 1;
+    this._dt = this._xor128.random();
 
     const size = this.width / this._cols;
     const max_dist = this.width / 2;
@@ -34,27 +34,38 @@ class Sketch extends Engine {
         return new Particle(xx, yy, size, this._particle_color);
       })
       .filter((p) => p !== null);
+
+    document.body.style.background = this._bg.hex;
+    this._frame_offset = this.frameCount;
+    if (this._recording) {
+      this.startRecording();
+      console.log("%cRecording started", "color:green");
+    }
   }
 
   draw() {
-    const t = (this.frameCount / this._duration) % 1;
-
-    this.background(this._bg.rgba);
+    const delta_frames = this.frameCount - this._frame_offset;
+    const t = (delta_frames / this._duration) % 1;
 
     this.ctx.save();
+    this.background(this._bg.rgba);
     this.ctx.translate(this.width / 2, this.height / 2);
     this.ctx.scale(this._scl, this._scl);
-    this._particles.forEach((p) => p.update(t));
+    this._particles.forEach((p) => p.update(t + this._dt));
     this._particles.forEach((p) => p.show(this.ctx));
     this.ctx.restore();
 
-    if (t >= 1 && this._recording) {
+    if (delta_frames >= this._duration && this._recording) {
       this._recording = false;
       this.stopRecording();
       console.log("%cRecording stopped. Saving...", "color:yellow");
       this.saveRecording();
       console.log("%cRecording saved", "color:green");
     }
+  }
+
+  click() {
+    this.setup();
   }
 }
 
