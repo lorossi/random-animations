@@ -8,15 +8,15 @@ from load_animations import AnimationsLoader
 def main() -> None:
     """Script entry point."""
     issue_found = False
-    folders = AnimationsLoader.load_animations()
-    for folder in folders:
+    for folder in AnimationsLoader.load_animations():
         if folder.check_issues():
             issue_found = True
 
+    print(f"Checked {AnimationsLoader.count_animations()} animations.")
     if issue_found:
         exit(1)
 
-    print("All folders are correctly set up.")
+    print("All animations are correctly set up.")
 
 
 if __name__ == "__main__":

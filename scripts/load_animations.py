@@ -328,3 +328,8 @@ class AnimationsLoader:
         )
         for folder in sorted(glob(full_path)):
             yield Animation(folder)
+
+    @staticmethod
+    def count_animations() -> int:
+        """Count the number of folders in the animations folder."""
+        return len(os.listdir(AnimationsLoader.animations_folder))
