@@ -1,4 +1,4 @@
-import { Engine } from "./engine.js";
+import { Engine } from "./lib.js";
 
 import {
   Color,
