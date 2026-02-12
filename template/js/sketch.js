@@ -1,11 +1,13 @@
+import { Engine } from "./engine.js";
+
 import {
   Color,
-  Engine,
   GradientPalette,
   Palette,
   PaletteFactory,
   Point,
   SimplexNoise,
+  Utils,
   XOR128,
 } from "./lib.js";
 
