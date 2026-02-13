@@ -1,10 +1,12 @@
 import { Color } from "./lib.js";
 
 class Letter {
-  constructor(x, y, size) {
+  constructor(x, y, size, font) {
     this._x = x;
     this._y = y;
     this._size = size;
+    this._font = font;
+
     this._letters = [];
 
     this._frozen = false;
@@ -26,7 +28,7 @@ class Letter {
     ctx.save();
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = `${this._size * 1.3}px RobotoMono`;
+    ctx.font = `${this._size * 1.3}px ${this._font}`;
     ctx.fillText(letter, 0, this._size * 0.05);
     ctx.restore();
   }

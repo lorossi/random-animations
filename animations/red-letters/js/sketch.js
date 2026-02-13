@@ -10,6 +10,7 @@ class Sketch extends Engine {
     this._texture_scl = 2;
     this._texture_oversize = 1.1;
     this._to_spell = "MAKEITSTOP";
+    this._font = "RobotoMono";
     this._duration = 600;
   }
 
@@ -23,7 +24,7 @@ class Sketch extends Engine {
       const x = i % this._cols;
       const y = Math.floor(i / this._cols);
 
-      const l = new Letter(x, y, letter_size);
+      const l = new Letter(x, y, letter_size, this._font);
       l.setAttributes(this._duration);
       l.injectDependencies(this._xor128);
       return l;
@@ -33,7 +34,7 @@ class Sketch extends Engine {
     const row = this._xor128.random_int(1, this._cols - 1);
     const col = this._xor128.random_int(
       1,
-      this._cols - this._to_spell.length - 1
+      this._cols - this._to_spell.length - 1,
     );
 
     this._letters
@@ -45,6 +46,11 @@ class Sketch extends Engine {
         l.freeze();
       });
 
+    this._font_loaded = false;
+    document.fonts
+      .load(`10px ${this._font}`)
+      .then(() => (this._font_loaded = true));
+
     this._texture = this._createTexture();
 
     if (this._recording) {
@@ -54,6 +60,9 @@ class Sketch extends Engine {
   }
 
   draw() {
+    if (!this._font_loaded) {
+      return;
+    }
     this.background(this._bg.rgba);
     this.ctx.save();
 
@@ -88,14 +97,14 @@ class Sketch extends Engine {
 
   _addTexture() {
     const dx = Math.floor(
-      this._xor128.random_int(0, this._texture.width - this.width)
+      this._xor128.random_int(0, this._texture.width - this.width),
     );
     const dy = Math.floor(
-      this._xor128.random_int(0, this._texture.height - this.height)
+      this._xor128.random_int(0, this._texture.height - this.height),
     );
 
     this.ctx.save();
-    this.ctx.globalCompositeOperation = "multiply";
+    this.ctx.globalCompositeOperation = "dodge";
     this.ctx.drawImage(
       this._texture,
       dx,
@@ -105,7 +114,7 @@ class Sketch extends Engine {
       0,
       0,
       this.width,
-      this.height
+      this.height,
     );
     this.ctx.restore();
   }
