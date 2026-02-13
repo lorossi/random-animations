@@ -1,13 +1,4 @@
-import {
-  Color,
-  Engine,
-  GradientPalette,
-  Palette,
-  PaletteFactory,
-  Point,
-  SimplexNoise,
-  XOR128,
-} from "./lib.js";
+import { Color, Engine, Point, XOR128 } from "./lib.js";
 
 import { Circle } from "./circle.js";
 
@@ -90,7 +81,7 @@ class Sketch extends Engine {
     if (t == 0) {
       const transform_index =
         Math.floor(
-          delta_frame / (this._phase_duration * this._phases_per_transform)
+          delta_frame / (this._phase_duration * this._phases_per_transform),
         ) % this._transforms.length;
       this._current_transform = this._transforms[transform_index];
 
@@ -149,7 +140,7 @@ class Sketch extends Engine {
     this.ctx.rotate(this._current_transform.rotation);
     this.ctx.scale(
       this._current_transform.scl_flip[0],
-      this._current_transform.scl_flip[1]
+      this._current_transform.scl_flip[1],
     );
     this.ctx.translate(-this.width / 2, -this.height / 2);
 
