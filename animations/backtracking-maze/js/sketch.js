@@ -16,7 +16,6 @@ class Sketch extends Engine {
     this._solution_color = Color.fromHEX("#218380");
     this._visited_color = Color.fromHEX("#ffbc42");
     this._start = [1, 1];
-    this._end = [this._cols - 2, this._cols - 2];
 
     this._single_frame_generation = false;
     this._single_frame_solution = false;
@@ -38,6 +37,7 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(this._seed);
     this._cols = this._xor128.random_int(80, 120);
     if (this._cols % 2 === 0) this._cols++; // Ensure cols is odd for maze generation
+    this._end = [this._cols - 2, this._cols - 2];
 
     this._generation_first_step = true;
     this._solution_first_step = true;
@@ -126,8 +126,10 @@ class Sketch extends Engine {
   }
 
   _solutionNextStep() {
+    if (this._solution_stack.length === 0) return true;
     // find the node with the lowest f score
     const current = this._lowestFScore();
+    if (current == null) return true;
     const [cx, cy] = this._i_to_xy(current);
     // add the current node to the visited set for visualization
     this._solution_visited[current] = true;
