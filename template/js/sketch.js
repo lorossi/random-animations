@@ -18,7 +18,7 @@ class Sketch extends Engine {
   }
 
   setup() {
-    this._frame_offset = this.frameCount;
+    this._frame_offset = this.frame_count;
     if (this._recording) {
       this.startRecording();
       console.log("%cRecording started", "color:green");
@@ -26,7 +26,7 @@ class Sketch extends Engine {
   }
 
   draw(dt) {
-    const delta_frame = this.frameCount - this._frame_offset;
+    const delta_frame = this.frame_count - this._frame_offset;
     const t = (delta_frame / this._duration) % 1;
 
     if (t == 0 && delta_frame > 0 && this._recording) {
