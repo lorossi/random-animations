@@ -305,7 +305,7 @@ class Animation:
 
         if self.has_subfolders:
             for subfolder in self.subfolders:
-                if os.path.basename(subfolder) not in ["css", "js"]:
+                if os.path.basename(subfolder) not in ["css", "js", "assets"]:
                     print(
                         f"Folder '{self.name}' has unexpected subfolder: '{subfolder}'"
                     )
