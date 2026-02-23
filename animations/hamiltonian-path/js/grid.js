@@ -133,7 +133,6 @@ class Grid {
 
     if (this._steps_count > this._max_tries) {
       // stupid heuristic to prevent infinite loops in unsolvable configurations
-      console.log("Restarting grid with seed", this._seed + 1);
       this._seed++;
       this._init();
     }
@@ -151,12 +150,6 @@ class Grid {
       this._is_neighbor(current_i, this._path[0]) &&
       this._path.length === this._slots * this._slots
     ) {
-      console.log(
-        "Solved grid with seed",
-        this._seed,
-        "steps:",
-        this._steps_count,
-      );
       this._ended = true;
       // rotate the path randomly
       const rotate_by = this._xor128.random_int(this._path.length);

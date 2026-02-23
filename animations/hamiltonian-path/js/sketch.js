@@ -6,28 +6,52 @@ class Sketch extends Engine {
     this._duration = 600;
     this._recording = false;
 
-    this._hex_palettes = [
-      ["#DA525D", "#064F6E"],
-      ["#C56127", "#007190"],
-      ["#E2B540", "#4F4086"],
-      ["#F2545B", "#2D6A4F"],
-      ["#FFA400", "#009FFD"],
-      ["#A63A50", "#F0E7D8"],
-      ["#F1F7ED", "#243E36"],
+    this._sanzo_wada_palettes = [
+      ["Rosolanc Purple", "Helvetia Blue"],
+      ["Old Rose", "White"],
+      ["Aconite Violet", "Dark Soft Violet"],
+      ["Ochraceous Salmon", "Pompeian Red"],
+      ["Lincoln Green", "Raw Sienna"],
+      ["Eugenia Red", "Vandar Poel's Blue"],
+      ["Yellow Orange", "Violet Blue"],
+      ["Antwarp Blue", "Orange Yellow"],
+      ["Dark Tyrian Blue", "Light Glaucous Blue"],
+      ["Cameo Pink", "Pompeian Red"],
+      ["Dusky Madder Violet", "Cinnamon Rufous"],
+      ["Aconite Violet", "Eosine Pink"],
+      ["Violet Blue", "Olive Buff"],
+      ["Golden Yellow", "Warm Gray"],
+      ["Green Blue", "Turquoise Green"],
+      ["Black", "Sulphur Yellow"],
+      ["Olympic Blue", "Light Porcelain Green"],
     ];
     this._grid_cols = 1;
     this._scl = 0.98;
     this._noise_scl = 0.5;
     this._max_tries = 5e3;
+
+    this._i = 0;
+    this._color_phase = 0;
   }
 
   setup() {
     this._seed = new Date().getTime();
     this._xor128 = new XOR128(this._seed);
 
-    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
+    this._palette_factory = PaletteFactory.fromSanzoWadaArray(
+      this._sanzo_wada_palettes,
+    );
     this._palette = this._palette_factory.getRandomPalette(this._xor128, true);
+
     [this._fg, this._bg] = this._palette.colors;
+
+    console.log({
+      i: this._i,
+      phase: this._color_phase,
+      FG_L: this._fg.luminance,
+      BG_L: this._bg.luminance,
+      diff: Math.abs(this._fg.luminance - this._bg.luminance),
+    });
 
     this._slots = this._xor128.random_int(24, 40);
     if (this._slots % 2 != 0) this._slots++;
