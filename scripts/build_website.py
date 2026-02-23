@@ -33,7 +33,9 @@ class WebsiteBuilder:
 
         webp_preview = animation.preview.replace(".png", ".webp")
         webp_path = os.path.join(
-            self._destination, animation.path, os.path.basename(webp_preview)
+            self._destination,
+            animation.folder,
+            os.path.basename(webp_preview),
         )
         if os.path.isfile(webp_path):
             return webp_path.replace(self._destination + "/", "")
