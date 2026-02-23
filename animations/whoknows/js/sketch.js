@@ -68,7 +68,10 @@ class Sketch extends Engine {
   }
 
   draw() {
-    if (!this._font_loaded) return;
+    if (!this._font_loaded) {
+      this.background(this._bg);
+      return;
+    }
 
     this.ctx.save();
 
