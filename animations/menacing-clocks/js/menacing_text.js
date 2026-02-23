@@ -1,7 +1,8 @@
 class MenacingText {
-  constructor(x, y, font_size, fg, bg, duration, allow_repeat = false) {
+  constructor(x, y, font, font_size, fg, bg, duration, allow_repeat = false) {
     this._x = x;
     this._y = y;
+    this._font = font;
     this._font_size = font_size;
     this._fg = fg;
     this._bg = bg;
@@ -24,7 +25,7 @@ class MenacingText {
     const text = this._text[current_text_index];
 
     ctx.save();
-    ctx.font = `${this._font_size}px Hack`;
+    ctx.font = `${this._font_size}px ${this._font}`;
 
     const font_metrics = ctx.measureText(text);
     const padding = this._font_size * 0.2;

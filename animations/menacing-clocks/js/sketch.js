@@ -17,6 +17,7 @@ class Sketch extends Engine {
     this._min_text_delay = 30;
     this._max_text_delay = 90;
 
+    this._font = "Hack";
     this._bg = Color.fromMonochrome(20);
     this._fg = Color.fromMonochrome(240);
   }
@@ -48,10 +49,20 @@ class Sketch extends Engine {
       this._xor128.random_int(this._min_text_delay, this._max_text_delay);
     this._current_phase = PHASES.INCREASING;
 
+    this._font_loaded = false;
+    document.fonts.load(`${this.height / 15}px ${this._font}`).then(() => {
+      this._font_loaded = true;
+    });
+
     document.body.style.background = this._bg.hex;
   }
 
   draw() {
+    if (!this._font_loaded) {
+      this.background(this._bg);
+      return;
+    }
+
     this.ctx.save();
     this.background(this._bg);
 
@@ -125,6 +136,7 @@ class Sketch extends Engine {
     return new MenacingText(
       x,
       y,
+      this._font,
       this.height / 15,
       this._fg,
       this._bg,
