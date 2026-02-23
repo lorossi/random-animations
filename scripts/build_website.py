@@ -61,7 +61,7 @@ class WebsiteBuilder:
                 continue
 
             # copy the folder to the destination
-            dest_folder = os.path.join(self._destination, animation.path)
+            dest_folder = os.path.join(self._destination, animation.folder)
             shutil.copytree(
                 animation.path,
                 dest_folder,
@@ -109,7 +109,7 @@ class WebsiteBuilder:
             delay = self._random.uniform(0.1, 1)
             output.append(
                 {
-                    "path": animation.path,
+                    "path": animation.folder,
                     "preview": preview,
                     "title": animation.title,
                     "delay": delay,

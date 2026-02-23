@@ -43,6 +43,11 @@ class Animation:
         """Check if the folder contains any subfolders."""
         return len(self.subfolders) > 0
 
+    @property
+    def folder(self) -> str:
+        """Get the folder name."""
+        return os.path.basename(self.path)
+
     @cached_property
     def font_files(self) -> list[str]:
         """Get a list of embedded font files in the folder."""
