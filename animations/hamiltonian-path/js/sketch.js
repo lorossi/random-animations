@@ -45,14 +45,6 @@ class Sketch extends Engine {
 
     [this._fg, this._bg] = this._palette.colors;
 
-    console.log({
-      i: this._i,
-      phase: this._color_phase,
-      FG_L: this._fg.luminance,
-      BG_L: this._bg.luminance,
-      diff: Math.abs(this._fg.luminance - this._bg.luminance),
-    });
-
     this._slots = this._xor128.random_int(24, 40);
     if (this._slots % 2 != 0) this._slots++;
 
