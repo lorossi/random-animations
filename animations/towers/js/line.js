@@ -1,36 +1,27 @@
-import { Color } from "./lib.js";
-
 class Line {
-  constructor(slot_width, points, palette) {
+  constructor(slot_width, points, color) {
     this._slot_width = slot_width;
     this._points = points;
-    this._palette = palette;
+    this._color = color;
   }
 
   show(ctx) {
     ctx.save();
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 5;
 
-    ctx.strokeStyle = "black";
-    ctx.fillStyle = "white";
+    ctx.strokeStyle = this._color.rgba;
+    ctx.fillStyle = this._color.rgba;
 
     ctx.beginPath();
     this._points.forEach((point, i) => {
-      if (i === 0) ctx.moveTo(point.coords.x, point.coords.y);
-      else ctx.lineTo(point.coords.x, point.coords.y);
+      if (i === 0) ctx.moveTo(point.x, point.y);
+      else ctx.lineTo(point.x, point.y);
     });
     ctx.stroke();
 
-    this._points.forEach((point, i) => {
+    this._points.forEach((point) => {
       ctx.beginPath();
-      ctx.arc(
-        point.coords.x,
-        point.coords.y,
-        this._slot_width * 0.2,
-        0,
-        2 * Math.PI,
-      );
-      ctx.stroke();
+      ctx.arc(point.x, point.y, this._slot_width * 0.1, 0, 2 * Math.PI);
       ctx.fill();
     });
 
