@@ -1,6 +1,6 @@
 import { Engine } from "./lib.js";
 
-import { Color, PaletteFactory, SimplexNoise, XOR128 } from "./lib.js";
+import { Color, Utils, SimplexNoise, XOR128 } from "./lib.js";
 
 import { Tower } from "./tower.js";
 import { Line } from "./line.js";
@@ -9,18 +9,13 @@ class Sketch extends Engine {
   preload() {
     this._bg = Color.fromMonochrome(240);
     this._scl = 0.95;
-    this._line_noise_scl = 0.1;
-    this._hex_palettes = [
-      // https://coolors.co/palette/5f0f40-9a031e-fb8b24-e36414-0f4c5c
-      ["#5f0f40", "#9a031e", "#fb8b24", "#e36414", "#0f4c5c"],
-      // https://coolors.co/palette/001427-708d81-f4d58d-bf0603-8d0801
-      ["#001427", "#708d81", "#f4d58d", "#bf0603", "#8d0801"],
-      // https://coolors.co/palette/33658a-86bbd8-2f4858-f6ae2d-f26419
-      ["#33658a", "#86bbd8", "#2f4858", "#f6ae2d", "#f26419"],
-      // https://coolors.co/palette/55dde0-33658a-2f4858-f6ae2d-f26419
-      ["#55dde0", "#33658a", "#2f4858", "#f6ae2d", "#f26419"],
+    this._sanzo_wada_colors = [
+      "Pompeian Red",
+      "Sulphine Yellow",
+      "Helvetia Blue",
+      "Diamine Green",
     ];
-    this._duration = 900;
+    this._duration = 300;
     this._recording = false;
   }
 
@@ -29,49 +24,49 @@ class Sketch extends Engine {
     this._xor128 = new XOR128(seed);
     this._noise = new SimplexNoise(this._xor128.random_int(1e16));
 
-    this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
-    this._palette = this._palette_factory.getRandomPalette(this._xor128);
+    const towers_num = this._xor128.random_int(5, 8);
+    const towers_slots = this._xor128.random_int(-1, 4) + towers_num;
 
-    this._towers_num = this._xor128.random_int(5, 8);
-    this._towers_slots = this._xor128.random_int(-1, 4) + this._towers_num;
+    const towers_width = this.width / (towers_num * 2 + 1);
+    const towers_height = this.height;
 
-    this._towers_width = this.width / (this._towers_num * 2 + 1);
-    this._towers_height = this.height;
+    const circle_radius = towers_width * 0.1;
+    const lines_num = Utils.clamp(
+      towers_num + this._xor128.random_int(-1, 2),
+      1,
+      towers_slots,
+    );
 
-    this._towers = new Array(this._towers_num).fill().map((_, i) => {
-      const x = this._towers_width * (2 * i + 1);
+    this._towers = new Array(towers_num).fill().map((_, i) => {
+      const x = towers_width * (2 * i + 1);
       return new Tower(
         x,
-        this._towers_width,
-        this._towers_height,
-        this._towers_slots,
-        this._xor128.random_int(2 ** 32),
+        towers_width,
+        towers_height,
+        towers_slots,
+        this._xor128,
+        this._noise,
       );
     });
 
-    this._lines_points = new Array(this._towers_slots).fill().map((_, x) => {
-      return new Array(this._towers_num).fill().map((_, y) => {
-        const n = this._noise.noise(
-          x * this._line_noise_scl,
-          y * this._line_noise_scl,
-          1000,
-        );
-        const i = Math.floor(((n + 1) / 2) * this._towers_slots);
-        const tower = this._towers[y];
-        return tower.get_coords(i);
-      });
-    });
-
-    this._lines = new Array(this._towers_slots)
+    const lines_points = new Array(lines_num)
       .fill()
-      .map(
-        (_, i) =>
-          new Line(
-            this._towers_width,
-            this._lines_points[i],
-            this._palette.getColor(i),
-          ),
-      );
+      .map((_, x) => {
+        const points = new Array(towers_num)
+          .fill()
+          .map((_, y) => this._towers[y].get_score_coords(x));
+        const order = this._xor128.random();
+        return { points, order };
+      })
+      .sort((a, b) => a.order - b.order)
+      .map((l) => l.points);
+
+    const color = Color.fromSanzoWada(
+      this._xor128.pick(this._sanzo_wada_colors),
+    );
+    this._lines = new Array(lines_num).fill().map((_, x) => {
+      return new Line(towers_width, circle_radius, lines_points[x], color);
+    });
 
     this._frame_offset = this.frame_count;
     if (this._recording) {
@@ -88,7 +83,10 @@ class Sketch extends Engine {
     this.background(this._bg);
     this.scaleFromCenter(this._scl);
     this._towers.forEach((tower) => tower.show(this.ctx));
-    this._lines.forEach((line) => line.show(this.ctx));
+    this._lines.forEach((line) => {
+      line.update(t);
+      line.show(this.ctx);
+    });
     this.ctx.restore();
 
     if (t == 0 && delta_frame > 0 && this._recording) {
@@ -98,8 +96,6 @@ class Sketch extends Engine {
       this.saveRecording();
       console.log("%cRecording saved", "color:green");
     }
-
-    this.noLoop();
   }
 
   click() {
