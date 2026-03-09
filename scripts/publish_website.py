@@ -226,7 +226,7 @@ class WebsitePublisher:
             logging.info("SSH client closed")
 
 
-def gather_args() -> tuple[argparse.Namespace, str, str]:
+def gather_args() -> argparse.Namespace:
     """Script entry point."""
     parser = argparse.ArgumentParser(
         description="Create the website in the dist/ folder.",
@@ -259,27 +259,24 @@ def gather_args() -> tuple[argparse.Namespace, str, str]:
         default=8,
         help="Number of concurrent workers for uploading files",
     )
+    parser.add_argument(
+        "--ssh-key",
+        type=str,
+        help="SSH private key",
+    )
+    parser.add_argument(
+        "--ssh-pwd",
+        type=str,
+        help="Password of the ssh key",
+    )
 
-    args = parser.parse_args()
-
-    # parse key from environment variable
-    env_key = os.getenv("SSH_KEY")
-    if env_key is None:
-        print("SSH_KEY environment variable not set")
-        exit(1)
-
-    env_pwd = os.getenv("SSH_PASSWORD")
-    if env_pwd is None:
-        print("SSH_PASSWORD environment variable not set")
-        exit(2)
-
-    return args, env_key, env_pwd
+    return parser.parse_args()
 
 
 async def main() -> None:
     """Script entry point."""
     logging.basicConfig(level=logging.INFO)
-    args, env_key, env_pwd = gather_args()
+    args = gather_args()
     publisher = WebsitePublisher(
         source=args.source,
         destination=args.destination,
@@ -288,8 +285,8 @@ async def main() -> None:
     await publisher.connect(
         host=args.host,
         user=args.user,
-        key=env_key,
-        password=env_pwd,
+        key=args.ssh_key,
+        password=args.ssh_pwd,
     )
     await publisher.publish()
     await publisher.cleanup_remote()

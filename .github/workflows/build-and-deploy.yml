@@ -77,4 +77,4 @@ jobs:
           path: ${{ env.SITE_ARTIFACTS_PATH }}
 
       - name: Deploy to website
-        run: python3 scripts/publish_website.py --source ${{ env.SITE_ARTIFACTS_PATH }} --destination public_html/random-animations/ --host lorenzoros.si --user lorenz66 --workers ${{ env.WORKERS }}
+        run: python3 scripts/publish_website.py --source ${{ env.SITE_ARTIFACTS_PATH }} --destination public_html/random-animations/ --host lorenzoros.si --user lorenz66 --workers ${{ env.WORKERS }} --ssh-key "${{ secrets.SSH_KEY }}" --ssh-pwd "${{ secrets.SSH_KEY_PASSWORD }}"
