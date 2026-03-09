@@ -1,6 +1,6 @@
 # Random Animations
 
-[Try them here](https://lorossi.github.io/random-animations).
+[Try them here](https://lorenzoros.si/random-animations/).
 
 Also, don't forget to check my [Instagram profile](https://www.instagram.com/lorossi97/) where I am gradually posting all these dumb videos.
 
