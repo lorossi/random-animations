@@ -22,6 +22,7 @@ permissions:
 env:
   SITE_ARTIFACTS_PATH: dest
   SITE_ARTIFACT_NAME: website-files
+  WORKERS: 8
 
 jobs:
   check-animations:
@@ -76,4 +77,4 @@ jobs:
           path: ${{ env.SITE_ARTIFACTS_PATH }}
 
       - name: Deploy to website
-        run: python3 scripts/publish_website.py --source ${{ env.SITE_ARTIFACTS_PATH }} --destination public_html/random-animations/ --host lorenzoros.si --user lorenz66
+        run: python3 scripts/publish_website.py --source ${{ env.SITE_ARTIFACTS_PATH }} --destination public_html/random-animations/ --host lorenzoros.si --user lorenz66 --workers ${{ env.WORKERS }}
