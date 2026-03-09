@@ -16,8 +16,6 @@ concurrency:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 env:
   SITE_ARTIFACTS_PATH: dest
@@ -57,7 +55,7 @@ jobs:
         run: python3 ./scripts/build_website.py --destination ${{ env.SITE_ARTIFACTS_PATH }} --randomize --seed 875492
 
       - name: Upload static files as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.SITE_ARTIFACT_NAME }}
           path: ${{ env.SITE_ARTIFACTS_PATH }}
