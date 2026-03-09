@@ -153,7 +153,7 @@ class WebsitePublisher:
             IOError,
         ) as e:
             logging.error("Failed to create remote folder %s: %s", remote_path, e)
-            raise e
+            raise
 
     async def _remote_exists(self, remote_path: str) -> bool:
         """Check whether a remote path exists."""
@@ -244,20 +244,12 @@ def gather_args() -> argparse.Namespace:
     parser.add_argument(
         "--source",
         type=str,
-        default="dist",
         help="Source folder for the website",
     )
     parser.add_argument(
         "--destination",
         type=str,
-        default="/path/to/website",
         help="Destination for the website (e.g. /path/to/website)",
-    )
-    parser.add_argument(
-        "--workers",
-        type=int,
-        default=8,
-        help="Number of concurrent workers for uploading files",
     )
     parser.add_argument(
         "--ssh-key",
@@ -268,6 +260,12 @@ def gather_args() -> argparse.Namespace:
         "--ssh-pwd",
         type=str,
         help="Password of the ssh key",
+    )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=8,
+        help="Number of concurrent workers for uploading files",
     )
 
     return parser.parse_args()
