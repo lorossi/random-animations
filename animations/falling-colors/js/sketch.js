@@ -71,7 +71,6 @@ class Sketch extends Engine {
       const a =
         (this._noise.noise(tn, this._slices_seeds[i], 1000) * Math.PI) / 2;
       const force_vec = new Vector(0, 1).rotate(a);
-      if (i == 0) console.log(tn, a, force_vec);
 
       slice.update(force_vec, 1);
       slice.draw(this.ctx);

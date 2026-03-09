@@ -84,7 +84,6 @@ class Sketch extends Engine {
       const n = this._simplex.noise(i * this._noise_scl, 3000);
       return n * (this.width / 2) * 0.5;
     });
-    console.log(this._dxs);
 
     this.background(this._bg);
     document.body.style.background = this._bg.hex;
