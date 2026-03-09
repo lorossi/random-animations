@@ -1,5 +1,6 @@
 """This script checks for issues in the animation folders."""
 
+import warnings
 from sys import exit
 
 from load_animations import AnimationsLoader
@@ -7,6 +8,7 @@ from load_animations import AnimationsLoader
 
 def main() -> None:
     """Script entry point."""
+    warnings.filterwarnings(action="ignore", module="load_animations")
     issue_found = False
     for folder in AnimationsLoader.load_animations():
         if folder.check_issues():
