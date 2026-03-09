@@ -63,6 +63,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    environment:
+      name: website-secrets
     steps:
       - *checkout_step
       - *setup_python_step
