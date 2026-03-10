@@ -9,13 +9,18 @@ from load_animations import AnimationsLoader
 def main() -> None:
     """Script entry point."""
     warnings.filterwarnings(action="ignore", module="load_animations")
-    issue_found = False
-    for folder in AnimationsLoader.load_animations():
-        if folder.check_issues():
-            issue_found = True
+
+    issues_found = False
+    incomplete_animations = set()
+    for animations in AnimationsLoader.load_animations():
+        if animations.check_issues():
+            issues_found = True
+            incomplete_animations.add(animations.name)
 
     print(f"Checked {AnimationsLoader.count_animations()} animations.")
-    if issue_found:
+    if issues_found:
+        print("The following animations have issues:")
+        print(", ".join(sorted(incomplete_animations)))
         exit(1)
 
     print("All animations are correctly set up.")
