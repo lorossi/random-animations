@@ -1,4 +1,4 @@
-name: Build and Deploy on GitHub Pages
+name: Build and Deploy on Website
 on:
   push:
     branches:
@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: pages-${{ github.workflow }}-${{ github.ref }}
+  group: website-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
