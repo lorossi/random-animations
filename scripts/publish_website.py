@@ -6,11 +6,23 @@ import hashlib
 import logging
 import os
 import shlex
+import sys
 from glob import glob
-from sys import exit
 
 import asyncssh
 import asyncssh.sftp
+
+
+class SSHKeyError(Exception):
+    """Raised when the SSH private key cannot be loaded."""
+
+
+class SSHConnectError(Exception):
+    """Raised when the SSH connection cannot be established."""
+
+
+class SFTPStartError(Exception):
+    """Raised when the SFTP session cannot be started."""
 
 
 class WebsitePublisher:
@@ -43,7 +55,7 @@ class WebsitePublisher:
             )
         except Exception as e:
             logging.error(f"Failed to load SSH key: {e}")
-            exit(1)
+            raise SSHKeyError(str(e)) from e
         logging.info("SSH key loaded successfully")
 
         try:
@@ -55,7 +67,7 @@ class WebsitePublisher:
             )
         except Exception as e:
             logging.error(f"Failed to connect to {host}: {e}")
-            exit(2)
+            raise SSHConnectError(str(e)) from e
         logging.info("Connected to SSH server successfully")
 
         try:
@@ -63,7 +75,7 @@ class WebsitePublisher:
         except Exception as e:
             logging.error(f"Failed to open SFTP session: {e}")
             self._client.close()
-            exit(3)
+            raise SFTPStartError(str(e)) from e
         logging.info("SFTP session opened successfully")
 
     async def publish(self) -> None:
@@ -121,6 +133,39 @@ class WebsitePublisher:
             tasks.append(cleanup_task(remote_path))
         await asyncio.gather(*tasks)
 
+        await self._remove_empty_remote_dirs(self._destination)
+
+    async def _remove_empty_remote_dirs(self, remote_path: str) -> None:
+        """Remove empty directories left behind under remote_path, deepest first."""
+        find_cmd = f"find {shlex.quote(remote_path)} -mindepth 1 -type d -empty"
+        while True:
+            try:
+                result = await self._client.run(find_cmd, check=False)
+            except Exception as e:
+                logging.error(
+                    f"Failed to list empty remote directories under {remote_path}: {e}"
+                )
+                return
+
+            if result.exit_status != 0 or not result.stdout:
+                return
+
+            empty_dirs = [str(line) for line in result.stdout.splitlines() if line]
+            if not empty_dirs:
+                return
+
+            # Remove deepest directories first so removing a child can empty its parent.
+            for empty_dir in sorted(
+                empty_dirs, key=lambda p: p.count("/"), reverse=True
+            ):
+                try:
+                    await self._sftp.rmdir(empty_dir)
+                    logging.info("Removed empty remote directory %s", empty_dir)
+                except Exception as e:
+                    logging.error(
+                        f"Failed to remove empty remote directory {empty_dir}: {e}"
+                    )
+
     async def _list_remote_files(self, remote_path: str) -> list[str]:
         """List all files in the remote directory."""
         find_cmd = f"find {shlex.quote(remote_path)} -type f"
@@ -148,10 +193,11 @@ class WebsitePublisher:
 
         try:
             await self._sftp.mkdir(remote_path)
-        except (
-            asyncssh.sftp.SFTPFailure,
-            IOError,
-        ) as e:
+        except asyncssh.sftp.SFTPFailure:
+            # Another concurrent task may have created it first; ignore if so.
+            if not await self._remote_exists(remote_path):
+                raise
+        except IOError as e:
             logging.error("Failed to create remote folder %s: %s", remote_path, e)
             raise
 
@@ -280,12 +326,14 @@ async def main() -> None:
         destination=args.destination,
         workers=args.workers,
     )
+    
     await publisher.connect(
         host=args.host,
         user=args.user,
         key=args.ssh_key,
         password=args.ssh_pwd,
     )
+
     await publisher.publish()
     await publisher.cleanup_remote()
     await publisher.disconnect()
