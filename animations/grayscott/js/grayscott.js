@@ -14,7 +14,7 @@ class GrayScott {
     this._seed = seed; // random seed
     this._color = color; // color scheme
 
-    this._levels = 3; // number of discrete levels for posterization
+    this._levels = 8; // number of discrete levels for posterization
     this._xor128 = new XOR128(seed); // random number generator
 
     // precompute the (levels + 1) distinct rgba strings used during posterized drawing
@@ -30,24 +30,22 @@ class GrayScott {
     this._a2 = new Float32Array(N * N); // next concentration of A
     this._b2 = new Float32Array(N * N); // next concentration of B
 
-    this._converged = false;
-    this._convergence_threshold = 1e-4; // avg per-cell, per-step change below which the simulation is considered settled
-    this._convergence_streak = 0; // consecutive step() calls under the threshold
-    this._convergence_streak_required = 5; // streak needed before declaring convergence, to ignore transient lulls
-
     this._reset();
-  }
-
-  hasConverged() {
-    return this._converged;
   }
 
   _reset() {
     this._a1.fill(1.0);
     this._b1.fill(0.0);
 
-    const center = Math.floor(this._n / 2);
-    const radius = Math.floor(10);
+    const starting_blobs = this._xor128.random_int(1, 6);
+    for (let i = 0; i < starting_blobs; i++) {
+      this._add_blob();
+    }
+  }
+
+  _add_blob() {
+    const center = this._xor128.random_int(0, this._n - 1);
+    const radius = this._xor128.random_int(5, 25);
 
     for (let y = center - radius; y < center + radius; y++) {
       for (let x = center - radius; x < center + radius; x++) {
@@ -60,8 +58,6 @@ class GrayScott {
   }
 
   step(n) {
-    if (this._converged) return;
-
     const N = this._n;
     const Da = this._Da;
     const Db = this._Db;
@@ -101,22 +97,6 @@ class GrayScott {
       // swap buffers
       [this._a1, this._a2] = [this._a2, this._a1];
       [this._b1, this._b2] = [this._b2, this._b1];
-
-      let total_change = 0;
-      for (let i = 0; i < N * N; i++) {
-        total_change += Math.abs(this._a1[i] - a1[i]) + Math.abs(this._b1[i] - b1[i]);
-      }
-
-      const avg_change = total_change / (N * N);
-      if (avg_change < this._convergence_threshold) {
-        this._convergence_streak++;
-        if (this._convergence_streak >= this._convergence_streak_required) {
-          this._converged = true;
-          return;
-        }
-      } else {
-        this._convergence_streak = 0;
-      }
     }
   }
 
@@ -142,7 +122,7 @@ class GrayScott {
 
         // color alpha based on concentration, posterized into discrete bands
         const raw_alpha = Utils.clamp(a - b, 0, 1);
-        const eased_alpha = Utils.ease_in_poly(raw_alpha, 3); // apply easing for smoother transitions
+        const eased_alpha = Utils.ease_in_poly(raw_alpha, 4); // apply easing for smoother transitions
         const level = Math.round(eased_alpha * levels);
         const fill = level_colors[level];
 
@@ -185,7 +165,7 @@ const GRAY_SCOTT_PARAMS = Object.freeze({
   [GrayScottType.BUBBLES]: { Da: 0.16, Db: 0.08, f: 0.098, k: 0.0555 },
 });
 
-const JITTER_RATIO = 0.0125; // max +/- fractional variation applied to f and k
+const JITTER_RATIO = 0.01; // max +/- fractional variation applied to f and k
 
 class GrayScottFactory {
   static create(type, x, y, N, scl, seed, color) {
@@ -194,6 +174,12 @@ class GrayScottFactory {
 
     const jittered_f = f * xor128.random(1 - JITTER_RATIO, 1 + JITTER_RATIO);
     const jittered_k = k * xor128.random(1 - JITTER_RATIO, 1 + JITTER_RATIO);
+
+    console.log(
+      `Creating GrayScott of type ${type} with parameters: Da=${Da}, Db=${Db}, f=${jittered_f.toFixed(
+        5,
+      )}, k=${jittered_k.toFixed(5)}`,
+    );
 
     return new GrayScott(
       x,
@@ -207,6 +193,15 @@ class GrayScottFactory {
       seed,
       color,
     );
+  }
+
+  static randomType(rand = Math) {
+    const types = [
+      GrayScottType.MITOSIS,
+      GrayScottType.CORAL,
+      GrayScottType.SPOTS,
+    ];
+    return types[Math.floor(rand.random() * types.length)];
   }
 }
 

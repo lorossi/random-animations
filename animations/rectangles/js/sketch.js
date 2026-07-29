@@ -16,6 +16,7 @@ class Sketch extends Engine {
     this._spacing = 2;
 
     this._bg = Color.fromMonochrome(15);
+    this._shadow = Color.fromMonochrome(240);
 
     this._hex_palettes = [
       [
@@ -27,6 +28,12 @@ class Sketch extends Engine {
         "#43aa8b",
         "#577590",
       ],
+      ["#f72585", "#7209b7", "#3a0ca3", "#4361ee", "#4cc9f0"],
+      ["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"],
+      ["#ffbe0b", "#fb5607", "#ff006e", "#8338ec", "#3a86ff"],
+      ["#390099", "#9e0059", "#ff0054", "#ff5400", "#ffbd00"],
+      ["#5f0f40", "#9a031e", "#fb8b24", "#e36414", "#0f4c5c"],
+      ["#1f2041", "#4b3f72", "#ffc857", "#119da4", "#19647e"],
     ];
   }
 
@@ -37,12 +44,23 @@ class Sketch extends Engine {
     this._palette_factory = PaletteFactory.fromHEXArray(this._hex_palettes);
     this._palette = this._palette_factory.getRandomPalette(this._xor128, false);
 
-    console.log(this._palette);
     this._cols = this._xor128.random_int(30, 50);
     this._rows = this._xor128.random_int(5, 15);
 
     const width = this.width / this._cols / this._spacing;
     const height = this.height / this._rows;
+    const shadow_x = width / this._xor128.random_int(2, 5);
+    const shadow_y = height / this._xor128.random_int(10, 20);
+
+    const rectangle_params = {
+      palette: this._palette,
+      noise: this._noise,
+      noise_scl: this._noise_scl,
+      color_scl: this._color_scl,
+      shadow: this._shadow,
+      shadow_x,
+      shadow_y,
+    };
 
     this._rectangles = Array.from(
       { length: this._cols * this._rows },
@@ -55,10 +73,7 @@ class Sketch extends Engine {
           row * height,
           width,
           height,
-          this._palette,
-          this._noise,
-          this._noise_scl,
-          this._color_scl,
+          rectangle_params,
         );
       },
     );

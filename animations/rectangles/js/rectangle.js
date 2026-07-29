@@ -1,7 +1,10 @@
 import { Color } from "./lib.js";
 
 class Rectangle {
-  constructor(x, y, width, height, palette, noise, noise_scl, color_scl) {
+  constructor(x, y, width, height, params) {
+    const { palette, noise, noise_scl, color_scl, shadow, shadow_x, shadow_y } =
+      params;
+
     this._x = x;
     this._y = y;
     this._width = width;
@@ -14,13 +17,23 @@ class Rectangle {
     this._color_nx = x * color_scl;
     this._color_ny = y * color_scl;
 
-    this._visible = true;
+    this._shadow = shadow;
+    this._shadow_x = shadow_x;
+    this._shadow_y = shadow_y;
 
+    this._visible = true;
     this._color = new Color(128, 0, 128); // purple for empty palette
   }
 
   show(ctx) {
     if (!this._visible) return;
+    ctx.fillStyle = this._shadow;
+    ctx.fillRect(
+      this._x + this._shadow_x,
+      this._y + this._shadow_y,
+      this._width,
+      this._height,
+    );
     ctx.fillStyle = this._color;
     ctx.fillRect(this._x, this._y, this._width, this._height);
   }
