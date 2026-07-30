@@ -2,6 +2,28 @@ import { Engine, Color, XOR128, PaletteFactory } from "./lib.js";
 import { Mesh } from "./mesh.js";
 import { Automaton } from "./automaton.js";
 
+class GridCell {
+  constructor(x, y, mesh, automaton, low_color, high_color) {
+    this.x = x;
+    this.y = y;
+    this.mesh = mesh;
+    this.automaton = automaton;
+    this.low_color = low_color;
+    this.high_color = high_color;
+  }
+
+  step(steps_per_frame) {
+    for (let i = 0; i < steps_per_frame; i++) this.automaton.step();
+  }
+
+  draw(ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    this.automaton.draw(ctx, this.mesh.cells, this.low_color, this.high_color);
+    ctx.restore();
+  }
+}
+
 class Sketch extends Engine {
   preload() {
     this._site_count = 2400;
@@ -51,30 +73,27 @@ class Sketch extends Engine {
       const mesh = new Mesh(cell_w, cell_h, cell_site_count, this._xor128);
       const automaton = new Automaton(mesh.neighbors, this._xor128);
 
-      return {
-        x: col * cell_w,
-        y: row * cell_h,
+      return new GridCell(
+        col * cell_w,
+        row * cell_h,
         mesh,
         automaton,
         low_color,
         high_color,
-      };
+      );
     });
 
-    document.body.style.background = this._cells[0].low_color.hex;
+    this._bg = this._xor128.pick(this._cells).low_color;
+    document.body.style.background = this._bg.hex;
   }
 
   draw() {
     this.ctx.save();
-    this.background(this._cells[0].low_color);
+    this.background(this._bg);
 
-    this._cells.forEach(({ x, y, mesh, automaton, low_color, high_color }) => {
-      for (let i = 0; i < this._steps_per_frame; i++) automaton.step();
-
-      this.ctx.save();
-      this.ctx.translate(x, y);
-      automaton.draw(this.ctx, mesh.cells, low_color, high_color);
-      this.ctx.restore();
+    this._cells.forEach((cell) => {
+      cell.step(this._steps_per_frame);
+      cell.draw(this.ctx);
     });
 
     this.ctx.restore();
