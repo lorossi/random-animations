@@ -23,6 +23,8 @@ body {
   aspect-ratio: 1;
 
   touch-action: none;
+
+  cursor: none;
 }
 
 @media only screen and (max-width: 600px) {
