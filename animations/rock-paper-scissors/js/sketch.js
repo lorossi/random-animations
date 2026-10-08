@@ -35,6 +35,8 @@ class Sketch extends Engine {
     this._bg = this._palette.getRandomColor(this._xor128);
     document.body.style.background = this._bg.rgb;
 
+    this._rotation = this._xor128.random_int(4) * Math.PI / 2;
+
     this._frame_offset = this.frameCount;
 
     this._ended = false;
@@ -57,8 +59,14 @@ class Sketch extends Engine {
     }
 
     this.ctx.save();
-    this.background(this._bg);
 
+    this.ctx.translate(this.width / 2, this.height / 2);
+    this.ctx.rotate(this._rotation);
+    this.ctx.translate(-this.width / 2, - this.height / 2);
+    
+    this.background(this._bg);
+    
+    
     // fight
     this._map.forEach((p, i) => {
       const [x, y] = this._1d_to_2d(i);
