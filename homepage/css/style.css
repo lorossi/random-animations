@@ -1,13 +1,7 @@
 @font-face {
   font-family: Raleway;
   src: url(fonts/Raleway.ttf);
-  font-weight: 0 1000;
-}
-
-@font-face {
-  font-family: RalewayItalic;
-  src: url(fonts/Raleway-Italic.ttf);
-  font-weight: 0 1000;
+  font-weight: 100 900;
 }
 
 @keyframes fadeInUp {
@@ -18,15 +12,6 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
   }
 }
 
@@ -47,15 +32,7 @@ a {
   color: var(--text-color);
 }
 
-a:visited,
-a:active {
-  color: var(--text-color);
-}
-
 .top {
-  margin-top: 0;
-  margin-left: 0;
-
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -64,7 +41,6 @@ a:active {
 
 .top a {
   text-decoration: none;
-  color: var(--text-color);
   font-size: var(--title-size);
   padding: var(--title-size);
 
@@ -106,13 +82,10 @@ a:active {
   height: 100%;
   object-fit: cover;
   grid-area: 1 / 1; /* both occupy the same grid cell */
-  overflow: hidden;
 }
 
 .animation .description {
   grid-area: 1 / 1; /* overlaps with image */
-  align-self: center;
-  justify-self: center;
 
   display: flex;
   justify-content: center;
@@ -129,13 +102,4 @@ a:active {
 .animation:hover .description {
   opacity: 1;
   transition: opacity 0.3s;
-}
-
-@media only screen and (max-width: 1200px) {
-}
-
-@media only screen and (max-width: 800px) {
-}
-
-@media only screen and (max-width: 400px) {
 }
