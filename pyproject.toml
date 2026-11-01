@@ -1,0 +1,18 @@
+[project]
+name = "random-animations-scripts"
+version = "0.1.0"
+description = "Scripts to check, build and publish the random animations website."
+requires-python = ">=3.13"
+dependencies = [
+    "asyncssh[bcrypt]==2.22.0",
+    "jinja2==3.1.6",
+    "pillow==12.1.0",
+]
+
+[dependency-groups]
+dev = [
+    "pyperclipfix",
+]
+
+[tool.uv]
+package = false

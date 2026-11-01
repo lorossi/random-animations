@@ -10,3 +10,6 @@ dist/
 # Ignore python cache files
 __pycache__/
 *.pyc
+
+# Ignore python virtual environment
+.venv/
