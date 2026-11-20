@@ -33,6 +33,10 @@ a {
 }
 
 .top {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -55,6 +59,7 @@ a {
 
 .content {
   width: 100%;
+  max-width: var(--max-width);
   box-sizing: border-box;
   display: grid;
   grid-template-columns: repeat(var(--cols), 1fr);

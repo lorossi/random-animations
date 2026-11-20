@@ -5,6 +5,7 @@
   --title-size: 2rem;
   --cols: 4;
   --grid-padding: 1rem;
+  --max-width: 1400px;
 }
 
 @media only screen and (max-width: 600px) {
