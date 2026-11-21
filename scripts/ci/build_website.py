@@ -7,9 +7,12 @@ import warnings
 from datetime import datetime
 from random import Random
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 from load_animations import Animation, AnimationsLoader
 from PIL import Image
+
+
+SITE_URL = "https://lorenzoros.si/random-animations/"
 
 
 class WebsiteBuilder:
@@ -23,8 +26,13 @@ class WebsiteBuilder:
         if seed is None:
             seed = int(datetime.now().timestamp() * 1000)
 
-        self._seed = seed
         self._random = Random(seed)
+
+        env = Environment(
+            loader=FileSystemLoader("homepage/"),
+            autoescape=select_autoescape(["html"]),
+        )
+        self._index_template = env.get_template("index_template.html")
 
     def _png_to_webp(self, animation: Animation) -> str | None:
         """Get the webp version of the preview image if it exists."""
@@ -93,10 +101,6 @@ class WebsiteBuilder:
 
     def build_index(self) -> None:
         """Create the index.html file from the template."""
-        env = Environment(loader=FileSystemLoader("homepage/"))
-        template = env.get_template("index_template.html")
-
-        html = ""
         default_preview = "./assets/placeholder.png"
 
         animations = list(AnimationsLoader.load_animations())
@@ -118,7 +122,7 @@ class WebsiteBuilder:
                 }
             )
 
-        html = template.render(animations=output)
+        html = self._index_template.render(animations=output, site_url=SITE_URL)
         with open(f"{self._destination}/index.html", "w", encoding="utf-8") as f:
             f.write(html)
         print("Created index.html file")
