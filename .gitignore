@@ -2,10 +2,8 @@
 .vscode
 
 # Ignore build output
-/homepage/index.html
-/homepage/assets/*
-!/homepage/assets/placeholder.png
 dist/
+dest/
 
 # Ignore python cache files
 __pycache__/

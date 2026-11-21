@@ -17,6 +17,16 @@ All the animations are hosted on a simple GitHub Pages website; however, some of
 
 I'd say we have to wing it
 
+## Development
+
+The scripts that check, build and publish the website are managed with [uv](https://docs.astral.sh/uv/); there is nothing to install by hand.
+
+```sh
+uv run scripts/ci/check_animations.py                      # validate the animations
+uv run scripts/ci/build_website.py --destination dist      # build the website
+python -m http.server -d dist                              # preview it
+```
+
 ## Published Animations
 
 Links to the animations that are already published on my Instagram profile:
