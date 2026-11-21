@@ -37,3 +37,33 @@ body {
     width: 90vw;
   }
 }
+
+/* link back to the homepage */
+.back-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font: 1.5rem/1 sans-serif;
+  text-decoration: none;
+  color: #fff;
+  mix-blend-mode: difference;
+  opacity: 0.35;
+  transition: opacity 0.2s;
+}
+
+.back-link:hover,
+.back-link:focus-visible {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back-link {
+    transition: none;
+  }
+}
