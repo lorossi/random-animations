@@ -1,18 +1,30 @@
 :root {
   --background-color: #0c0c0c;
   --text-color: #f5f2f2;
+  --muted-color: #a8a5a5;
+  --border-color: #262626;
+  --control-border-color: #5a5757;
+  --accent-color: #ff6a3d;
   --text-size: 1rem;
-  --title-size: 2rem;
+  --title-size: 1.75rem;
   --cols: 4;
-  --grid-padding: 1rem;
+  --grid-padding: 2rem;
+  --grid-gap: 2.5rem 1.5rem;
   --max-width: 1400px;
+}
+
+@media only screen and (max-width: 1000px) {
+  :root {
+    --cols: 3;
+  }
 }
 
 @media only screen and (max-width: 600px) {
   :root {
-    --title-size: 1rem;
-    --text-size: 0.75rem;
-    --cols: 3;
-    --grid-padding: 0.75rem;
+    --title-size: 1.25rem;
+    --text-size: 0.8rem;
+    --cols: 2;
+    --grid-padding: 1rem;
+    --grid-gap: 1.5rem 0.75rem;
   }
 }

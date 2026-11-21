@@ -1,7 +1,8 @@
 @font-face {
   font-family: Raleway;
-  src: url(fonts/Raleway.ttf);
+  src: url(fonts/Raleway.woff2) format("woff2");
   font-weight: 100 900;
+  font-display: swap;
 }
 
 @keyframes fadeInUp {
@@ -18,93 +19,245 @@
 * {
   margin: 0;
   padding: 0;
-  font-family: Raleway;
-  font-weight: 400;
+  box-sizing: border-box;
 }
 
 body {
+  font-family: Raleway, sans-serif;
+  font-weight: 400;
   color: var(--text-color);
   background-color: var(--background-color);
 }
 
+[hidden] {
+  display: none !important;
+}
+
 a {
-  user-select: none;
   color: var(--text-color);
 }
 
-.top {
+a:focus-visible,
+input:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
+}
+
+.page {
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  box-sizing: border-box;
+  padding: 0 var(--grid-padding);
+}
+
+/* header */
+.top {
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  padding: 1.75rem 0;
 }
 
-.top a {
-  text-decoration: none;
+.top h1 {
   font-size: var(--title-size);
-  padding: var(--title-size);
-
   font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.content {
-  width: 100%;
-  max-width: var(--max-width);
-  box-sizing: border-box;
-  display: grid;
-  grid-template-columns: repeat(var(--cols), 1fr);
-  grid-auto-rows: auto;
-  grid-gap: var(--grid-padding);
-  padding: var(--grid-padding);
-}
-
-.animation * {
-  overflow: hidden;
+.top h1 a {
   text-decoration: none;
+}
+
+.top nav {
+  display: flex;
+  gap: 1.75rem;
+  font-size: 0.95rem;
+}
+
+.top nav a {
+  color: var(--muted-color);
+  text-decoration: none;
+  padding: 0.5rem 0;
+}
+
+.top nav a:hover {
+  color: var(--accent-color);
+}
+
+/* sticky toolbar */
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  background-color: var(--background-color);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  color: var(--muted-color);
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1 1 16rem;
+  max-width: 26rem;
+}
+
+.search svg {
+  flex: none;
+  stroke: var(--muted-color);
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text-color);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--control-border-color);
+  border-radius: 0;
+  padding: 0.5rem 0;
+}
+
+/* grid */
+.content {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: var(--grid-gap);
+  padding: 2rem 0 4.5rem;
+}
+
+.empty {
+  padding: 5rem 0;
+  text-align: center;
+  color: var(--muted-color);
 }
 
 .animation {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-decoration: none;
+  /* "both" keeps items hidden during the delay but visible if animations are off */
+  animation: fadeInUp 1s both;
+}
+
+.animation .frame {
+  position: relative;
   aspect-ratio: 1;
-  animation: fadeInUp 1s forwards;
+  overflow: hidden;
+  background: #161616;
 }
 
 .animation .preview {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  grid-area: 1 / 1; /* both occupy the same grid cell */
+  transition: transform 0.5s;
 }
 
-.animation .description {
-  grid-area: 1 / 1; /* overlaps with image */
+.animation:hover .preview,
+.animation:focus-visible .preview {
+  transform: scale(1.04);
+}
 
+.animation .open {
+  position: absolute;
+  inset: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-
-  width: 100%;
-  height: 100%;
-  font-size: var(--text-size);
+  gap: 0.6rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: rgba(12, 12, 12, 0.55);
   opacity: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  transition: opacity 0.25s;
 }
 
-.animation:hover .description {
+.animation .open svg {
+  stroke: var(--text-color);
+}
+
+.animation:hover .open,
+.animation:focus-visible .open {
   opacity: 1;
-  transition: opacity 0.3s;
+}
+
+.animation .caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  transition: color 0.2s;
+}
+
+.animation .title {
+  font-size: var(--text-size);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.animation .num {
+  font-size: 0.75rem;
+  color: var(--muted-color);
+}
+
+.animation:hover .caption,
+.animation:focus-visible .caption {
+  color: var(--accent-color);
+}
+
+/* footer */
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1.75rem 0 2.5rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.8rem;
+  color: var(--muted-color);
+}
+
+.bottom a {
+  color: var(--muted-color);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animation {
+    animation: none;
+  }
+
+  .animation .preview,
+  .animation .open,
+  .animation .caption {
+    transition: none;
+  }
+
+  .animation:hover .preview,
+  .animation:focus-visible .preview {
+    transform: none;
+  }
 }
