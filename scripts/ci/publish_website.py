@@ -6,7 +6,6 @@ import hashlib
 import logging
 import os
 import shlex
-import sys
 from glob import glob
 
 import asyncssh
@@ -30,7 +29,6 @@ class WebsitePublisher:
 
     _source: str
     _destination: str
-    _workers: int
 
     _semaphore: asyncio.Semaphore
     _client: asyncssh.SSHClientConnection
@@ -40,13 +38,12 @@ class WebsitePublisher:
         """Initialize the WebsitePublisher."""
         self._source = source
         self._destination = destination
-        self._workers = workers
 
         self._semaphore = asyncio.Semaphore(workers)
 
     async def connect(self, host: str, user: str, key: str, password: str) -> None:
         """Connect to the SSH server."""
-        logging.info(f"Connecting to %s as %s", host, user)
+        logging.info("Connecting to %s as %s", host, user)
 
         try:
             pkey = asyncssh.import_private_key(
@@ -326,7 +323,7 @@ async def main() -> None:
         destination=args.destination,
         workers=args.workers,
     )
-    
+
     await publisher.connect(
         host=args.host,
         user=args.user,
